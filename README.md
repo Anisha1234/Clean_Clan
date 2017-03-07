@@ -1,5 +1,10 @@
-# nodesite
+# Clean Clan
 
 
-building a simple signup and login system with node + express
-having a contact form 
+The web app aims towards bringing a change in the way we conceive the idea of Swachha Bharat Abhiyaan at India by adding Gamification and Competitiveness to the cleaning process of Public Place.
+
+TECHNOLOGIES USED:
+Front-end :- HTML,CSS,Bootstrap
+Templating language :- .ejs
+Backend :- Node.js
+Database :- MongoDB
