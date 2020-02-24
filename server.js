@@ -8,7 +8,10 @@ var serveIndex = require('serve-index')
 var body_parser = require('body-parser');
 
 
-mongoose.connect('mongodb://localhost/tcs');
+mongoose.connect('mongodb://localhost/tcs', { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true
+});
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function () {
@@ -63,5 +66,5 @@ app.use('/report',report);
 
 //start your server
 app.listen(port,function(){
-	console.log('App started')
+	console.log('App started');
 });
