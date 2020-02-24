@@ -1,0 +1,18 @@
+.user-img-container{
+  width: 200px;
+  padding-bottom: 20px;
+  position: relative;
+}
+.user-img-update{
+  border: none;
+  background: none;
+  position: absolute;
+  border-radius: 30%;
+  bottom: 0px;
+  right: 0px;
+  outline: none;
+}
+
+.user-img-update:hover{
+  background: rgba(85, 84, 84, 0.2);
+}

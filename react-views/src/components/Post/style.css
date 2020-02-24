@@ -1,0 +1,10 @@
+.post-interaction-bar{
+  padding-top: 20px;
+  cursor: pointer;
+}
+.post-interaction-bar button{
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
