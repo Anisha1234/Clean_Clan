@@ -59,7 +59,10 @@ var storage = multer.diskStorage({
     callback(null, 'public/uploads/');
   },
   filename: function(request, file, callback) {
-    callback(null, file.originalname + Date.now())
+    let fileNameParseResult = path.parse(file.originalname);
+    callback(null, 
+        `${fileNameParseResult.name}${Date.now()}${fileNameParseResult.ext}`
+    );
   }
 });
 
