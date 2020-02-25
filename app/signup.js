@@ -90,16 +90,16 @@ router.post('/', upload.array('files', 12), function(req, res, next) {
     if (!req.body.name || !req.body.email || !req.body.city || !req.body.password) {
       res.status(502).send('Insufficient field values');
     } else {
-             var email=req.body.email;
+        var email=req.body.email;
         var newUser = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        city: req.body.city,
-        image: req.files[0].path,
-				like_count:0,
-        user_details:req.body.user_details,
-      });
+          name: req.body.name,
+          email: req.body.email,
+          password: req.body.password,
+          city: req.body.city,
+          image: req.files[0].path,
+          like_count:0,
+          user_details:req.body.user_details,
+        });
       // User.findOne({
       //   email: new_user.email
       // }, function(err, user) {
@@ -127,6 +127,7 @@ router.post('/', upload.array('files', 12), function(req, res, next) {
 
       nev.createTempUser(newUser, function(err, existingPersistentUser, newTempUser) {
         if (err) {
+          console.log(err);
           return res.status(404).send('ERROR: creating temp user FAILED');
         }
 
@@ -143,6 +144,7 @@ router.post('/', upload.array('files', 12), function(req, res, next) {
 
           nev.sendVerificationEmail(email, URL, function(err, info) {
             if (err) {
+              console.log(err);
               return res.status(404).send('ERROR: sending verification email FAILED');
             }
             res.json({

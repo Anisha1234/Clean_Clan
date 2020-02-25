@@ -143,7 +143,11 @@ module.exports = function(mongoose) {
         } else if (!isPositiveInteger(options.expirationTime)) {
             err = err || new Error('expirationTime must be a positive integer');
         }
-
+        //verify the connection between nodemailer and email server
+        transporter.verify()
+        .catch(function(connectionError){
+            err = connectionError;
+        });
         if (err) {
             return callback(err, null);
         }

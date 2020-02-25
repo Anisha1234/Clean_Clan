@@ -11,6 +11,11 @@ var body_parser = require('body-parser');
 mongoose.connect('mongodb://localhost/tcs', { 
   useNewUrlParser: true, 
   useUnifiedTopology: true
+})
+//handle error in connection
+.catch(function(error){
+  //handle error
+  console.log(error);
 });
 var db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
