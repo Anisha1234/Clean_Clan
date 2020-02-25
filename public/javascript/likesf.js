@@ -94,8 +94,5 @@ function remove_like(postId) {
      $("#like-count"+postId).text(q-1);
   }).fail(function(xhr, status, error) {
     console.log(error);
-
-  })
-
-
+  });
 }
