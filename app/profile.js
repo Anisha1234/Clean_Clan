@@ -17,7 +17,7 @@ var auth = function(req, res, next) {
     return res.redirect('/login');
 };
 router.get('/', auth, function(req, res, next) {
-  if (req.session && req.session.email) {
+  if (req.session && req.session.email){
     User.findOne({
       email: req.session.email
     }, function(err, user) {
@@ -28,7 +28,6 @@ router.get('/', auth, function(req, res, next) {
         Post.find({
           author: user._id.toString()
         }, function(err, posts) {
-
           var render_data = {
             title: "Clean India",
             name: user.name,
@@ -42,11 +41,8 @@ router.get('/', auth, function(req, res, next) {
             author: user._id.toString()
           }
           res.render('./pages/profile', render_data);
-        })
-
+        });
       }
-
-
     });
   }
 

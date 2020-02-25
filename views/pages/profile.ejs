@@ -10,9 +10,11 @@
   <link href="/css/strap.min.css" rel="stylesheet">
   <link href="/css/profile.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
-
-
-
+  <!-- script references -->
+  <script src="/javascript/vendor/jquery/jquery.min.js"></script>
+  <script src="/javascript/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/javascript/vendor/freelancer.js"></script>
+  <script src="/javascript/likesf.js"></script>
 </head>
 
 <body>
@@ -25,7 +27,8 @@
           <div class="sidebar-prop">
             <strong><h1 id="profilename" style="text-transform: capitalize"><%= name %></h1></strong>
             <div class="alert alert-warning" role="alert" id="reputation">
-              <h4><strong id="repuword"><%= like_count*10%></strong>&nbsp<small> REPUTATION</small></h4></div>
+              <h4><strong id="repuword"><%=like_count*10%></strong>&nbsp<small> REPUTATION</small></h4>
+            </div>
           </div>
           <div class="badges col-sm-3">
             <%if(posts.length) {%>
@@ -92,10 +95,11 @@
 
               <!--/stories-->
               <% if(posts.length) { %>
-                <% for(i=1;i<posts.length+1;i++){ post = posts[i-1];
-      postid_remove = "remove_like('"+post._id+"');";
-      postid_add = "like_add('"+post._id+"');";
-       %>
+                <% for(i=0;i<posts.length;i++){ 
+                  post = posts[i];
+                  postid_remove = "remove_like('"+post._id+"');";
+                  postid_add = "like_add('"+post._id+"');";
+                %>
 
                   <div class="row">
 
@@ -123,17 +127,25 @@
                <% if(post.type_post=="Solved Challenge") {%>
                  <h4 class="description">Challenged By:<small style="text-transform: capitalize;"><%= post.challenge_user_name %></small></h4>
                  <%}%>
-                                <h4 class="description">POSTED BY: <small style="text-transform: capitalize;"><%= post.author_name %></small></h4>
+                              <h4 class="description">POSTED BY: <small style="text-transform: capitalize;"><%= post.author_name %></small></h4>
                               <h4 class="description">DESCRIPTION : <small style="text-transform: capitalize;"><%= post.description %></small></h4>
                               <h4 class="description">STAKE-HOLDERS : <small style="text-transform: capitalize;"><%= post.stake_holders %></small></h4>
                               <h5>LOCATION : <small style="text-transform: capitalize;"><%= post.location%></small></h5>
                               <h5>LIKES : <small id="like-count<%= post._id %>"><%= post.likes.length %></small><small class="text-muted" style="float:right;"><%= post.date %></small></h5>
                               <% if(post.likes.indexOf(current_userid)>=0) { %>
-                                <a id="like<%= post._id %>" title="unlike" class="like" onclick="<%=postid_remove%>"><i class="fa fa-heart fa-2x " style="color:green;"></i></a>
+                                <a id="like<%= post._id%>" title="unlike" class="like" 
+                                onclick=<%= postid_remove%> ><i class="fa fa-heart fa-2x " style="color:green;"></i></a>
                                 <% }else { %>
-                                  <a id="like<%= post._id %>"  title="like" class="like" onclick="<%=postid_add%>"><i class="fa fa-heart fa-2x" style="color:red;"></i></a>
-                                  <% } %>
-                                <a style="margin-left:60%" title="tweet" target="_blank" class="twitter-share-button" href="https://twitter.com/intent/tweet?text=<%= post.description %>"data-size="large"><i class="fa fa-twitter fa-3x" style="color:#03a9f4" aria-hidden="true"></i></a>
+                                  <a id="like<%= post._id %>"  title="like" class="like" 
+                                  onclick=<%=postid_add%>> 
+                                    <i class="fa fa-heart fa-2x" style="color:red;"></i>
+                                  </a>
+                                <% } %>
+                                <a style="margin-left:60%" title="tweet" target="_blank" class="twitter-share-button" 
+                                href="https://twitter.com/intent/tweet?text=<%= post.description %>"data-size="large">
+                                  <i class="fa fa-twitter fa-3x" style="color:#03a9f4" aria-hidden="true">
+                                  </i>
+                                </a>
 
                                 <!-- <a href="/report"><i class="fa fa-2x fa-exclamation-circle" style="float: right;margin-top:2%;color: red" aria-hidden="true"></i></a> -->
 
@@ -231,11 +243,6 @@
         </div>
       </div>
     </div>
-    <!-- script references -->
-    <script src="/javascript/vendor/jquery/jquery.min.js"></script>
-    <script src="/javascript/vendor/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/javascript/vendor/freelancer.js"></script>
-    <script src="/javascript/likesf.js"></script>
 </body>
 
 </html>

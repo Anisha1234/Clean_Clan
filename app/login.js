@@ -3,7 +3,6 @@ var path = require('path');
 var User = require('../model/user');
 //create our router object
 var bcrypt = require('bcrypt');
-const saltRounds = 10;
 var router = express.Router();
 
 //export our router
@@ -13,55 +12,39 @@ router.get('/',function(req,res){
 	console.log("Got get request");
 	res.sendFile(path.join(__dirname,'../login.html'));
 });
+
 router.post('/',function(req,res){
-		console.log("got post request");
-	//res.send(req.body);
-	// req.body = req.fields;
+	console.log("got post request");
 	if(!req.body.email || !req.body.password){
-		  res.status(502).send('Insufficient field values');
-		//res.send("enter some data/empty fields are present");
-	}else{
-		User.findOne({email:req.body.email},function(err,user){
+		return res.status(502).send('Insufficient field values');
+	}
+	User.findOne({email:req.body.email}, function(err,user){
+		if(err){
+			console.log(err);
+			return res.status(500).send(err);
+		}
+		if(!user){
+			return res.status(200).send("Not registered");
+		}
+		bcrypt.compare(req.body.password, user.password, function(err, result) {
+			console.log(result);
 			if(err){
 				console.log(err);
-				res.send(err);
+				return res.status(500).send("Internal Server Error");
+			} 
+			if(result) {
+				req.session.email = user.email;
+				req.session.userid = user._id;
+				req.session.userimage=user.image;
+				req.session.name=user.name;
+				console.log(req.session.userid + " is the id");
+				console.log(req.session.userimage + " is the image");
+				response={};
+				response[0]="Success";
+				response[1]= user._id;
+				return res.status(200).send(response);
 			}
-			if(!user){
-				//res.redirect('/signup');
-				res.send("Not registered");
-			}
-			else{
-				bcrypt.compare(req.body.password, user.password, function(err, result) {
-						// res == true
-						console.log(result);
-						if(err) console.log(err);
-
-						else if(result) {
-							req.session.email = user.email;
-							req.session.userid = user._id;
-							req.session.userimage=user.image;
-							req.session.name=user.name;
-							console.log(req.session.userid + " is the id");
-							console.log(req.session.userimage + " is the image");
-							response={};
-							response[0]="Success";
-							response[1]= user._id;
-							res.send(response);
-						}
-						else {
-							res.send("wrong password")
-						}
-					});
-				// 	if(user.password == req.body.password){
-				// 	req.session.email = user.email;
-				// 	res.send("Success")
-				// 	// res.redirect('/profile');
-				// }
-				// else{res.send("wrong password");
-				// 	}
-
-			}
+			return res.status(200).send("wrong password");
 		});
-	};
-
+	});
 });
