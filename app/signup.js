@@ -102,88 +102,88 @@ router.post('/', upload.array('files', 12), function(req, res, next) {
     user_details:req.body.user_details,
   });
 
-  User.findOne({
-    email: newUser.email
-  },function(err, user){
-    if (err) {
-      console.log(err);
-      return res.send(err);
-    }
+  // User.findOne({
+  //   email: newUser.email
+  // },function(err, user){
+  //   if (err) {
+  //     console.log(err);
+  //     return res.send(err);
+  //   }
+  //   if (user) {
+  //     console.log(user);
+  //     return res.send("email already registered");
+  //   } 
+  //   newUser.save(function(err, user) {
+  //     if (err) {
+  //       console.log(err);
+  //       return res.send(err);
+  //     }
+  //     console.log(user);
+  //     return res.send("User succesfully saved!");
+  //   });
+  // });
+
+
+      nev.createTempUser(newUser, function(err, existingPersistentUser, newTempUser) {
+        if (err) {
+          console.log(err);
+          return res.status(404).send('ERROR: creating temp user FAILED');
+        }
+
+        // user already exists in persistent collection
+        if (existingPersistentUser) {
+           console.log("user exists in db");
+          res.send("email already registered");
+          return
+        }
+
+        // new user created
+        if (newTempUser) {
+          var URL = newTempUser[nev.options.URLFieldName];
+
+          nev.sendVerificationEmail(email, URL, function(err, info) {
+            if (err) {
+              console.log(err);
+              return res.status(404).send('ERROR: sending verification email FAILED');
+            }
+            res.json({
+              msg: "An email has been sent to you. Please check it to verify your account.",
+              info: info
+            });
+          });
+
+        // user already exists in temporary collection!
+        } else {
+          res.json({
+            msg: "You have already signed up. Please check your email to verify your account."
+          });
+        }
+      });
+
+});
+
+// user accesses the link that is sent
+router.get('/email-verification/:URL', function(req, res) {
+  var url = req.params.URL;
+
+  nev.confirmTempUser(url, function(err, user) {
     if (user) {
-      console.log(user);
-      return res.send("email already registered");
-    } 
-    newUser.save(function(err, user) {
-      if (err) {
-        console.log(err);
-        return res.send(err);
-      }
-      console.log(user);
-      return res.send("User succesfully saved!");
-    });
+      nev.sendConfirmationEmail(user.email, function(err, info) {
+        if (err) {
+          return res.status(404).send('ERROR: sending confirmation email FAILED');
+        }
+        // res.json({
+        //   msg: 'CONFIRMED ho gaya!',
+        //   info: info
+        // });
+        res.sendFile(path.join(__dirname,'../confirm_mail.html'));
+      });
+
+
+    } else {
+      return res.status(404).send('ERROR: confirming temp user FAILED');
+    }
   });
-
-
-//       nev.createTempUser(newUser, function(err, existingPersistentUser, newTempUser) {
-//         if (err) {
-//           console.log(err);
-//           return res.status(404).send('ERROR: creating temp user FAILED');
-//         }
-
-//         // user already exists in persistent collection
-//         if (existingPersistentUser) {
-//            console.log("user exists in db");
-//           res.send("email already registered");
-//           return
-//         }
-
-//         // new user created
-//         if (newTempUser) {
-//           var URL = newTempUser[nev.options.URLFieldName];
-
-//           nev.sendVerificationEmail(email, URL, function(err, info) {
-//             if (err) {
-//               console.log(err);
-//               return res.status(404).send('ERROR: sending verification email FAILED');
-//             }
-//             res.json({
-//               msg: "An email has been sent to you. Please check it to verify your account.",
-//               info: info
-//             });
-//           });
-
-//         // user already exists in temporary collection!
-//         } else {
-//           res.json({
-//             msg: "You have already signed up. Please check your email to verify your account."
-//           });
-//         }
-//       });
-
-// });
-
-// // user accesses the link that is sent
-// router.get('/email-verification/:URL', function(req, res) {
-//   var url = req.params.URL;
-
-//   nev.confirmTempUser(url, function(err, user) {
-//     if (user) {
-//       nev.sendConfirmationEmail(user.email, function(err, info) {
-//         if (err) {
-//           return res.status(404).send('ERROR: sending confirmation email FAILED');
-//         }
-//         // res.json({
-//         //   msg: 'CONFIRMED ho gaya!',
-//         //   info: info
-//         // });
-//         res.sendFile(path.join(__dirname,'../confirm_mail.html'));
-//       });
-
-
-    // } else {
-    //   return res.status(404).send('ERROR: confirming temp user FAILED');
-    // }
- // });
 });
 
 
