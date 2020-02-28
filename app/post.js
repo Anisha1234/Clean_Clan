@@ -114,7 +114,7 @@ router.post('/create', auth, upload.array('images', 12), function(req, res, next
         new_post.save(function(err, post) {
           if (err) {
             console.log(err);
-            res.send(err)
+            res.send(err);
           } else {
                 res.send("Post saved succesfully");
             }
