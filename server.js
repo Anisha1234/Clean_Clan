@@ -10,7 +10,9 @@ var body_parser = require('body-parser');
 
 mongoose.connect('mongodb://localhost/tcs', { 
   useNewUrlParser: true, 
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex:true,
+  useFindAndModify:false
 })
 //handle error in connection
 .catch(function(error){
