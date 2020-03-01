@@ -1,0 +1,32 @@
+{
+  "name": "react-views",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "webpack-dev-server --mode development --open",
+    "build": "webpack --mode production",
+    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prop-types": "^15.7.2",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-hot-loader": "^4.12.19"
+  },
+  "devDependencies": {
+    "@neutrinojs/airbnb": "^9.1.0",
+    "@neutrinojs/jest": "^9.1.0",
+    "@neutrinojs/react": "^9.1.0",
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0",
+    "neutrino": "^9.1.0",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  }
+}
