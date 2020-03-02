@@ -20,7 +20,6 @@
   },
   "devDependencies": {
     "@neutrinojs/airbnb": "^9.1.0",
-    "@neutrinojs/copy": "^9.1.0",
     "@neutrinojs/jest": "^9.1.0",
     "@neutrinojs/react": "^9.1.0",
     "eslint": "^6.8.0",
