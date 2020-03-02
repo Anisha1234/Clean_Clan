@@ -7,7 +7,7 @@
     "test": "jest",
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
-    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test"
+    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test --fix"
   },
   "keywords": [],
   "author": "",
