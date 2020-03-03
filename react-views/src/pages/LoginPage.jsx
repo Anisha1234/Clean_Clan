@@ -1,11 +1,9 @@
 import React from 'react';
+import LoginFormComponent from '../components/LoginFormComponent';
 
 const LoginPage = () => (
   <div>
-    <p>
-      <strong>Login</strong>
-      and I love you
-    </p>
+    <LoginFormComponent />
   </div>
 );
 

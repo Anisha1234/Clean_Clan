@@ -1,5 +1,5 @@
-import { hot } from 'react-hot-loader';
 import React, { lazy, Suspense } from 'react';
+import { hot } from 'react-hot-loader';
 import {
   BrowserRouter as Router,
   Switch,
