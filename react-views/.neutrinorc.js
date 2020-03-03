@@ -9,7 +9,7 @@ module.exports = {
   use: [
     airbnb(),
     react({
-      hot: false,
+      hot: true,
       html: {
         title: 'Clean India App',
       }
