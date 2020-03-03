@@ -1,5 +1,5 @@
 import {
-  PENDING_STATE,
+  PENDING_STATE, LOGIN_STATE, LOGOUT_STATE
 } from '../utilities/constants';
 
 const initialState = {
@@ -7,8 +7,13 @@ const initialState = {
 };
 
 const AuthReducer = (state = initialState, action) => {
-  const { type: authState } = action;
-  return { ...state, auth_state: authState };
+  const { type } = action;
+  switch(type){
+    case LOGIN_STATE, LOGOUT_STATE, PENDING_STATE:
+      return {...state, auth_state: type};
+    default:
+      return state;
+  }
 };
 
 export default AuthReducer;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ErrorDisplayComponent from './ErrorDisplayComponent';
-import { checkLoginState } from '../actions/authActions';
+//import { useSelector, useDispatch } from 'react-redux';
+//import {loginAction} from '../actions/authActions';
 
 const LoginFormComponent = () => {
   const [email, setEmail] = useState(undefined);
@@ -19,9 +19,7 @@ const LoginFormComponent = () => {
     }
     console.log(password);
     // submit data
-    checkLoginState();
   };
-
   return (
     <form onSubmit={submitLoginData}>
       <label htmlFor="email">
@@ -46,7 +44,7 @@ const LoginFormComponent = () => {
         />
       </label>
       <input type="submit" />
-      <ErrorDisplayComponent error={error} />
+      <p>Error founded: {error}</p>
     </form>
   );
 };
