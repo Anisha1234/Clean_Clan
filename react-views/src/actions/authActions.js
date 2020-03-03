@@ -1,14 +1,22 @@
-import { request } from '../utilities';
+import axios from 'axios';
 import { serverRoot } from '../utilities/constants';
 
-export const checkLoginState = () => {
-  request.get(
+const checkLoginState = () => {
+  axios.get(
     `${serverRoot}/auth-check`,
     {
-      params:{
-        only_auth_check: true
-      }
-    }
+      params: {
+        only_auth_check: true,
+      },
+    },
   )
-  .then(({data}) => console.log(data));
+    .then(({ data }) => console.log(data));
+};
+
+const login = () => {
+
+};
+
+export {
+  checkLoginState, login,
 };
