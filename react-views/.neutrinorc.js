@@ -14,20 +14,6 @@ module.exports = {
         title: 'Clean India App',
       }
     }),
-    jest(),
-    (neutrino)=>{
-      neutrino.config.optimization.merge({
-        splitChunks:{
-          cacheGroups:{
-            vendors:{
-              chunks: 'all',
-              test: /.[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              filename: './assets/[name][contenthash].js'
-            }
-          }
-        }
-      })
-    }
+    jest()
   ],
 };

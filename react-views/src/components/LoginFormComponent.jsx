@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import ErrorDisplayComponent from './ErrorDisplayComponent';
+import { checkLoginState } from '../actions/authActions';
 
 const LoginFormComponent = () => {
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState(undefined);
+  const [password, setPassword] = useState(undefined);
   const [error, setError] = useState(null);
 
   const validateEmail = (inputEmail) => {
@@ -16,7 +17,9 @@ const LoginFormComponent = () => {
     if (!validateEmail(email)) {
       setError('invalid email');
     }
+    console.log(password);
     // submit data
+    checkLoginState();
   };
 
   return (
@@ -26,10 +29,9 @@ const LoginFormComponent = () => {
         <input
           type="email"
           name="email"
-          value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="example@gmail.com"
-          required="true"
+          required
         />
       </label>
       <br />
@@ -38,10 +40,9 @@ const LoginFormComponent = () => {
         <input
           type="password"
           name="password"
-          value={password}
-          onChage={(e) => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="password"
-          required="true"
+          required
         />
       </label>
       <input type="submit" />

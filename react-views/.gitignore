@@ -108,3 +108,6 @@ dist
 
 # Neutrino build directory
 build
+
+#mock api data
+mock/

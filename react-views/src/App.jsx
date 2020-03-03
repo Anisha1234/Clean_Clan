@@ -15,7 +15,7 @@ const App = () => (
   <div>
     <Router>
       <Switch>
-        <Suspense fallback={LoaderComponent}>
+        <Suspense fallback={<LoaderComponent />}>
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/logout" component={LogoutPage} />
           <Route exact path="/signup" component={SignupPage} />
