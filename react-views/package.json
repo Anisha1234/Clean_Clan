@@ -8,7 +8,7 @@
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
     "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src test --fix",
-    "mock-server": "concurrently \"npm start\" \"node mock\" "
+    "mock-server": "node mock"
   },
   "keywords": [],
   "author": "",
@@ -28,7 +28,6 @@
     "@neutrinojs/airbnb": "^9.1.0",
     "@neutrinojs/jest": "^9.1.0",
     "@neutrinojs/react": "^9.1.0",
-    "concurrently": "^5.1.0",
     "connect-api-mocker": "^1.7.0",
     "eslint": "^6.8.0",
     "express": "^4.17.1",

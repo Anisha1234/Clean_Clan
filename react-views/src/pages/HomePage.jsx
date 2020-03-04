@@ -1,12 +1,13 @@
 import React from 'react';
 
-const LogoutPage = () => (
+
+const HomePage = () => (
   <div>
     <p>
-      <strong>Log out</strong>
+      <strong>Home</strong>
       and I love you
     </p>
   </div>
 );
 
-export default LogoutPage;
+export default HomePage;

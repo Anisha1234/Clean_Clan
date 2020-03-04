@@ -1,10 +1,10 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
-import AuthReducer from './AuthReducer';
+import UserReducer from './UserReducer';
 
-const rootReducer = combineReducers({ AuthReducer });
+const rootReducer = combineReducers({ user: UserReducer });
 const store = createStore(rootReducer, applyMiddleware(
-  ReduxThunk
+  ReduxThunk,
 ));
 
 export default store;

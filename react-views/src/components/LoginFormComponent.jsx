@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-//import { useSelector, useDispatch } from 'react-redux';
-//import {loginAction} from '../actions/authActions';
+import { useDispatch } from 'react-redux';
+import { loginAction } from '../actions/UserAction';
 
 const LoginFormComponent = () => {
   const [email, setEmail] = useState(undefined);
   const [password, setPassword] = useState(undefined);
   const [error, setError] = useState(null);
-
+  const dispatch = useDispatch();
   const validateEmail = (inputEmail) => {
     const emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
     return emailReg.test(inputEmail);
@@ -17,8 +17,8 @@ const LoginFormComponent = () => {
     if (!validateEmail(email)) {
       setError('invalid email');
     }
-    console.log(password);
     // submit data
+    dispatch(loginAction(email, password));
   };
   return (
     <form onSubmit={submitLoginData}>
@@ -44,7 +44,10 @@ const LoginFormComponent = () => {
         />
       </label>
       <input type="submit" />
-      <p>Error founded: {error}</p>
+      <p>
+        Error founded:
+        {error}
+      </p>
     </form>
   );
 };
