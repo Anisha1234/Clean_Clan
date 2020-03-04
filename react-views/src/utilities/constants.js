@@ -1,4 +1,4 @@
-const serverRoot = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:4567';
+const serverRoot = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 
 const LOGIN_STATE = 'LOGIN';
 const LOGOUT_STATE = 'LOGOUT';

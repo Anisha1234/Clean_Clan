@@ -9,7 +9,7 @@ import { PENDING_STATE, LOGIN_STATE } from '../utilities/constants';
 const LogoutContainer = ({ children }) => {
   const authState = useSelector((state) => state.user.auth_state);
   const location = useLocation();
-  const { from } = location.state || { from: { pathname: '/home' } };
+  const { from } = location.state || { from: { pathname: '/profile' } };
   switch (authState) {
     case LOGIN_STATE:
       return (

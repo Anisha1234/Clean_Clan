@@ -52,13 +52,24 @@ app.use(body_parser.urlencoded({extended:true}));
 app.use(session({
   secret: 'tcshack',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie:{
+    maxAge: 3600000
+  }
 }))
 
 //setup ejs
 app.set('view engine','ejs');
 app.set('views',__dirname+'/views')
 
+//development cors
+app.use(function(req, res, next){
+  res.header("Access-Control-Allow-Origin", ["http://localhost:5000"]);
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Credentials", true);
+  next();
+});
 
 //express middlewire which have access to all our routes
 app.use('/',router);
@@ -70,6 +81,19 @@ app.use('/post',post);
 app.use('/leaderboard',leaderboard);
 app.use('/issues',issues);
 app.use('/report',report);
+
+app.get('/auth-check', function(req, res){
+  console.log(req.session);
+  if(req.session && req.session.email){
+    let userData = {
+      name: req.session.name, 
+      email: req.session.email, 
+      userid: req.session.userid,
+    }
+    return res.status(200).send({is_login: true, user_data: userData});
+  }
+  return res.status(200).send({is_login: false, user_data: null});
+});
 
 //start your server
 app.listen(port,function(){

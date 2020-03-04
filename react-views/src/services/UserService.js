@@ -8,12 +8,14 @@ const checkLoginState = async () => axios.get(
       only_auth_check: true,
     },
     timeout: 4500,
+    withCredentials: true
   },
 );
 
-const login = async () => {
-
-};
+const login = async (email, password) => axios.post(
+  `${serverRoot}/login`,
+  { email, password },
+);
 
 export {
   checkLoginState, login,

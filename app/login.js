@@ -14,17 +14,15 @@ router.get('/',function(req,res){
 });
 
 router.post('/',function(req,res){
-	console.log("got post request");
-	if(!req.body.email || !req.body.password){
-		return res.status(502).send('Insufficient field values');
-	}
+	console.log("got login request");
 	User.findOne({email:req.body.email}, function(err,user){
 		if(err){
 			console.log(err);
 			return res.status(500).send(err);
 		}
 		if(!user){
-			return res.status(200).send("Not registered");
+			let message = "Not registered";
+			return res.status(200).send({message, user_data: user});
 		}
 		bcrypt.compare(req.body.password, user.password, function(err, result) {
 			console.log(result);
@@ -39,12 +37,17 @@ router.post('/',function(req,res){
 				req.session.name=user.name;
 				console.log(req.session.userid + " is the id");
 				console.log(req.session.userimage + " is the image");
-				response={};
-				response[0]="Success";
-				response[1]= user._id;
-				return res.status(200).send(response);
+				let userData={
+					email: user.email,
+					userid: user._id,
+					name: user.name
+				};
+				return res.status(200).send({
+					message: "Success",
+					user_data: userData
+				});
 			}
-			return res.status(200).send("wrong password");
+			return res.status(200).send({message: "Wrong password"});
 		});
 	});
 });

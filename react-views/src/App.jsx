@@ -11,9 +11,12 @@ import { checkUserAuthStateAction } from './actions/UserAction';
 
 const LoginContainer = lazy(() => import('./containers/LoginContainer'));
 const LogoutContainer = lazy(() => import('./containers/LogoutContainer'));
+
 const LoginPage = lazy(() => import('./pages/LoginPage'));
-const HomePage = lazy(() => import('./pages/HomePage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const SignupPage = lazy(() => import('./pages/SignupPage'));
+const HomePage = lazy(() => import('./pages/HomePage'));
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -36,14 +39,15 @@ const App = () => {
             />
             <Route
               exact
-              path="/home"
+              path="/profile"
               render={() => (
                 <LoginContainer>
-                  <HomePage />
+                  <ProfilePage />
                 </LoginContainer>
               )}
             />
             <Route exact path="/signup" component={SignupPage} />
+            <Route exact path="/" component={HomePage} />
           </Suspense>
         </Switch>
       </Router>
