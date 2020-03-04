@@ -28,7 +28,7 @@ const checkUserAuthStateAction = () => (dispatch) => {
 const loginAction = (email, password) => async (dispatch) => {
   const { data } = await login(email, password);
   const { message, user_data: userData } = data;
-  if(message === 'Success'){
+  if (message === 'Success') {
     dispatch(updateUserDataAction(LOGIN_STATE, userData));
     return;
   }

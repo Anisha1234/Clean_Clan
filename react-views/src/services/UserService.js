@@ -8,7 +8,7 @@ const checkLoginState = async () => axios.get(
       only_auth_check: true,
     },
     timeout: 4500,
-    withCredentials: true
+    withCredentials: true,
   },
 );
 

@@ -54,7 +54,8 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie:{
-    maxAge: 3600000
+    maxAge: 3600000,
+    domain: "http://localhost:5000"
   }
 }))
 
