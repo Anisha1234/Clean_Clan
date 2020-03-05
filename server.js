@@ -84,8 +84,6 @@ app.use('/report',report);
 
 app.get('/auth-check', function(req, res){
   //console.log(req);
-  console.log(req.sessionID);
-  console.log(req.session);
   if(req.session && req.session.email){
     let userData = {
       name: req.session.name, 

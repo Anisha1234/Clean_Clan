@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginAction } from '../actions/UserAction';
-
-const validateEmail = (inputEmail) => {
-  const emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-  return emailReg.test(inputEmail);
-};
+import { validateEmail } from '../utilities/helpers';
 
 
 const LoginFormComponent = () => {
