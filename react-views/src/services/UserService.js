@@ -16,10 +16,17 @@ const login = async (email, password) => axios.post(
   `${serverRoot}/login`,
   { email, password },
   {
-    withCredentials: true
-  }
+    withCredentials: true,
+  },
+);
+
+const logout = async () => axios.get(
+  `${serverRoot}/logout`,
+  {
+    withCredentials: true,
+  },
 );
 
 export {
-  checkLoginState, login,
+  checkLoginState, login, logout,
 };

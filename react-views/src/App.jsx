@@ -1,5 +1,4 @@
 import React, { lazy, Suspense, useEffect } from 'react';
-import { hot } from 'react-hot-loader';
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,10 +6,9 @@ import {
 } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import LoaderComponent from './components/LoaderComponent';
+import LoginContainer from './containers/LoginContainer';
+import LogoutContainer from './containers/LogoutContainer';
 import { checkUserAuthStateAction } from './actions/UserAction';
-
-const LoginContainer = lazy(() => import('./containers/LoginContainer'));
-const LogoutContainer = lazy(() => import('./containers/LogoutContainer'));
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -46,7 +44,15 @@ const App = () => {
                 </LoginContainer>
               )}
             />
-            <Route exact path="/signup" component={SignupPage} />
+            <Route
+              exact
+              path="/signup"
+              render={() => (
+                <LogoutContainer>
+                  <SignupPage />
+                </LogoutContainer>
+              )}
+            />
             <Route exact path="/" component={HomePage} />
           </Suspense>
         </Switch>
@@ -55,4 +61,4 @@ const App = () => {
   );
 };
 
-export default hot(module)(App);
+export default App;

@@ -1,7 +1,17 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { logoutAction } from '../actions/UserAction';
 
-const LogoutButtonComponent = () => (
-  <button type="button">Log out bitches</button>
-);
+const LogoutButtonComponent = () => {
+  const dispatch = useDispatch();
+  return (
+    <button
+      type="button"
+      onClick={() => dispatch(logoutAction())}
+    >
+      Log out bitches
+    </button>
+  );
+};
 
 export default LogoutButtonComponent;

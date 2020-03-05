@@ -1,7 +1,7 @@
 import {
   LOGIN_STATE, LOGOUT_STATE, PENDING_STATE,
 } from '../utilities/constants';
-import { checkLoginState, login } from '../services/UserService';
+import { checkLoginState, login, logout } from '../services/UserService';
 
 // authState only recieves 3 value: PENDING_STATE, LOGIN_STATE, LOGOUT_STATE
 const updateUserDataAction = (authState, userData = null) => ({
@@ -37,7 +37,13 @@ const loginAction = (email, password) => async (dispatch) => {
 };
 
 const logoutAction = () => (dispatch) => {
-
+  logout()
+    .then(() => {
+      dispatch(updateUserDataAction(LOGOUT_STATE, null));
+    })
+    .catch(() => {
+      dispatch(updateUserDataAction(LOGOUT_STATE, null));
+    });
 };
 
 export {

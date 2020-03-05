@@ -14,8 +14,13 @@ router.get('/',function(req,res){
 });
 
 router.get('/logout',function(req,res){
-	req.session.destroy();
-	res.sendFile(path.join(__dirname,'../logout.html'));
+	req.session.destroy(function(error){
+		if(error){
+			return res.status(500).send("Internal Server Error");
+		}
+		return res.status(200).send("Success");
+	});
+//	res.sendFile(path.join(__dirname,'../logout.html'));
 })
 // router.get('/profile',auth,function(req,res,next){
 // 	if(req.session && req.session.email){

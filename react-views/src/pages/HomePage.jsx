@@ -22,7 +22,12 @@ const HomePage = () => {
         <br />
         <LogoutButtonComponent />
         <br />
-        <Link to="/signup">Create new account</Link>
+        {authState === LOGIN_STATE
+          ? null
+          : (
+            <Link to="/signup">Create new account</Link>
+          )}
+
       </div>
     </div>
   );
