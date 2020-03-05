@@ -14,6 +14,7 @@ const SignupFormComponent = () => {
   const [name, setName] = useState(undefined);
   const [email, setEmail] = useState(undefined);
   const [city, setCity] = useState(givenCity[0]);
+  const [details, setDetails] = useState(undefined);
   const [password, setPassword] = useState(undefined);
   const [signupMessage, setSignupMessage] = useState(undefined);
   const history = useHistory();
@@ -22,7 +23,7 @@ const SignupFormComponent = () => {
     if (!validateEmail(email)) {
       setSignupMessage('Invalid email');
     }
-    signup(name, email, city, password)
+    signup(name, email, details, city, password)
       .then(({ data: message }) => {
         // if sign up successfully, auto redirect to login
         if (message === 'ok') {
@@ -61,6 +62,16 @@ const SignupFormComponent = () => {
           name="email"
           onChange={(e) => setEmail(e.target.value)}
           placeholder="example@gmail.com"
+          required
+        />
+      </label>
+      <br />
+      <label htmlFor="user-details">
+        Description
+        <textarea
+          name="user-details"
+          onChange={(e) => setDetails(e.target.value)}
+          placeholder="Describe about yourself..."
           required
         />
       </label>

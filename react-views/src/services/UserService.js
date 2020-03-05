@@ -27,10 +27,10 @@ const logout = async () => axios.get(
   },
 );
 
-const signup = async (name, email, city, password) => axios.post(
+const signup = async (name, email, details, city, password) => axios.post(
   `${serverRoot}/signup`,
   {
-    name, email, city, password,
+    name, email, user_details: details, city, password,
   },
 );
 
