@@ -35,8 +35,13 @@ router.post('/',function(req,res){
 				req.session.userid = user._id;
 				req.session.userimage=user.image;
 				req.session.name=user.name;
-				console.log(req.session.userid + " is the id");
-				console.log(req.session.userimage + " is the image");
+				console.log(req.session);
+				console.log(req.sessionID);
+				req.session.save(function(error){
+					console.log(error);
+				});
+			//	console.log(req.session.userid + " is the id");
+			//	console.log(req.session.userimage + " is the image");
 				let userData={
 					email: user.email,
 					userid: user._id,

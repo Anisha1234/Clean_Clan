@@ -21,7 +21,7 @@ const LoginFormComponent = () => {
     }
     // submit data
     dispatch(loginAction(email, password))
-      .catch((errorMessage) => setLoginMessage(errorMessage));
+      .catch((loginError) => setLoginMessage(loginError.toString()));
   };
   return (
     <form onSubmit={submitLoginData}>

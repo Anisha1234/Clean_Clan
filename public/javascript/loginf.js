@@ -16,7 +16,8 @@ $(document).ready(function() {
             password: $('#passwordconf').val()
           }).done(function(data) {
             console.log(data);
-            if (data == "Not registered") {
+            var loginMessage = data.message;
+            if (loginMessage == "Not registered") {
               $(n).siblings('.msg').empty().append("<strong>Not Registered !</strong> </br></br><strong>You will be redirected to signup page shortly</strong>");
               $(n).siblings('.msg').addClass("alert alert-danger alert-dismissible");
               setTimeout(function() {
@@ -24,15 +25,14 @@ $(document).ready(function() {
                 window.location.href = s.substr(0, s.lastIndexOf('/')) + '/signup';
               }, 2500);
             }
-            if (data[0] == "Success") {
+            if (loginMessage == "Success") {
               s = document.URL;
               window.location.href = s.substr(0, s.lastIndexOf('/')) + '/profile';
             }
-            if (data == "wrong password") {
+            if (loginMessage == "wrong password") {
               $(n).siblings('.msg').empty().append("<strong>Wrong Password</strong>");
               $(n).siblings('.msg').addClass("alert alert-danger alert-dismissible");
             }
-
           })
           .fail(function(xhr, status, error) {
             console.log(error);

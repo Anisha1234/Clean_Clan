@@ -15,6 +15,9 @@ const checkLoginState = async () => axios.get(
 const login = async (email, password) => axios.post(
   `${serverRoot}/login`,
   { email, password },
+  {
+    withCredentials: true
+  }
 );
 
 export {

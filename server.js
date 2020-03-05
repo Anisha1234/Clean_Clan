@@ -28,6 +28,15 @@ db.once('open', function () {
 var app = express();
 var port = 3000;
 
+//development cors
+app.use(function(req, res, next){
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Origin", ["http://localhost:5000"]);
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
+
 //route our app
 var router = require('./app/routes');
 var signup = require('./app/signup');
@@ -48,29 +57,19 @@ app.use(body_parser.json({limit:'10mb'}));
 app.use(body_parser.urlencoded({extended:true}));
 // app.use(formidable());
 
-
 app.use(session({
   secret: 'tcshack',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie:{
     maxAge: 3600000,
-    domain: "http://localhost:5000"
+    path: "/"
   }
-}))
+}));
 
 //setup ejs
 app.set('view engine','ejs');
 app.set('views',__dirname+'/views')
-
-//development cors
-app.use(function(req, res, next){
-  res.header("Access-Control-Allow-Origin", ["http://localhost:5000"]);
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Credentials", true);
-  next();
-});
 
 //express middlewire which have access to all our routes
 app.use('/',router);
@@ -84,6 +83,8 @@ app.use('/issues',issues);
 app.use('/report',report);
 
 app.get('/auth-check', function(req, res){
+  //console.log(req);
+  console.log(req.sessionID);
   console.log(req.session);
   if(req.session && req.session.email){
     let userData = {
