@@ -4,24 +4,28 @@ import {
 import { checkLoginState, login, logout } from '../services/UserService';
 
 // authState only recieves 3 value: PENDING_STATE, LOGIN_STATE, LOGOUT_STATE
-const updateUserDataAction = (authState, userData = null) => ({
+const updateUserAuthStateAction = (authState) => ({
   type: authState,
+});
+
+const updateUserDataAction = (userData) => ({
   user: userData,
 });
 
 const checkUserAuthStateAction = () => (dispatch) => {
-  dispatch(updateUserDataAction(PENDING_STATE));
+  dispatch(updateUserAuthStateAction(PENDING_STATE));
   checkLoginState()
     .then(({ data }) => {
       const { is_login: isLogin, user_data: userData } = data;
       if (isLogin) {
-        dispatch(updateUserDataAction(LOGIN_STATE, userData));
+        dispatch(updateUserAuthStateAction(LOGIN_STATE));
+        dispatch(updateUserDataAction(userData));
         return;
       }
-      dispatch(updateUserDataAction(LOGOUT_STATE));
+      dispatch(updateUserAuthStateAction(LOGOUT_STATE));
     })
     .catch(() => {
-      dispatch(updateUserDataAction(LOGOUT_STATE));
+      dispatch(updateUserAuthStateAction(LOGOUT_STATE));
     });
 };
 
@@ -29,20 +33,21 @@ const loginAction = (email, password) => async (dispatch) => {
   const { data } = await login(email, password);
   const { message, user_data: userData } = data;
   if (message === 'Success') {
-    dispatch(updateUserDataAction(LOGIN_STATE, userData));
+    dispatch(updateUserAuthStateAction(LOGIN_STATE));
+    dispatch(updateUserDataAction(userData));
     return;
   }
-  dispatch(updateUserDataAction(LOGOUT_STATE, userData));
+  dispatch(updateUserAuthStateAction(LOGOUT_STATE));
   throw message;
 };
 
 const logoutAction = () => (dispatch) => {
   logout()
     .then(() => {
-      dispatch(updateUserDataAction(LOGOUT_STATE, null));
+      dispatch(updateUserAuthStateAction(LOGOUT_STATE));
     })
     .catch(() => {
-      dispatch(updateUserDataAction(LOGOUT_STATE, null));
+      dispatch(updateUserAuthStateAction(LOGOUT_STATE));
     });
 };
 

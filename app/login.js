@@ -37,8 +37,11 @@ router.post('/',function(req,res){
 				req.session.name=user.name;
 				let userData={
 					email: user.email,
-					userid: user._id,
-					name: user.name
+					userid: user._id.toString(),
+					name: user.name,
+					city: user.city,
+					like_count: user.like_count,
+					user_details: user.user_details,
 				};
 				return res.status(200).send({
 					message: "Success",

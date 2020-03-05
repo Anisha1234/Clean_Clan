@@ -29,3 +29,23 @@ router.get('/', auth, function(req, res, next) {
   });
 
 });
+
+//only for react dev test
+router.get('/posts', function(req, res) {
+  if(req.session && req.session.email){
+    let queryFilter={};
+    let userID = req.params['user_id'];
+    if(userID){
+      queryFilter.author = userID;
+    }
+    Post.find(queryFilter, function(err, posts) {
+      if(err){
+        return res.status(500).send("Internal server error");
+      }
+      return res.status(200).send(posts);
+    });
+  }
+  else{
+    return res.status(401).send("Request not allowed");
+  }
+});
