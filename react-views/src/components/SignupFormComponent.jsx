@@ -41,7 +41,6 @@ const SignupFormComponent = () => {
   };
   return (
     <form
-      encType="multipart/form-data"
       onSubmit={submitSignupData}
     >
       <label htmlFor="name">
