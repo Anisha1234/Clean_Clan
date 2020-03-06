@@ -13,8 +13,7 @@ const LoginContainer = ({ children }) => {
     case LOGOUT_STATE:
       return (
         <Redirect to={{
-          pathname: '/login',
-          state: { from: location },
+          pathname: '/',
         }}
         />
       );
