@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import LoaderComponent from '../components/LoaderComponent';
 import { PENDING_STATE, LOGIN_STATE } from '../utilities/constants';

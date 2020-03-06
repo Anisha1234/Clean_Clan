@@ -10,10 +10,14 @@ const getPosts = async (userID = '') => axios.get(
   },
 );
 
-const uploadPost = () => {
-
-};
+const publishPost = (data) => axios.post(
+  `${serverRoot}/post/create`,
+  data,
+  {
+    withCredentials: true,
+  },
+);
 
 export {
-  getPosts, uploadPost,
+  getPosts, publishPost,
 };

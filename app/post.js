@@ -45,7 +45,7 @@ router.post('/create', auth, upload.array('images', 12), function(req, res, next
   ///FOR Challenge
   if(req.body.type_post=="Challenge"){
       if (req.files.length > 1) {
-        res.send("Exceeds file limit");
+        res.statu(502).send("Exceeds file limit");
       } else {
         console.log(req.files[0].path);
         if (!req.body.description || !req.body.location || !req.files[0].path
@@ -69,7 +69,7 @@ router.post('/create', auth, upload.array('images', 12), function(req, res, next
           new_post.save(function(err, post) {
             if (err) {
               console.log(err);
-              res.send(err)
+              return res.status(500).send(err);
             } else {
               User.findByIdAndUpdate(req.session.userid, {
                 $inc: {
@@ -78,8 +78,10 @@ router.post('/create', auth, upload.array('images', 12), function(req, res, next
               }, {
                    new: true
               }, function (err, user) {
-                  if(err) res.send(err);
-                  res.send("Post saved succesfully");
+                  if(err){
+                    return res.status(500).send(err);
+                  }
+                  return res.status(200).send("Post saved succesfully");
               });
             }
           });
@@ -91,7 +93,7 @@ router.post('/create', auth, upload.array('images', 12), function(req, res, next
 ////FOR SOLUTION
   else{
     if (req.files.length > 2) {
-      res.send("Exceeds file limit");
+      res.status(502).send("Exceeds file limit");
     } else {
       if (!req.body.description || !req.body.location || !req.files[0].path ||
         !req.files[1].path || !req.body.stake_holders || !req.body.heading) {
@@ -114,11 +116,10 @@ router.post('/create', auth, upload.array('images', 12), function(req, res, next
         new_post.save(function(err, post) {
           if (err) {
             console.log(err);
-            res.send(err);
+            res.status(500).send(err);
           } else {
-                res.send("Post saved succesfully");
+              res.status(200).send("Post saved succesfully");
             }
-
         });
       }
     }

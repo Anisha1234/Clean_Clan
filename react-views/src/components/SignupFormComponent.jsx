@@ -13,7 +13,7 @@ const givenCity = [
 const SignupFormComponent = () => {
   const [name, setName] = useState(undefined);
   const [email, setEmail] = useState(undefined);
-  const [city, setCity] = useState(givenCity[0]);
+  const [city, setCity] = useState(givenCity[0].value);
   const [details, setDetails] = useState(undefined);
   const [password, setPassword] = useState(undefined);
   const [signupMessage, setSignupMessage] = useState(undefined);

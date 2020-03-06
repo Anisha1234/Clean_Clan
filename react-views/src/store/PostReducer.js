@@ -1,24 +1,27 @@
 import {
-  GET_POSTS_PENDING,
+  POST_ACTION_PENDING,
   GET_MY_POSTS_DONE,
   GET_ALL_POSTS_DONE,
+  POST_ACTION_DONE,
 } from '../utilities/constants';
 
 const initialState = {
-  status: null,
-  my_posts: null,
-  all_posts: null,
+  status: POST_ACTION_DONE,
+  my_posts: [],
+  all_posts: [],
 };
 
 const PostReducer = (state = initialState, action) => {
-  const { type, data } = action;
+  // posts here must be an array
+  const { type, posts } = action;
   switch (type) {
-    case GET_POSTS_PENDING:
-      return { ...state, status: GET_POSTS_PENDING };
+    case POST_ACTION_PENDING:
+    case POST_ACTION_DONE:
+      return { ...state, status: type };
     case GET_MY_POSTS_DONE:
-      return { ...state, status: 'done', my_posts: data };
+      return { ...state, my_posts: posts };
     case GET_ALL_POSTS_DONE:
-      return { ...state, status: 'done', all_posts: data };
+      return { ...state, all_posts: posts };
     default:
       return state;
   }
