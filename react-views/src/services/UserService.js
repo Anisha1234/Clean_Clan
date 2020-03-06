@@ -34,6 +34,13 @@ const signup = async (name, email, details, city, password) => axios.post(
   },
 );
 
+const getUserProfile = async () => axios.get(
+  `${serverRoot}/profile/my-profile`,
+  {
+    withCredentials: true,
+  },
+);
+
 export {
-  checkLoginState, login, logout, signup,
+  checkLoginState, login, logout, signup, getUserProfile,
 };

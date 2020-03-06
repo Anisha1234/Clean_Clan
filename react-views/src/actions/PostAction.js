@@ -20,7 +20,7 @@ const getMyPostsAction = () => async (dispatch, getState) => {
   }
 };
 
-const getAllPostsAction = ()=> async(dispatch)=>{
+const getAllPostsAction = () => async (dispatch) => {
   try {
     dispatch(updatePostsAction(GET_POSTS_PENDING, null));
     const posts = await getPosts();
@@ -32,5 +32,5 @@ const getAllPostsAction = ()=> async(dispatch)=>{
 };
 
 export {
-  getAllPostsAction, getMyPostsAction
-}
+  getAllPostsAction, getMyPostsAction,
+};

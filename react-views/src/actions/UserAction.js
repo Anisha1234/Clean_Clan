@@ -1,7 +1,9 @@
 import {
-  LOGIN_STATE, LOGOUT_STATE, PENDING_STATE,
+  LOGIN_STATE, LOGOUT_STATE, PENDING_STATE, GET_USER_DATA,
 } from '../utilities/constants';
-import { checkLoginState, login, logout } from '../services/UserService';
+import {
+  checkLoginState, login, logout, getUserProfile,
+} from '../services/UserService';
 
 // authState only recieves 3 value: PENDING_STATE, LOGIN_STATE, LOGOUT_STATE
 const updateUserAuthStateAction = (authState) => ({
@@ -9,6 +11,7 @@ const updateUserAuthStateAction = (authState) => ({
 });
 
 const updateUserDataAction = (userData) => ({
+  type: GET_USER_DATA,
   user: userData,
 });
 
@@ -51,6 +54,16 @@ const logoutAction = () => (dispatch) => {
     });
 };
 
+const getUserProfileAction = () => (dispatch) => {
+  getUserProfile()
+    .then(({ data: userData }) => {
+      dispatch(updateUserDataAction(userData));
+    })
+    .catch(() => {
+      dispatch(updateUserAuthStateAction(LOGOUT_STATE));
+    });
+};
+
 export {
-  checkUserAuthStateAction, loginAction, logoutAction,
+  checkUserAuthStateAction, loginAction, logoutAction, getUserProfileAction,
 };

@@ -48,6 +48,26 @@ router.get('/', auth, function(req, res, next) {
 
 })
 
+//for react dev only
+router.get("/my-profile", function(req, res){
+  if(req.session && req.session.email){
+    User.findOne({
+      email: req.session.email
+    }, function(getUserError, user){
+      if(getUserError){
+        return res.status(500).send("Internal server error");
+      }
+      return res.status(200).send({
+        city: user.city,
+        user_details: user.user_details,
+        like_count: user.like_count
+      });
+    });
+  }
+  else{
+    res.status(401).send("Unauthorized request");
+  }
+});
 
 router.get('/:userId', auth, function(req, res, next) {
   if (req.session && req.session.email) {
