@@ -7,6 +7,7 @@ const getPosts = async (userID = '') => axios.get(
     params: {
       user_id: userID,
     },
+    withCredentials: true,
   },
 );
 

@@ -20,7 +20,7 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(checkUserAuthStateAction());
-  });
+  }, [dispatch]);
   return (
     <div>
       <Router>

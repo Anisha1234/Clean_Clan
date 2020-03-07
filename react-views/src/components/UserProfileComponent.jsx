@@ -12,7 +12,7 @@ const UserProfileComponent = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserProfileAction());
-  });
+  }, [dispatch]);
 
   return (
     <div>

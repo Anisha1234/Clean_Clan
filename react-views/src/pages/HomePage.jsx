@@ -11,16 +11,19 @@ const HomePage = () => {
     <div>
       <p><strong>Home page of Clean Clan India</strong></p>
       <div>
-        {authState === LOGIN_STATE ? (
-          <Link to="/profile">
-            Continue with
-            {user.name}
-          </Link>
+        {user ? (
+          <>
+            <Link to="/profile">
+              Continue with
+              {user.name}
+            </Link>
+            <br />
+            <LogoutButtonComponent />
+          </>
         ) : (
           <Link to="/login">Login</Link>
         )}
         <br />
-        <LogoutButtonComponent />
         <br />
         {authState === LOGIN_STATE
           ? null

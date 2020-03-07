@@ -42,7 +42,12 @@ router.get('/posts', function(req, res) {
       if(err){
         return res.status(500).send("Internal server error");
       }
-      return res.status(200).send(posts);
+      let postData = Array.from(posts);
+      for(let i=0; i< posts.length; ++i){
+        postData[i].id = posts[i]['_id'];
+      }
+      console.log(postData);
+      return res.status(200).send(postData);
     });
   }
   else{

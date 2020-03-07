@@ -7,12 +7,15 @@ import { getPosts, publishPost } from '../services/PostService';
 // only two types of status: POST_ACTION_DONE and POST_ACTION_PENDING allowed
 const updatePostStatusAction = (type) => ({ type });
 // this one only update the post data, not the status
-const updatePostDataAction = (type, posts) => ({ type, posts });
+const updatePostDataAction = (type, posts) => {
+  posts.reverse();
+  return { type, posts };
+};
 
 const getMyPostsAction = () => async (dispatch, getState) => {
   try {
     dispatch(updatePostStatusAction(POST_ACTION_PENDING));
-    const currentUserID = getState().user.userid;
+    const currentUserID = getState().user.data.userid;
     if (!currentUserID) {
       dispatch(updatePostStatusAction(POST_ACTION_DONE));
       throw new Error("Can't get your posts. Please reload to resolve the issue");
@@ -22,7 +25,7 @@ const getMyPostsAction = () => async (dispatch, getState) => {
     dispatch(updatePostDataAction(GET_MY_POSTS_DONE, posts));
   } catch (e) {
     dispatch(updatePostStatusAction(POST_ACTION_DONE));
-    dispatch(updatePostDataAction(GET_MY_POSTS_DONE, null));
+    dispatch(updatePostDataAction(GET_MY_POSTS_DONE, []));
     throw e;
   }
 };
@@ -35,7 +38,7 @@ const getAllPostsAction = () => async (dispatch) => {
     dispatch(updatePostDataAction(GET_ALL_POSTS_DONE, posts));
   } catch (e) {
     dispatch(updatePostStatusAction(POST_ACTION_DONE));
-    dispatch(updatePostDataAction(GET_ALL_POSTS_DONE, null));
+    dispatch(updatePostDataAction(GET_ALL_POSTS_DONE, []));
     throw e;
   }
 };
