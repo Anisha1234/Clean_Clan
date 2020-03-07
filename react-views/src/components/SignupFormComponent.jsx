@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, {
+  useState, useRef, useEffect, useCallback,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import { validateEmail } from '../utilities/helpers';
 import { signup } from '../services/UserService';
@@ -11,6 +13,7 @@ const givenCity = [
 ];
 
 const SignupFormComponent = () => {
+  const isUnmounted = useRef(false);
   const [name, setName] = useState(undefined);
   const [email, setEmail] = useState(undefined);
   const [city, setCity] = useState(givenCity[0].value);
@@ -18,7 +21,12 @@ const SignupFormComponent = () => {
   const [password, setPassword] = useState(undefined);
   const [signupMessage, setSignupMessage] = useState(undefined);
   const history = useHistory();
-  const submitSignupData = (e) => {
+
+  useEffect(() => () => {
+    isUnmounted.current = true;
+  }, []);
+
+  const submitSignupData = useCallback((e) => {
     e.preventDefault();
     if (!validateEmail(email)) {
       setSignupMessage('Invalid email');
@@ -26,20 +34,26 @@ const SignupFormComponent = () => {
     signup(name, email, details, city, password)
       .then(({ data: message }) => {
         // if sign up successfully, auto redirect to login
+        let displayMessage = message;
         if (message === 'ok') {
-          setSignupMessage(`Account is succesfully registered. 
-            You will be direct to login page shortly`);
+          // change the message for user to understand
+          displayMessage = `Account is succesfully registered. 
+          You will be direct to login page shortly`;
           setTimeout(() => {
             history.push('/login');
           }, 2500);
-          return;
         }
-        setSignupMessage(message);
+        if (!isUnmounted.current) {
+          setSignupMessage(displayMessage);
+        }
       })
-      .catch((error) => {
-        setSignupMessage(error.toString());
+      .catch((signUpError) => {
+        if (!isUnmounted.current) {
+          setSignupMessage(signUpError.toString());
+        }
       });
-  };
+  }, [isUnmounted, history, name, email, details, city, password]);
+
   return (
     <form
       onSubmit={submitSignupData}

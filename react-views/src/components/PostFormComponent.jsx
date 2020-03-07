@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, {
+  useState, useRef, useEffect, useCallback,
+} from 'react';
 import { useDispatch } from 'react-redux';
 import { publishPostAction } from '../actions/PostAction';
 import defaultImg from '../assets/media/ninja.png';
@@ -18,6 +20,7 @@ const initiateUploadedImages = (size) => (
 );
 
 const PostFormComponent = () => {
+  const isUnmounted = useRef(false);
   const [postLocation, setPostLocation] = useState(undefined);
   const [postType, setPostType] = useState('Challenge');
   const [postHeading, setPostHeading] = useState(undefined);
@@ -28,24 +31,34 @@ const PostFormComponent = () => {
   );
   const [publishPostError, setPublishPostError] = useState(undefined);
   const dispatch = useDispatch();
-  const submitNewPost = (e) => {
+
+  useEffect(() => () => {
+    isUnmounted.current = true;
+  }, []);
+
+  const submitNewPost = useCallback((e) => {
     e.preventDefault();
     dispatch(publishPostAction(
       postLocation, postType, postHeading, postDescription, stakeholders, uploadedImages,
     ))
       .then(() => {
+        if (isUnmounted.current) return;
         window.location.reload();
       })
       .catch((error) => {
+        if (isUnmounted.current) return;
         setPublishPostError(error.toString());
       });
-  };
+  }, [
+    isUnmounted, dispatch,
+    postLocation, postType, postDescription, postHeading, stakeholders, uploadedImages,
+  ]);
   // change the post type => resize the uploaded images array
-  const updateSelectedPostType = (chosenType) => {
+  const updateSelectedPostType = useCallback((chosenType) => {
     // resize uploaded images array first
     const newUploadedImages = initiateUploadedImages(postTypeImageCount[chosenType]);
     for (let i = 0; i < uploadedImages.length; i += 1) {
-      // if the image element fits the new uploaded array => copy
+      // if the image element fits the new array => copy into the new array
       if (i < newUploadedImages.length) {
         newUploadedImages[i] = { ...uploadedImages[i] };
       }
@@ -56,8 +69,10 @@ const PostFormComponent = () => {
     setUploadedImages(newUploadedImages);
     // change the post type
     setPostType(chosenType);
-  };
-  const handleUploadImage = (imageIndex, imageFile) => {
+  }, [uploadedImages]);
+
+
+  const handleUploadImage = useCallback((imageIndex, imageFile) => {
     if (imageIndex < postTypeImageCount[postType]) {
       setUploadedImages(uploadedImages.map(
         (currentImage, index) => {
@@ -71,7 +86,7 @@ const PostFormComponent = () => {
         },
       ));
     }
-  };
+  }, [uploadedImages, postType]);
   return (
     <form
       encType="multipart/form-data"

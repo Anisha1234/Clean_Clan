@@ -12,15 +12,15 @@ const ProfilePage = () => {
   const myPosts = useSelector((state) => state.posts.my_posts);
   const dispatch = useDispatch();
   useEffect(() => {
-    let componentUmounted = false;
+    let isUmounted = false;
     dispatch(getMyPostsAction())
       .catch((error) => {
-        if (!componentUmounted) {
+        if (!isUmounted) {
           setGetMyPostError(error.toString());
         }
       });
     return () => {
-      componentUmounted = true;
+      isUmounted = true;
     };
   }, [dispatch]);
 
@@ -39,6 +39,12 @@ const ProfilePage = () => {
         {myPosts.map((post) => (
           <div key={post.id}>
             <h4>{post.heading}</h4>
+            <img src={`http://localhost:3000/${post.image_before}`} alt="before" />
+            {
+              post.image_after
+                ? <img src={`http://localhost:3000/${post.image_after}`} alt="after" />
+                : null
+            }
           </div>
         ))}
         <p><strong>{getMyPostError}</strong></p>

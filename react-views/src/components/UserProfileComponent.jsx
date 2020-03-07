@@ -4,11 +4,7 @@ import { getUserProfileAction } from '../actions/UserAction';
 
 
 const UserProfileComponent = () => {
-  const {
-    name, email, city,
-    user_details: userDetails,
-    like_count: likeCount,
-  } = useSelector((state) => state.user.data);
+  const currentUser = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserProfileAction());
@@ -19,25 +15,35 @@ const UserProfileComponent = () => {
       <p>
         <strong>My profile</strong>
       </p>
-      <div>
-        <p>{name}</p>
-        <p>
-          Reputation:
-          {(likeCount && typeof (likeCount) === 'number' ? likeCount * 10 : 0)}
-        </p>
-        <p>
-          Email:
-          {email}
-        </p>
-        <p>
-          Description:
-          {userDetails}
-        </p>
-        <p>
-          Current location:
-          {city}
-        </p>
-      </div>
+      <>
+        {
+        currentUser ? (
+          <div>
+            <p>{currentUser.name}</p>
+            <p>
+              Reputation:
+              {
+                currentUser.like_count
+                && typeof (currentUser.like_count) === 'number'
+                  ? currentUser.like_count * 10 : "Can't display your like count"
+              }
+            </p>
+            <p>
+              Email:
+              {currentUser.email}
+            </p>
+            <p>
+              Description:
+              {currentUser.user_details}
+            </p>
+            <p>
+              Current location:
+              {currentUser.city}
+            </p>
+          </div>
+        ) : "Can't display your profile, you may reload to fix the issue"
+      }
+      </>
     </div>
   );
 };
