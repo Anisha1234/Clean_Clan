@@ -2,6 +2,7 @@ import React, {
   useState, useRef, useEffect, useCallback,
 } from 'react';
 import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import { publishPostAction } from '../actions/PostAction';
 import defaultImg from '../assets/media/ninja.png';
 
@@ -19,10 +20,12 @@ const initiateUploadedImages = (size) => (
   }))
 );
 
-const PostFormComponent = () => {
+// type: intended post type (Challenge/Solution)
+// responsePostID: if type === Solution, then it could be solution to some responseID.
+const PostFormComponent = ({ type, responsePostID }) => {
   const isUnmounted = useRef(false);
   const [postLocation, setPostLocation] = useState(undefined);
-  const [postType, setPostType] = useState('Challenge');
+  const [postType, setPostType] = useState(type);
   const [postHeading, setPostHeading] = useState(undefined);
   const [postDescription, setPostDescription] = useState(undefined);
   const [stakeholders, setStakeholders] = useState(undefined);
@@ -38,9 +41,14 @@ const PostFormComponent = () => {
 
   const submitNewPost = useCallback((e) => {
     e.preventDefault();
-    dispatch(publishPostAction(
-      postLocation, postType, postHeading, postDescription, stakeholders, uploadedImages,
-    ))
+    dispatch(publishPostAction({
+      location: postLocation,
+      type_post: postType,
+      heading: postHeading,
+      description: postDescription,
+      stake_holders: stakeholders,
+      images: uploadedImages,
+    }, responsePostID))
       .then(() => {
         if (isUnmounted.current) return;
         window.location.reload();
@@ -50,11 +58,16 @@ const PostFormComponent = () => {
         setPublishPostError(error.toString());
       });
   }, [
-    isUnmounted, dispatch,
+    isUnmounted, dispatch, responsePostID,
     postLocation, postType, postDescription, postHeading, stakeholders, uploadedImages,
   ]);
-  // change the post type => resize the uploaded images array
+  // change the post type
   const updateSelectedPostType = useCallback((chosenType) => {
+    // if responsePostID exist, the chosenType must !== Challenge
+    if (responsePostID && chosenType === 'Challenge') {
+      setPublishPostError('You are proposing a solution to this challenge');
+      return;
+    }
     // resize uploaded images array first
     const newUploadedImages = initiateUploadedImages(postTypeImageCount[chosenType]);
     for (let i = 0; i < uploadedImages.length; i += 1) {
@@ -69,7 +82,7 @@ const PostFormComponent = () => {
     setUploadedImages(newUploadedImages);
     // change the post type
     setPostType(chosenType);
-  }, [uploadedImages]);
+  }, [uploadedImages, responsePostID]);
 
 
   const handleUploadImage = useCallback((imageIndex, imageFile) => {
@@ -110,12 +123,12 @@ const PostFormComponent = () => {
           value={postType}
           onChange={(e) => updateSelectedPostType(e.target.value)}
         >
-          {Object.keys(postTypeImageCount).map((type) => (
+          {Object.keys(postTypeImageCount).map((pType) => (
             <option
-              key={type}
-              value={type}
+              key={pType}
+              value={pType}
             >
-              {type}
+              {pType}
             </option>
           ))}
         </select>
@@ -143,7 +156,7 @@ const PostFormComponent = () => {
       </label>
       <br />
       <label htmlFor="post-stakeholders">
-        Title:
+        Stakeholders:
         <input
           name="post-stakeholders"
           type="text"
@@ -178,3 +191,13 @@ const PostFormComponent = () => {
 };
 
 export default PostFormComponent;
+
+PostFormComponent.propTypes = {
+  type: PropTypes.string,
+  responsePostID: PropTypes.string,
+};
+
+PostFormComponent.defaultProps = {
+  type: 'Solution',
+  responsePostID: '',
+};

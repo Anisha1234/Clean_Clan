@@ -4,6 +4,7 @@ import { getMyPostsAction } from '../actions/PostAction';
 import UserProfileComponent from '../components/UserProfileComponent';
 import NavBarComponent from '../components/NavBarComponent';
 import PostFormComponent from '../components/PostFormComponent';
+import PostComponent from '../components/PostComponent';
 
 
 const ProfilePage = () => {
@@ -23,7 +24,6 @@ const ProfilePage = () => {
       isUmounted = true;
     };
   }, [dispatch]);
-
   return (
     <>
       <NavBarComponent />
@@ -37,15 +37,17 @@ const ProfilePage = () => {
       {postFormPopUp ? <PostFormComponent /> : null}
       <div>
         {myPosts.map((post) => (
-          <div key={post.id}>
-            <h4>{post.heading}</h4>
-            <img src={`http://localhost:3000/${post.image_before}`} alt="before" />
-            {
-              post.image_after
-                ? <img src={`http://localhost:3000/${post.image_after}`} alt="after" />
-                : null
-            }
-          </div>
+          <PostComponent
+            key={post.id}
+            postType={post.type_post}
+            postID={post.id}
+            date={post.date}
+            heading={post.heading}
+            location={post.location}
+            description={post.description}
+            likeCount={post.like_count}
+            likes={post.likes}
+          />
         ))}
         <p><strong>{getMyPostError}</strong></p>
       </div>

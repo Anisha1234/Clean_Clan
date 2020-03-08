@@ -11,14 +11,30 @@ const getPosts = async (userID = '') => axios.get(
   },
 );
 
-const publishPost = (data) => axios.post(
-  `${serverRoot}/post/create`,
-  data,
-  {
-    withCredentials: true,
-  },
-);
+const publishPost = async (data, responsePostID) => {
+  const endPoint = (responsePostID ? `/${responsePostID}/solve` : '/post/create');
+  const postURL = new URL(endPoint, serverRoot);
+  return axios.post(
+    postURL,
+    data,
+    {
+      withCredentials: true,
+    },
+  );
+};
+
+const updatePostLike = async (postID, likeStatus) => {
+  const endPoint = likeStatus ? `/post/${postID}/like` : `/post/${postID}/unlike`;
+  const updateLikeURL = new URL(endPoint, serverRoot);
+  return axios.put(
+    updateLikeURL,
+    null,
+    {
+      withCredentials: true,
+    },
+  );
+};
 
 export {
-  getPosts, publishPost,
+  getPosts, publishPost, updatePostLike,
 };

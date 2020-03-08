@@ -197,6 +197,7 @@ router.post('/:postId/solve',auth,upload.array('images', 12),function(req,res,ne
   })
 })
 router.put('/:postId/like',auth,function(req,res,next){
+  console.log(req.session.userid);
   Post.findByIdAndUpdate(req.params.postId, {
     $push: {
      likes: req.session.userid
@@ -207,7 +208,7 @@ router.put('/:postId/like',auth,function(req,res,next){
   }, {
        new: true
   }, function (err, post) {
-      if(err) throw(err);
+      if(err) res.status(500).send(error);
       User.findByIdAndUpdate(post.author.toString(), {
         $inc: {
          "like_count":1
@@ -215,12 +216,12 @@ router.put('/:postId/like',auth,function(req,res,next){
       }, {
            new: true
       }, function (err, user) {
-          if(err) res.send(err);
-          res.send(user);
+        if(err){
+          return res.status(500).send(err);
+        }
+        return res.status(200).send("ok");
       });
   });
-
-
 
 
 
@@ -244,8 +245,10 @@ router.put('/:postId/unlike',auth,function(req,res,next){
     }, {
          new: true
     }, function (err, user) {
-        if(err) res.send(err);
-        res.send(user);
+      if(err){
+        return res.status(500).send(err);
+      }
+      return res.status(200).send("ok");
     });
 
 

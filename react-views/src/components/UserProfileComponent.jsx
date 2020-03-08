@@ -23,8 +23,7 @@ const UserProfileComponent = () => {
             <p>
               Reputation:
               {
-                currentUser.like_count
-                && typeof (currentUser.like_count) === 'number'
+                typeof (currentUser.like_count) === 'number'
                   ? currentUser.like_count * 10 : "Can't display your like count"
               }
             </p>
