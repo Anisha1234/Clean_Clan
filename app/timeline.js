@@ -34,7 +34,7 @@ router.get('/', auth, function(req, res, next) {
 router.get('/posts', function(req, res) {
   if(req.session && req.session.email){
     let queryFilter={};
-    let userID = req.params['user_id'];
+    let userID = req.query.user_id;
     if(userID){
       queryFilter.author = userID;
     }

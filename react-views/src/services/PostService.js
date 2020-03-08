@@ -12,7 +12,7 @@ const getPosts = async (userID = '') => axios.get(
 );
 
 const publishPost = async (data, responsePostID) => {
-  const endPoint = (responsePostID ? `/${responsePostID}/solve` : '/post/create');
+  const endPoint = (responsePostID ? `/post/${responsePostID}/solve` : '/post/create');
   const postURL = new URL(endPoint, serverRoot);
   return axios.post(
     postURL,

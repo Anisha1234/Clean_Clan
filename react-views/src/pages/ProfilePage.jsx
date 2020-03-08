@@ -41,6 +41,7 @@ const ProfilePage = () => {
             key={post.id}
             postType={post.type_post}
             postID={post.id}
+            author={post.author}
             date={post.date}
             heading={post.heading}
             location={post.location}

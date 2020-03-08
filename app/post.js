@@ -197,7 +197,6 @@ router.post('/:postId/solve',auth,upload.array('images', 12),function(req,res,ne
   })
 })
 router.put('/:postId/like',auth,function(req,res,next){
-  console.log(req.session.userid);
   Post.findByIdAndUpdate(req.params.postId, {
     $push: {
      likes: req.session.userid
