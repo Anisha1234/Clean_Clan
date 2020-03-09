@@ -1,38 +1,42 @@
 /**
- *
+ * @function - validate a string of email (just the format)
  * @param {string} inputEmail - input email to be verified
+ * @return {boolean}
  */
 const validateEmail = (inputEmail) => {
   const emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
   return emailReg.test(inputEmail);
 };
-
 /**
- *
- * @param {Array} posts - array of posts
- * @param {string} postID - current post id for like update
- * @param {string} userID - user id that update like on current post
- * @return {Array} - the altered array of posts after update
+ * @function - compare types of action in the form of string array
+ * @param {string[]} type1 - first type to compare - [...domains, "action_type"]
+ * @param {string[]} type2 - second type to compare
+ * @return {boolean}
  */
-const updatePostLikeLocally = (posts, postID, userID) => {
-  const resultPosts = [...posts];
-  const postIndex = resultPosts.findIndex((post) => post.id === postID);
-  if (postIndex === -1) {
-    return resultPosts;
+const isActionTypeEqual = (type1, type2) => {
+  if (type1.length !== type2.length) {
+    return false;
   }
-  const userLikeIndex = resultPosts[postIndex].likes.indexOf(userID);
-  if (userLikeIndex === -1) {
-    resultPosts[postIndex].likes.push(userID);
-    resultPosts[postIndex].like_count += 1;
-    return resultPosts;
+  for (let i = 0; i < type1.length; i += 1) {
+    if (type1[i] !== type2[i]) {
+      return false;
+    }
   }
-  // delete the user's like in the likes array of the post.
-  resultPosts[postIndex].likes.splice(userLikeIndex, 1);
-  resultPosts[postIndex].like_count -= 1;
-  return resultPosts;
+  return true;
+};
+/**
+ * @function:'domain1/domain2/.../actionType'=> [...domains], actionType
+ * @param {string} type
+ */
+const getDomainsAndActionType = (type) => {
+  const typeArr = type.split('/');
+  const actionType = typeArr.pop();
+  return {
+    domains: typeArr,
+    actionType,
+  };
 };
 
 export {
-  validateEmail,
-  updatePostLikeLocally,
+  validateEmail, isActionTypeEqual, getDomainsAndActionType,
 };

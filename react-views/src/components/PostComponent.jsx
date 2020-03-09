@@ -1,19 +1,21 @@
-import React, { useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { updatePostLikeAction } from '../actions/PostAction';
+import { updatePostLikeAction } from '../actions/Post';
 import PostFormComponent from './PostFormComponent';
 
 const PostComponent = ({
   postType, postID, author, date, heading, location, description, likeCount, likes,
 }) => {
   const currentUserID = useSelector((state) => state.user.data.userid);
-  const [haveUserLiked, setHaveUserLiked] = useState(likes.indexOf(currentUserID) > -1);
   const [isResponseFormOpen, setIsResponseFormOpen] = useState(false);
   const dispatch = useDispatch();
+  const haveUserLiked = useMemo(
+    () => likes.indexOf(currentUserID) > -1,
+    [likes, currentUserID],
+  );
   const updatePostLike = useCallback(() => {
     dispatch(updatePostLikeAction(postID, !haveUserLiked));
-    setHaveUserLiked(!haveUserLiked);
   }, [dispatch, haveUserLiked, postID]);
   return (
     <div>
@@ -22,6 +24,11 @@ const PostComponent = ({
       <p>{new Date(date).toLocaleString()}</p>
       <p>{location}</p>
       <p>{description}</p>
+      {
+        likes.map((likeID) => (
+          <p key={likeID}>{likeID}</p>
+        ))
+      }
       <div>
         <p>{likeCount}</p>
         <button
@@ -69,9 +76,9 @@ PostComponent.propTypes = {
   location: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   likeCount: PropTypes.number.isRequired,
-  likes: PropTypes.arrayOf(PropTypes.string),
+  likes: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-PostComponent.defaultProps = {
-  likes: [],
-};
+// PostComponent.defaultProps = {
+//   likes: [],
+// };

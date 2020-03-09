@@ -1,9 +1,9 @@
 import React, {
-  useState, useRef, useEffect, useCallback,
+  useState, useCallback, useEffect,
 } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { publishPostAction } from '../actions/PostAction';
+import { publishPostAction } from '../actions/Post';
 import defaultImg from '../assets/media/ninja.png';
 
 // 2 types of post, each post type corresponds to an exact amount of images
@@ -12,7 +12,10 @@ const postTypeImageCount = {
   Solution: 2,
 };
 
-// initiate the uploaded images array with give size
+/**
+ * @function- initiate the uploaded images array
+ * @param {number} size
+ */
 const initiateUploadedImages = (size) => (
   [...Array(size)].map(() => ({
     file: null,
@@ -23,7 +26,6 @@ const initiateUploadedImages = (size) => (
 // type: intended post type (Challenge/Solution)
 // responsePostID: if type === Solution, then it could be solution to some responseID.
 const PostFormComponent = ({ type, responsePostID }) => {
-  const isUnmounted = useRef(false);
   const [postLocation, setPostLocation] = useState(undefined);
   const [postType, setPostType] = useState(type);
   const [postHeading, setPostHeading] = useState(undefined);
@@ -34,38 +36,34 @@ const PostFormComponent = ({ type, responsePostID }) => {
   );
   const [publishPostError, setPublishPostError] = useState(undefined);
   const dispatch = useDispatch();
+  const publishMessage = useSelector((state) => state.posts.publish.message);
 
-  useEffect(() => () => {
-    isUnmounted.current = true;
-  }, []);
+  useEffect(() => {
+    setPublishPostError(publishMessage);
+  }, [publishMessage]);
 
   const submitNewPost = useCallback((e) => {
     e.preventDefault();
-    dispatch(publishPostAction({
-      location: postLocation,
-      type_post: postType,
-      heading: postHeading,
-      description: postDescription,
-      stake_holders: stakeholders,
-      images: uploadedImages,
-    }, responsePostID))
-      .then(() => {
-        if (isUnmounted.current) return;
-        window.location.reload();
-      })
-      .catch((error) => {
-        if (isUnmounted.current) return;
-        setPublishPostError(error.toString());
-      });
+    dispatch(
+      publishPostAction({
+        location: postLocation,
+        type_post: postType,
+        heading: postHeading,
+        description: postDescription,
+        stake_holders: stakeholders,
+        images: uploadedImages,
+      }, responsePostID),
+    );
   }, [
-    isUnmounted, dispatch, responsePostID,
+    dispatch, responsePostID,
     postLocation, postType, postDescription, postHeading, stakeholders, uploadedImages,
   ]);
-  // change the post type
+
+  // onChange the post type
   const updateSelectedPostType = useCallback((chosenType) => {
     // if responsePostID exist, the chosenType must !== Challenge
     if (responsePostID && chosenType === 'Challenge') {
-      setPublishPostError('You are proposing a solution to this challenge');
+      setPublishPostError('You need to propse a solution to this challenge');
       return;
     }
     // resize uploaded images array first
@@ -82,23 +80,24 @@ const PostFormComponent = ({ type, responsePostID }) => {
     setUploadedImages(newUploadedImages);
     // change the post type
     setPostType(chosenType);
-  }, [uploadedImages, responsePostID]);
+  }, [setPublishPostError, uploadedImages, responsePostID]);
 
-
+  // onChange upload image
   const handleUploadImage = useCallback((imageIndex, imageFile) => {
-    if (imageIndex < postTypeImageCount[postType]) {
-      setUploadedImages(uploadedImages.map(
-        (currentImage, index) => {
-          if (index !== imageIndex) return currentImage;
-          URL.revokeObjectURL(currentImage.url);
-          const url = URL.createObjectURL(imageFile);
-          return {
-            file: imageFile,
-            url,
-          };
-        },
-      ));
+    if (imageIndex >= postTypeImageCount[postType]) {
+      return;
     }
+    setUploadedImages(uploadedImages.map(
+      (currentImage, index) => {
+        if (index !== imageIndex) return currentImage;
+        URL.revokeObjectURL(currentImage.url);
+        const url = URL.createObjectURL(imageFile);
+        return {
+          file: imageFile,
+          url,
+        };
+      },
+    ));
   }, [uploadedImages, postType]);
   return (
     <form
@@ -186,7 +185,6 @@ const PostFormComponent = ({ type, responsePostID }) => {
       <br />
       <strong>{publishPostError}</strong>
     </form>
-
   );
 };
 

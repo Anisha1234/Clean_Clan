@@ -1,36 +1,31 @@
 import React, {
-  useState, useEffect, useRef, useCallback,
+  useState, useCallback, useEffect,
 } from 'react';
-import { useDispatch } from 'react-redux';
-import { loginAction } from '../actions/UserAction';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAction } from '../actions/User';
 import { validateEmail } from '../utilities/helpers';
 
 
 const LoginFormComponent = () => {
-  const isUnmounted = useRef(false);
   const [email, setEmail] = useState(undefined);
   const [password, setPassword] = useState(undefined);
   const [loginMessage, setLoginMessage] = useState(null);
+  const submitLoginFormMessage = useSelector((state) => state.user.auth.message);
   const dispatch = useDispatch();
 
-  useEffect(() => () => {
-    isUnmounted.current = true;
-  }, []);
-
+  useEffect(() => {
+    setLoginMessage(submitLoginFormMessage);
+  }, [submitLoginFormMessage]);
 
   const submitLoginData = useCallback((e) => {
     e.preventDefault();
     if (!validateEmail(email)) {
       setLoginMessage('invalid email');
+      return;
     }
     // submit data
-    dispatch(loginAction(email, password))
-      .catch((loginError) => {
-        if (!isUnmounted.current) {
-          setLoginMessage(loginError.toString());
-        }
-      });
-  }, [isUnmounted, dispatch, email, password]);
+    dispatch(loginAction(email, password));
+  }, [dispatch, email, password]);
   return (
     <form onSubmit={submitLoginData}>
       <label htmlFor="email">

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUserProfileAction } from '../actions/UserAction';
+import { getUserProfileAction } from '../actions/User';
 
 
 const UserProfileComponent = () => {

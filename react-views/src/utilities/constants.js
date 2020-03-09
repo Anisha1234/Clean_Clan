@@ -1,17 +1,20 @@
 const serverRoot = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
 
-const LOGIN_STATE = 'LOGIN';
-const LOGOUT_STATE = 'LOGOUT';
-const PENDING_STATE = 'AUTH_PENDING';
-const GET_USER_DATA = 'GET_USER_DATA';
+// common status for request
+const PENDING = 'PENDING';
+const DONE = 'DONE';
+const FAIL = 'FAIL';
 
-const POST_ACTION_PENDING = 'POST_ACTION_PENDING';
-const POST_ACTION_DONE = 'POST_ACTION_DONE';
-const GET_MY_POSTS_DONE = 'GET_MY_POSTS_DONE';
-const GET_ALL_POSTS_DONE = 'GET_ALL_POSTS_DONE';
+// common data update action types
+const UPDATE = 'UPDATE';
+const RESET = 'RESET';
+
+// common user auth statuses
+const LOGGED_IN = 'LOGGED_IN';
+const LOGGED_OUT = 'LOGGED_OUT';
 
 export {
   serverRoot,
-  LOGIN_STATE, LOGOUT_STATE, PENDING_STATE, GET_USER_DATA,
-  POST_ACTION_PENDING, POST_ACTION_DONE, GET_MY_POSTS_DONE, GET_ALL_POSTS_DONE,
+  PENDING, DONE, FAIL, UPDATE, RESET,
+  LOGGED_IN, LOGGED_OUT,
 };

@@ -6,9 +6,9 @@ import {
 } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import LoaderComponent from './components/LoaderComponent';
-import LoginContainer from './containers/LoginContainer';
-import LogoutContainer from './containers/LogoutContainer';
-import { checkUserAuthStateAction } from './actions/UserAction';
+import LoginGuard from './containers/LoginGuard';
+import LogoutGuard from './containers/LogoutGuard';
+import { checkUserAuthStateAction } from './actions/User';
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -30,27 +30,27 @@ const App = () => {
               exact
               path="/login"
               render={() => (
-                <LogoutContainer>
+                <LogoutGuard>
                   <LoginPage />
-                </LogoutContainer>
+                </LogoutGuard>
               )}
             />
             <Route
               exact
               path="/profile"
               render={() => (
-                <LoginContainer>
+                <LoginGuard>
                   <ProfilePage />
-                </LoginContainer>
+                </LoginGuard>
               )}
             />
             <Route
               exact
               path="/signup"
               render={() => (
-                <LogoutContainer>
+                <LogoutGuard>
                   <SignupPage />
-                </LogoutContainer>
+                </LogoutGuard>
               )}
             />
             <Route exact path="/" component={HomePage} />

@@ -1,35 +1,60 @@
-import {
-  PENDING_STATE, LOGIN_STATE, LOGOUT_STATE, GET_USER_DATA,
-} from '../utilities/constants';
+import { combineReducers } from 'redux';
+import { PENDING, UPDATE, RESET } from '../utilities/constants';
+import { isActionTypeEqual, getDomainsAndActionType } from '../utilities/helpers';
+
+// domain
+const USER_DOMAIN = 'user';
+const AUTH_DOMAIN = 'auth';
+const REGISTRATION_DOMAIN = 'registration';
+const USER_DATA_DOMAIN = 'data';
 
 const initialState = {
-  auth_state: PENDING_STATE,
-  data: null,
+  auth: {
+    status: PENDING,
+    message: '',
+  },
+  registration: {
+    status: '',
+    message: '',
+  },
+  data: {
+    user_id: '',
+    name: '',
+    like_count: 0,
+    user_details: '',
+    city: '',
+    email: '',
+  },
 };
 
-const UserReducer = (state = initialState, action) => {
-  const { type, user } = action;
-  switch (type) {
-    case PENDING_STATE:
-    case LOGOUT_STATE:
-      return {
-        ...state,
-        auth_state: type,
-        data: null,
-      };
-    case LOGIN_STATE:
-      return {
-        ...state,
-        auth_state: type,
-      };
-    case GET_USER_DATA:
-      return {
-        ...state,
-        data: { ...state.data, ...user },
-      };
+/**
+ * @function - create sub reducers for user
+ * @param {string} subDomain  - Either AUTH_DOMAIN, REGISTRATION_DOMAIN, USER_DATA_DOMAINA
+ * @return {function} - a reducer
+ */
+const createUserSubReducer = (subDomain) => (state = initialState[subDomain], action) => {
+  const { type, payload } = action;
+  const { domains, actionType } = getDomainsAndActionType(type);
+  if (!isActionTypeEqual([USER_DOMAIN, subDomain], domains)) return state;
+  switch (actionType) {
+    case UPDATE:
+      return { ...state, ...payload };
+    case RESET:
+      return { ...state, ...initialState[subDomain] };
     default:
       return state;
   }
 };
+
+const UserReducer = combineReducers({
+  auth: createUserSubReducer(AUTH_DOMAIN),
+  registration: createUserSubReducer(REGISTRATION_DOMAIN),
+  data: createUserSubReducer(USER_DATA_DOMAIN),
+});
+
+export {
+  USER_DOMAIN, AUTH_DOMAIN, REGISTRATION_DOMAIN, USER_DATA_DOMAIN,
+};
+
 
 export default UserReducer;

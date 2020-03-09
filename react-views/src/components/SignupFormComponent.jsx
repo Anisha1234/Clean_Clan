@@ -1,9 +1,11 @@
 import React, {
-  useState, useRef, useEffect, useCallback,
+  useState, useCallback, useEffect,
 } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { validateEmail } from '../utilities/helpers';
-import { signup } from '../services/UserService';
+import { signupAction } from '../actions/User';
+import { DONE } from '../utilities/constants';
 
 const givenCity = [
   { value: 'Bhubaneswar' },
@@ -13,46 +15,45 @@ const givenCity = [
 ];
 
 const SignupFormComponent = () => {
-  const isUnmounted = useRef(false);
   const [name, setName] = useState(undefined);
   const [email, setEmail] = useState(undefined);
   const [city, setCity] = useState(givenCity[0].value);
   const [details, setDetails] = useState(undefined);
   const [password, setPassword] = useState(undefined);
   const [signupMessage, setSignupMessage] = useState(undefined);
+  const submitSignupFormMessage = useSelector((state) => state.user.registration.message);
+  const signupStatus = useSelector((state) => state.user.registration.status);
   const history = useHistory();
+  const dispatch = useDispatch();
 
-  useEffect(() => () => {
-    isUnmounted.current = true;
-  }, []);
+  // update sign-up form submission message
+  useEffect(() => {
+    setSignupMessage(submitSignupFormMessage);
+  }, [submitSignupFormMessage]);
+
+  // if submit succesfully, redirect to login
+  useEffect(() => {
+    let timer;
+    if (signupStatus === DONE) {
+      timer = setTimeout(() => {
+        history.push('/login');
+      }, 2500);
+    }
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [history, signupStatus]);
 
   const submitSignupData = useCallback((e) => {
     e.preventDefault();
     if (!validateEmail(email)) {
       setSignupMessage('Invalid email');
+      return;
     }
-    signup(name, email, details, city, password)
-      .then(({ data: message }) => {
-        // if sign up successfully, auto redirect to login
-        let displayMessage = message;
-        if (message === 'ok') {
-          // change the message for user to understand
-          displayMessage = `Account is succesfully registered. 
-          You will be direct to login page shortly`;
-          setTimeout(() => {
-            history.push('/login');
-          }, 2500);
-        }
-        if (!isUnmounted.current) {
-          setSignupMessage(displayMessage);
-        }
-      })
-      .catch((signUpError) => {
-        if (!isUnmounted.current) {
-          setSignupMessage(signUpError.toString());
-        }
-      });
-  }, [isUnmounted, history, name, email, details, city, password]);
+    dispatch(signupAction(name, email, details, city, password));
+  }, [dispatch, name, email, details, city, password]);
 
   return (
     <form
