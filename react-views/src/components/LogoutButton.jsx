@@ -1,16 +1,19 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
 import { useDispatch } from 'react-redux';
 import { logoutAction } from '../actions/User';
 
 const LogoutButton = () => {
   const dispatch = useDispatch();
   return (
-    <button
+    <Button
       type="button"
       onClick={() => dispatch(logoutAction())}
+      variant="secondary"
+      block
     >
-      Log out bitches
-    </button>
+      SIGN OUT
+    </Button>
   );
 };
 

@@ -5,7 +5,7 @@ import {
   Route,
 } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import LoaderComponent from './components/LoaderComponent';
+import Loader from './components/Loader';
 import LoginGuard from './containers/LoginGuard';
 import LogoutGuard from './containers/LogoutGuard';
 import { checkUserAuthStateAction } from './actions/User';
@@ -25,7 +25,7 @@ const App = () => {
     <div>
       <Router>
         <Switch>
-          <Suspense fallback={<LoaderComponent />}>
+          <Suspense fallback={<Loader />}>
             <Route
               exact
               path="/login"

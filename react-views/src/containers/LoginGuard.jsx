@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import LoaderComponent from '../components/LoaderComponent';
+import Loader from '../components/Loader';
 import { PENDING, LOGGED_OUT } from '../utilities/constants';
 
 // this is a guard for pages/components that strictly require login
@@ -14,7 +14,7 @@ const LoginGuard = ({ children }) => {
         <Redirect to="/" />
       );
     case PENDING:
-      return <LoaderComponent />;
+      return <Loader />;
     default:
       return (
         <>
