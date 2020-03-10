@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPostsAction } from '../actions/Post';
-import UserProfileComponent from '../components/UserProfileComponent';
-import NavBarComponent from '../components/NavBarComponent';
-import PostFormComponent from '../components/PostFormComponent';
-import PostComponent from '../components/PostComponent';
+import UserProfile from '../components/UserProfile';
+import NavBar from '../components/NavBar';
+import PostForm from '../components/PostForm';
+import Post from '../components/Post';
 
 
 const ProfilePage = () => {
@@ -17,18 +17,18 @@ const ProfilePage = () => {
   }, [dispatch]);
   return (
     <>
-      <NavBarComponent />
-      <UserProfileComponent />
+      <NavBar />
+      <UserProfile />
       <button
         onClick={() => setPostFormPopUp(!postFormPopUp)}
         type="button"
       >
         {postFormPopUp ? 'Close' : 'Create a post'}
       </button>
-      {postFormPopUp ? <PostFormComponent /> : null}
+      {postFormPopUp ? <PostForm /> : null}
       <div>
         {myPosts.map((post) => (
-          <PostComponent
+          <Post
             key={post.id}
             postType={post.type_post}
             postID={post.id}

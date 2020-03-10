@@ -1,9 +1,9 @@
 import React from 'react';
 
-const LoaderComponent = () => (
+const Loader = () => (
   <div>
     ...Browser is loading, bitches...
   </div>
 );
 
-export default LoaderComponent;
+export default Loader;

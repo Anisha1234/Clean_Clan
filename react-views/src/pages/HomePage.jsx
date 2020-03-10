@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import LogoutButtonComponent from '../components/LogoutButtonComponent';
+import LogoutButton from '../components/LogoutButton';
 import { LOGGED_IN } from '../utilities/constants';
 
 const HomePage = () => {
@@ -18,7 +18,7 @@ const HomePage = () => {
               {user.name}
             </Link>
             <br />
-            <LogoutButtonComponent />
+            <LogoutButton />
           </>
         ) : (
           <Link to="/login">Login</Link>

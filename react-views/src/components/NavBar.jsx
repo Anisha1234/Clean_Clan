@@ -1,14 +1,14 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import LogoutButtonComponent from './LogoutButtonComponent';
+import LogoutButton from './LogoutButton';
 
-const NavBarComponent = () => (
+const NavBar = () => (
   <>
     <NavLink to="/profile">Profile</NavLink>
     <NavLink to="/leaderboard">Leaderboard</NavLink>
     <NavLink to="/issues">Issues</NavLink>
-    <LogoutButtonComponent />
+    <LogoutButton />
   </>
 );
 
-export default NavBarComponent;
+export default NavBar;

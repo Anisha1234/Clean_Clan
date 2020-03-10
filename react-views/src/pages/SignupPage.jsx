@@ -1,12 +1,12 @@
 import React from 'react';
-import SignupFormComponent from '../components/SignupFormComponent';
+import SignupForm from '../components/SignupForm';
 
 const SignupPage = () => (
   <div>
     <p>
       <strong>I love you, please sign up</strong>
     </p>
-    <SignupFormComponent />
+    <SignupForm />
   </div>
 );
 

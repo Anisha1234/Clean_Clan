@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { logoutAction } from '../actions/User';
 
-const LogoutButtonComponent = () => {
+const LogoutButton = () => {
   const dispatch = useDispatch();
   return (
     <button
@@ -14,4 +14,4 @@ const LogoutButtonComponent = () => {
   );
 };
 
-export default LogoutButtonComponent;
+export default LogoutButton;

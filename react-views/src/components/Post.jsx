@@ -2,9 +2,9 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { updatePostLikeAction } from '../actions/Post';
-import PostFormComponent from './PostFormComponent';
+import PostForm from './PostForm';
 
-const PostComponent = ({
+const Post = ({
   postType, postID, author, date, heading, location, description, likeCount, likes,
 }) => {
   const currentUserID = useSelector((state) => state.user.data.userid);
@@ -51,7 +51,7 @@ const PostComponent = ({
               {
                 isResponseFormOpen
                   ? (
-                    <PostFormComponent
+                    <PostForm
                       type="Solution"
                       responsePostID={postID}
                     />
@@ -65,9 +65,9 @@ const PostComponent = ({
   );
 };
 
-export default PostComponent;
+export default Post;
 
-PostComponent.propTypes = {
+Post.propTypes = {
   postType: PropTypes.string.isRequired,
   postID: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
@@ -78,7 +78,3 @@ PostComponent.propTypes = {
   likeCount: PropTypes.number.isRequired,
   likes: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
-
-// PostComponent.defaultProps = {
-//   likes: [],
-// };

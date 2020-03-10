@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getUserProfileAction } from '../actions/User';
 
 
-const UserProfileComponent = () => {
+const UserProfile = () => {
   const currentUser = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -47,4 +47,4 @@ const UserProfileComponent = () => {
   );
 };
 
-export default UserProfileComponent;
+export default UserProfile;

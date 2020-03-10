@@ -14,7 +14,7 @@ const givenCity = [
   { value: 'Delhi' },
 ];
 
-const SignupFormComponent = () => {
+const SignupForm = () => {
   const [name, setName] = useState(undefined);
   const [email, setEmail] = useState(undefined);
   const [city, setCity] = useState(givenCity[0].value);
@@ -130,4 +130,4 @@ const SignupFormComponent = () => {
   );
 };
 
-export default SignupFormComponent;
+export default SignupForm;

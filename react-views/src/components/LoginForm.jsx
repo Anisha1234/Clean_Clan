@@ -6,7 +6,7 @@ import { loginAction } from '../actions/User';
 import { validateEmail } from '../utilities/helpers';
 
 
-const LoginFormComponent = () => {
+const LoginForm = () => {
   const [email, setEmail] = useState(undefined);
   const [password, setPassword] = useState(undefined);
   const [loginMessage, setLoginMessage] = useState(null);
@@ -57,4 +57,4 @@ const LoginFormComponent = () => {
   );
 };
 
-export default LoginFormComponent;
+export default LoginForm;

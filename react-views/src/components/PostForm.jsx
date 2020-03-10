@@ -25,7 +25,7 @@ const initiateUploadedImages = (size) => (
 
 // type: intended post type (Challenge/Solution)
 // responsePostID: if type === Solution, then it could be solution to some responseID.
-const PostFormComponent = ({ type, responsePostID }) => {
+const PostForm = ({ type, responsePostID }) => {
   const [postLocation, setPostLocation] = useState(undefined);
   const [postType, setPostType] = useState(type);
   const [postHeading, setPostHeading] = useState(undefined);
@@ -188,14 +188,14 @@ const PostFormComponent = ({ type, responsePostID }) => {
   );
 };
 
-export default PostFormComponent;
+export default PostForm;
 
-PostFormComponent.propTypes = {
+PostForm.propTypes = {
   type: PropTypes.string,
   responsePostID: PropTypes.string,
 };
 
-PostFormComponent.defaultProps = {
+PostForm.defaultProps = {
   type: 'Solution',
   responsePostID: '',
 };
