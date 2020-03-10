@@ -22,42 +22,40 @@ const App = () => {
     dispatch(checkUserAuthStateAction());
   }, [dispatch]);
   return (
-    <div>
-      <Router>
-        <Switch>
-          <Suspense fallback={<Loader />}>
-            <Route
-              exact
-              path="/login"
-              render={() => (
-                <LogoutGuard>
-                  <LoginPage />
-                </LogoutGuard>
-              )}
-            />
-            <Route
-              exact
-              path="/profile"
-              render={() => (
-                <LoginGuard>
-                  <ProfilePage />
-                </LoginGuard>
-              )}
-            />
-            <Route
-              exact
-              path="/signup"
-              render={() => (
-                <LogoutGuard>
-                  <SignupPage />
-                </LogoutGuard>
-              )}
-            />
-            <Route exact path="/" component={HomePage} />
-          </Suspense>
-        </Switch>
-      </Router>
-    </div>
+    <Router>
+      <Switch>
+        <Suspense fallback={<Loader />}>
+          <Route
+            exact
+            path="/login"
+            render={() => (
+              <LogoutGuard>
+                <LoginPage />
+              </LogoutGuard>
+            )}
+          />
+          <Route
+            exact
+            path="/profile"
+            render={() => (
+              <LoginGuard>
+                <ProfilePage />
+              </LoginGuard>
+            )}
+          />
+          <Route
+            exact
+            path="/signup"
+            render={() => (
+              <LogoutGuard>
+                <SignupPage />
+              </LogoutGuard>
+            )}
+          />
+          <Route exact path="/" component={HomePage} />
+        </Suspense>
+      </Switch>
+    </Router>
   );
 };
 

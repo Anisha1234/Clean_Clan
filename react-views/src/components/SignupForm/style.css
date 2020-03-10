@@ -1,0 +1,10 @@
+.signup-form-container{
+  margin: 20px;
+  padding: 0;
+  width: 90%;
+  max-width: 500px;
+}
+.user-description{
+  resize: none;
+  overflow: hidden;
+}

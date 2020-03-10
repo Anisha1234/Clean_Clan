@@ -9,8 +9,8 @@ const HomePage = () => {
   const authState = useSelector((state) => state.user.auth.status);
   const user = useSelector((state) => state.user.data);
   return (
-    <div className="header-content">
-      <div className="header-content-inner">
+    <div className="header-content cover-all have-background-img">
+      <div className="header-content-inner center-vert-hor">
         <h1>CLEAN CLAN</h1>
         <hr />
         <p>
