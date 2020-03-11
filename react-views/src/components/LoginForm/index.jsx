@@ -73,7 +73,7 @@ const LoginForm = () => {
               Submit
             </Button>
             <br />
-            <Button variant="link" href="/signup">Want to create new account? Sign up</Button>
+            <Button variant="link" href="/signup">Create new account</Button>
           </Form.Group>
         </Form>
       </Card.Body>

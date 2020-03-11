@@ -69,7 +69,7 @@ const SignupForm = () => {
 
   return (
     <Card className="signup-form-container center-vert-hor">
-      <Card.Header style={{ textAlign: 'center' }}>
+      <Card.Header style={{ textAlign: 'center', height: '50px' }}>
         <Card.Title>SIGN UP</Card.Title>
       </Card.Header>
       <Card.Body>

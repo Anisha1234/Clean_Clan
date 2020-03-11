@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 
-const givenLoaderColors = ['primary', 'secondary',
-  'success', 'danger', 'warning', 'info', 'light', 'dark'];
+const givenLoaderColors = ['primary', 'danger', 'warning',
+  'success', 'secondary', 'light', 'info', 'dark'];
 
 const Loader = () => {
   const [colorIndex, setColorIndex] = useState(0);

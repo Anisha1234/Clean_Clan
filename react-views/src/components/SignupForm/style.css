@@ -1,8 +1,8 @@
 .signup-form-container{
-  margin: 20px;
-  padding: 0;
   width: 90%;
   max-width: 500px;
+  margin-top: 3%;
+  padding:0;
 }
 .user-description{
   resize: none;

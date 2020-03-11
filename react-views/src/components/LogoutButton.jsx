@@ -1,15 +1,16 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import { logoutAction } from '../actions/User';
 
-const LogoutButton = () => {
+const LogoutButton = ({ variant }) => {
   const dispatch = useDispatch();
   return (
     <Button
       type="button"
       onClick={() => dispatch(logoutAction())}
-      variant="secondary"
+      variant={variant}
       block
     >
       SIGN OUT
@@ -18,3 +19,11 @@ const LogoutButton = () => {
 };
 
 export default LogoutButton;
+
+LogoutButton.propTypes = {
+  variant: PropTypes.string,
+};
+
+LogoutButton.defaultProps = {
+  variant: 'secondary',
+};
