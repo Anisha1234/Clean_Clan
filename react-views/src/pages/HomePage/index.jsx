@@ -19,7 +19,7 @@ const HomePage = () => {
           &quot;Ab khel khel me badlega Bharat&quot;
         </p>
         <div className="homepage-navigation">
-          {user && user.name ? (
+          {authState === LOGGED_IN && user && user.name ? (
             <>
               <Button variant="primary" href="/profile" block>
                 Continue as

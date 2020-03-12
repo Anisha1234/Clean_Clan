@@ -19,7 +19,7 @@ const NavBar = () => {
       variant="dark"
       fixed="top"
     >
-      <Navbar.Brand href="#" style={{ float: 'left' }}>
+      <Navbar.Brand href="#">
         Clean India App
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="my-nav" />
@@ -45,7 +45,7 @@ const NavBar = () => {
           </Nav.Item>
         </Nav>
         <Nav
-          style={{ width: '300px' }}
+          style={{ width: '15%' }}
           className="justify-content-end"
         />
 

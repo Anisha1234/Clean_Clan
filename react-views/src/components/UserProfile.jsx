@@ -1,6 +1,15 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Row from 'react-bootstrap/Row';
+import Card from 'react-bootstrap/Card';
+import Image from 'react-bootstrap/Image';
+import {
+  FaAddressCard,
+  FaCity, FaMailBulk,
+  FaAward,
+} from 'react-icons/fa';
 import { getUserProfileAction } from '../actions/User';
+import profileImg from '../assets/media/profile.png';
 
 
 const UserProfile = () => {
@@ -11,39 +20,68 @@ const UserProfile = () => {
   }, [dispatch]);
 
   return (
-    <div>
-      <p>
-        <strong>My profile</strong>
-      </p>
-      <>
-        {
-        currentUser ? (
-          <div>
-            <p>{currentUser.name}</p>
-            <p>
-              Reputation:
+    <>
+      <Row className="justify-content-center">
+        <Card
+          className="justify-content-center"
+          style={{ width: '150px' }}
+          border="light"
+          bg="light"
+        >
+          <Image src={profileImg} roundedCircle fluid />
+        </Card>
+      </Row>
+      <Row
+        className="justify-content-center"
+        style={{ marginTop: '20px' }}
+      >
+        <Card
+          className="justify-content-center text-center"
+          style={{ width: '80%' }}
+        >
+          <Card.Title>
+            <FaAddressCard
+              style={{ padding: '5px', fontSize: '30px' }}
+            />
+            {
+              currentUser && currentUser.name
+                ? currentUser.name : 'Oops'
+            }
+          </Card.Title>
+          <Card.Subtitle className="text-muted">
+            {
+              currentUser && currentUser.user_details
+                ? currentUser.user_details : 'Oops'
+            }
+          </Card.Subtitle>
+          <Card.Body className="text-left">
+            <Card.Text>
+              <FaCity style={{ padding: '5px', fontSize: '30px' }} />
               {
-                typeof (currentUser.like_count) === 'number'
-                  ? currentUser.like_count * 10 : "Can't display your like count"
+                currentUser && currentUser.city
+                  ? currentUser.city : 'Oops'
               }
-            </p>
-            <p>
-              Email:
-              {currentUser.email}
-            </p>
-            <p>
-              Description:
-              {currentUser.user_details}
-            </p>
-            <p>
-              Current location:
-              {currentUser.city}
-            </p>
-          </div>
-        ) : "Can't display your profile, you may reload to fix the issue"
-      }
-      </>
-    </div>
+            </Card.Text>
+            <Card.Text>
+              <FaMailBulk style={{ padding: '5px', fontSize: '30px' }} />
+              {
+                currentUser && currentUser.email
+                  ? currentUser.email : 'Oops'
+              }
+            </Card.Text>
+            <Card.Text>
+              <FaAward style={{ padding: '5px', fontSize: '30px' }} />
+              Reputation: &nbsp;
+              {
+                currentUser && typeof (currentUser.like_count) === 'number'
+                  ? (<strong>{currentUser.like_count * 10}</strong>)
+                  : 'Could not display your reputation'
+              }
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Row>
+    </>
   );
 };
 

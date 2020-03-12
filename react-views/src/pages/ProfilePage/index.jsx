@@ -1,53 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getPostsAction } from '../../actions/Post';
+import React, { /* useState, */ } from 'react';
+// import { useSelector, useDispatch } from 'react-redux';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
 import UserProfile from '../../components/UserProfile';
 import NavBar from '../../components/NavBar';
-import PostForm from '../../components/PostForm';
-import Post from '../../components/Post';
+// import PostForm from '../../components/PostForm';
+// import Post from '../../components/Post';
+// import { getPostsAction } from '../../actions/Post';
 import './style.css';
 
 
-const ProfilePage = () => {
-  const [postFormPopUp, setPostFormPopUp] = useState(false);
-  const getMyPostsMessage = useSelector((state) => state.posts.my_posts.message);
-  const myPosts = useSelector((state) => state.posts.my_posts.data);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getPostsAction(true));
-  }, [dispatch]);
-  return (
-    <>
-      <NavBar />
-      <div className="profile-page-content">
+const ProfilePage = () => (
+  <>
+    <NavBar />
+    <Container className="profile-page-content">
+      <Col md={4}>
         <UserProfile />
-        <button
-          onClick={() => setPostFormPopUp(!postFormPopUp)}
-          type="button"
-        >
-          {postFormPopUp ? 'Close' : 'Create a post'}
-        </button>
-        {postFormPopUp ? <PostForm /> : null}
-        <div>
-          {myPosts.map((post) => (
-            <Post
-              key={post.id}
-              postType={post.type_post}
-              postID={post.id}
-              author={post.author}
-              date={post.date}
-              heading={post.heading}
-              location={post.location}
-              description={post.description}
-              likeCount={post.like_count}
-              likes={post.likes}
-            />
-          ))}
-          <p><strong>{getMyPostsMessage}</strong></p>
-        </div>
-      </div>
-    </>
-  );
-};
-
+      </Col>
+    </Container>
+  </>
+);
 export default ProfilePage;
