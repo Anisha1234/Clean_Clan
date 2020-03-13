@@ -37,11 +37,15 @@ const UserProfile = () => {
       >
         <Card
           className="justify-content-center text-center"
-          style={{ width: '80%' }}
+          style={{
+            width: '90%',
+            fontSize: '0.8rem',
+            maxWidth: '350px',
+          }}
         >
           <Card.Title>
             <FaAddressCard
-              style={{ padding: '5px', fontSize: '30px' }}
+              style={{ padding: '5px', fontSize: '25px' }}
             />
             {
               currentUser && currentUser.name
@@ -56,21 +60,21 @@ const UserProfile = () => {
           </Card.Subtitle>
           <Card.Body className="text-left">
             <Card.Text>
-              <FaCity style={{ padding: '5px', fontSize: '30px' }} />
+              <FaCity style={{ padding: '5px', fontSize: '25px' }} />
               {
                 currentUser && currentUser.city
                   ? currentUser.city : 'Oops'
               }
             </Card.Text>
             <Card.Text>
-              <FaMailBulk style={{ padding: '5px', fontSize: '30px' }} />
+              <FaMailBulk style={{ padding: '5px', fontSize: '25px' }} />
               {
                 currentUser && currentUser.email
                   ? currentUser.email : 'Oops'
               }
             </Card.Text>
             <Card.Text>
-              <FaAward style={{ padding: '5px', fontSize: '30px' }} />
+              <FaAward style={{ padding: '5px', fontSize: '25px' }} />
               Reputation: &nbsp;
               {
                 currentUser && typeof (currentUser.like_count) === 'number'

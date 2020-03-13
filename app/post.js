@@ -138,8 +138,9 @@ router.post('/:postId/solve',auth,upload.array('images', 12),function(req,res,ne
         res.send("This post cannot be solved as it is not a challenge")
       }else{
         console.log("This is a challenge , continue");
-        req.files[0].path = req.files[0].path.substr(req.files[0].path.indexOf('/') + 1, req.files[0].path.length - 1);
-        req.files[1].path = req.files[1].path.substr(req.files[1].path.indexOf('/') + 1, req.files[1].path.length - 1);
+        for(let i=0; i< req.files.length; ++i){
+          req.files[i].path = req.files[i].path.slice(7);
+        }
         if (req.files.length > 2) {
           res.send("Exceeds file limit");
         }else{

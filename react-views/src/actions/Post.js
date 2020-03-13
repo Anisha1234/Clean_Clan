@@ -73,6 +73,8 @@ const getPostsAction = (isMine) => async (dispatch, getState) => {
       }
     }
     const { data: posts } = await getPosts(userID);
+    // reverse the posts that newest go first
+    posts.reverse();
     dispatch(updatePostsDataAction(subDomain, DONE, '', posts));
     return;
   } catch (error) {
@@ -118,6 +120,7 @@ const updatePostLikeAction = (postID, likeStatus) => (dispatch, getState) => {
     return;
   }
   dispatch(updatePostLikeLocallyAction(MY_POSTS_DOMAIN, postID, currentUserID));
+  dispatch(updatePostLikeLocallyAction(ALL_POSTS_DOMAIN, postID, currentUserID));
   // then update on database
   updatePostLike(postID, likeStatus)
     .then()
