@@ -80,7 +80,7 @@ const LoginForm = () => {
       <Card.Footer>
         {
           loginMessage ? (
-            <Alert variant="info">{loginMessage}</Alert>
+            <Alert variant="danger">{loginMessage}</Alert>
           ) : null
         }
       </Card.Footer>

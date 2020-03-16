@@ -53,7 +53,7 @@ const checkUserAuthStateAction = () => async (dispatch) => {
       dispatch(updateUserDataAction(UPDATE, userData));
       return;
     }
-    throw new Error("You haven't logged in yet");
+    throw new Error();
   } catch (error) {
     dispatch(updateUserAuthAction(LOGGED_OUT));
     dispatch(updateUserDataAction(RESET, null));
@@ -67,18 +67,18 @@ const checkUserAuthStateAction = () => async (dispatch) => {
  */
 const loginAction = (email, password) => async (dispatch) => {
   try {
-    dispatch(updateUserAuthAction(PENDING, 'Processing...'));
+    dispatch(updateUserAuthAction(PENDING, ''));
     const { data } = await login(email, password);
     const { message, user_data: userData } = data;
     if (message === 'Success') {
-      dispatch(updateUserAuthAction(LOGGED_IN, 'You have logged in!'));
+      dispatch(updateUserAuthAction(LOGGED_IN, ''));
       dispatch(updateUserDataAction(UPDATE, userData));
       return;
     }
     throw message;
   } catch (error) {
-    dispatch(updateUserAuthAction(LOGGED_OUT, error.toString()));
     dispatch(updateUserDataAction(RESET, null));
+    dispatch(updateUserAuthAction(LOGGED_OUT, error.toString()));
   }
 };
 
@@ -118,7 +118,7 @@ const getUserProfileAction = () => async (dispatch) => {
  */
 const signupAction = (name, email, details, city, password) => async (dispatch) => {
   try {
-    dispatch(updateUserRegistrationAction(PENDING, 'We are processing your request'));
+    dispatch(updateUserRegistrationAction(PENDING, ''));
     const { data: message } = await signup(name, email, details, city, password);
     if (message === 'ok') {
       dispatch(updateUserRegistrationAction(

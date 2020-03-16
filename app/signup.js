@@ -104,7 +104,7 @@ router.post('/', upload.array('files', 12), function(req, res, next) {
       return res.status(500).send(err);
     }
     if (user) {
-      return res.status(200).send("email already registered");
+      return res.status(400).send("email already registered");
     } 
     newUser.save(function(err, user) {
       if (err) {

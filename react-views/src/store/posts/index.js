@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { DONE, UPDATE, RESET } from '../../util';
+import { UPDATE, RESET } from '../../util';
 import { isActionTypeEqual, getDomainsAndActionType } from '../util';
 // domains
 const POSTS_DOMAIN = 'posts';
@@ -11,17 +11,17 @@ const UPDATE_POST_LIKE = 'UPDATE_POST_LIKE';
 
 const initialState = {
   my_posts: {
-    status: DONE,
+    status: '',
     message: '',
     data: [],
   },
   all_posts: {
-    status: DONE,
+    status: '',
     message: '',
     data: [],
   },
   publish: {
-    status: DONE,
+    status: '',
     message: '',
   },
 };

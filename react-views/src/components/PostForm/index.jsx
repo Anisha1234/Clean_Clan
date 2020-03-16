@@ -1,12 +1,14 @@
 import React, {
-  useState, useCallback, useRef,
+  useState, useCallback, useRef, useEffect,
 } from 'react';
 import Form from 'react-bootstrap/Form';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Image from 'react-bootstrap/Image';
+import Alert from 'react-bootstrap/Alert';
 import { MdAttachFile } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { FAIL, DONE } from '../../util';
 import { publishPostAction } from '../../actions/Post';
 import './style.css';
 
@@ -38,8 +40,16 @@ const PostForm = ({ type, responsePostID }) => {
   const [uploadedImages, setUploadedImages] = useState(
     initiateUploadedImages(postTypeImageCount[postType]),
   );
+  const publishMessage = useSelector((state) => state.posts.publish.message);
+  const publishStatus = useSelector((state) => state.posts.publish.status);
   const dispatch = useDispatch();
   const postDescriptionTextRef = useRef();
+
+  useEffect(() => {
+    if (publishStatus === DONE) {
+      window.location.reload();
+    }
+  }, [publishStatus]);
 
   const submitNewPost = useCallback((e) => {
     e.preventDefault();
@@ -66,11 +76,6 @@ const PostForm = ({ type, responsePostID }) => {
 
   // onChange the post type
   const updateSelectedPostType = useCallback((chosenType) => {
-    // if responsePostID exist, the chosenType must !== Challenge
-    if (responsePostID && chosenType === 'Challenge') {
-      setPublishPostError('You need to propse a solution to this challenge');
-      return;
-    }
     // resize uploaded images array first
     const newUploadedImages = initiateUploadedImages(postTypeImageCount[chosenType]);
     for (let i = 0; i < uploadedImages.length; i += 1) {
@@ -85,7 +90,7 @@ const PostForm = ({ type, responsePostID }) => {
     setUploadedImages(newUploadedImages);
     // change the post type
     setPostType(chosenType);
-  }, [uploadedImages, responsePostID]);
+  }, [uploadedImages]);
 
   // onChange upload image
   const handleUploadImage = useCallback((imageIndex, imageFile) => {
@@ -110,23 +115,27 @@ const PostForm = ({ type, responsePostID }) => {
       encType="multipart/form-data"
       onSubmit={submitNewPost}
     >
-      <Form.Group controlId="post-type">
-        <Form.Label>What do you want to propose</Form.Label>
-        <Form.Control
-          as="select"
-          value={postType}
-          onChange={(e) => updateSelectedPostType(e.target.value)}
-        >
-          {Object.keys(postTypeImageCount).map((pType) => (
-            <option
-              key={pType}
-              value={pType}
+      {
+        responsePostID ? null : (
+          <Form.Group controlId="post-type">
+            <Form.Label>What do you want to propose?</Form.Label>
+            <Form.Control
+              as="select"
+              value={postType}
+              onChange={(e) => updateSelectedPostType(e.target.value)}
             >
-              {pType}
-            </option>
-          ))}
-        </Form.Control>
-      </Form.Group>
+              {Object.keys(postTypeImageCount).map((pType) => (
+                <option
+                  key={pType}
+                  value={pType}
+                >
+                  {pType}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+        )
+      }
       <Form.Group controlId="post-location">
         <Form.Label>Location</Form.Label>
         <Form.Control
@@ -203,6 +212,15 @@ const PostForm = ({ type, responsePostID }) => {
             ))
         }
       </CardDeck>
+      {
+          publishMessage ? (
+            <Alert
+              variant={publishStatus === FAIL ? 'danger' : 'info'}
+            >
+              {publishMessage}
+            </Alert>
+          ) : null
+        }
     </Form>
   );
 };

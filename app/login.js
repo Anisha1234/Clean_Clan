@@ -48,7 +48,7 @@ router.post('/',function(req,res){
 					user_data: userData
 				});
 			}
-			return res.status(200).send({message: "Wrong password"});
+			return res.status(400).send({message: "Wrong password"});
 		});
 	});
 });

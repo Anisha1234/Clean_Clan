@@ -1,9 +1,10 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import CardGroup from 'react-bootstrap/CardGroup';
 import Badge from 'react-bootstrap/Badge';
+import { MdLocationOn } from 'react-icons/md';
 import { FaHeart, FaRegHeart, FaTwitter } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import { updatePostLikeAction } from '../actions/Post';
@@ -39,6 +40,11 @@ const Post = ({
         </Card.Subtitle>
         <small className="text-muted">
           {new Date(date).toLocaleString()}
+        </small>
+        <br />
+        <small className="text-muted">
+          <MdLocationOn />
+          {` ${location}`}
         </small>
         <Card.Text>
           {description}
@@ -78,6 +84,11 @@ const Post = ({
             }
             <Badge variant="info" pill>{likeCount}</Badge>
           </button>
+          {
+            postType === 'Challenge' && author !== currentUserID
+              ? '' : null
+          }
+
           <a href={`https://twitter.com/intent/tweet?text=${description}`}>
             <FaTwitter
               style={{
