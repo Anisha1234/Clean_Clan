@@ -102,8 +102,8 @@ const logoutAction = () => async (dispatch) => {
     const { data: logoutMessage } = await logout();
     throw logoutMessage;
   } catch (error) {
-    dispatch(updateUserAuthAction(LOGGED_OUT));
     dispatch(updateUserDataAction(RESET, null));
+    dispatch(updateUserAuthAction(LOGGED_OUT));
   }
 };
 

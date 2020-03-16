@@ -1,10 +1,14 @@
 import React, {
-  useState, useCallback, useEffect,
+  useState, useCallback, useRef,
 } from 'react';
+import Form from 'react-bootstrap/Form';
+import CardDeck from 'react-bootstrap/CardDeck';
+import Image from 'react-bootstrap/Image';
+import { MdAttachFile } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { publishPostAction } from '../actions/Post';
-import defaultImg from '../assets/media/ninja.png';
+import { publishPostAction } from '../../actions/Post';
+import './style.css';
 
 // 2 types of post, each post type corresponds to an exact amount of images
 const postTypeImageCount = {
@@ -19,7 +23,7 @@ const postTypeImageCount = {
 const initiateUploadedImages = (size) => (
   [...Array(size)].map(() => ({
     file: null,
-    url: defaultImg,
+    url: '',
   }))
 );
 
@@ -34,13 +38,8 @@ const PostForm = ({ type, responsePostID }) => {
   const [uploadedImages, setUploadedImages] = useState(
     initiateUploadedImages(postTypeImageCount[postType]),
   );
-  const [publishPostError, setPublishPostError] = useState(undefined);
   const dispatch = useDispatch();
-  const publishMessage = useSelector((state) => state.posts.publish.message);
-
-  useEffect(() => {
-    setPublishPostError(publishMessage);
-  }, [publishMessage]);
+  const postDescriptionTextRef = useRef();
 
   const submitNewPost = useCallback((e) => {
     e.preventDefault();
@@ -58,6 +57,12 @@ const PostForm = ({ type, responsePostID }) => {
     dispatch, responsePostID,
     postLocation, postType, postDescription, postHeading, stakeholders, uploadedImages,
   ]);
+
+  const handlePostDescriptionText = useCallback((e) => {
+    setPostDescription(e.target.value);
+    postDescriptionTextRef.current.style.height = '60px';
+    postDescriptionTextRef.current.style.height = `${`${e.target.scrollHeight}px`}`;
+  }, [postDescriptionTextRef]);
 
   // onChange the post type
   const updateSelectedPostType = useCallback((chosenType) => {
@@ -80,7 +85,7 @@ const PostForm = ({ type, responsePostID }) => {
     setUploadedImages(newUploadedImages);
     // change the post type
     setPostType(chosenType);
-  }, [setPublishPostError, uploadedImages, responsePostID]);
+  }, [uploadedImages, responsePostID]);
 
   // onChange upload image
   const handleUploadImage = useCallback((imageIndex, imageFile) => {
@@ -99,26 +104,16 @@ const PostForm = ({ type, responsePostID }) => {
       },
     ));
   }, [uploadedImages, postType]);
+
   return (
-    <form
+    <Form
       encType="multipart/form-data"
       onSubmit={submitNewPost}
     >
-      <label htmlFor="post-location">
-        Location:
-        <input
-          name="post-location"
-          type="text"
-          onChange={(e) => setPostLocation(e.target.value)}
-          placeholder="Mumbai"
-          required
-        />
-      </label>
-      <br />
-      <label htmlFor="post-type">
-        Type of post:
-        <select
-          name="post-type"
+      <Form.Group controlId="post-type">
+        <Form.Label>What do you want to propose</Form.Label>
+        <Form.Control
+          as="select"
           value={postType}
           onChange={(e) => updateSelectedPostType(e.target.value)}
         >
@@ -130,61 +125,85 @@ const PostForm = ({ type, responsePostID }) => {
               {pType}
             </option>
           ))}
-        </select>
-      </label>
-      <br />
-      <label htmlFor="post-heading">
-        Title:
-        <input
-          name="post-heading"
+        </Form.Control>
+      </Form.Group>
+      <Form.Group controlId="post-location">
+        <Form.Label>Location</Form.Label>
+        <Form.Control
+          type="text"
+          onChange={(e) => setPostLocation(e.target.value)}
+          placeholder="Mumbai"
+          required
+        />
+      </Form.Group>
+      <Form.Group controlId="post-heading">
+        <Form.Label>Title</Form.Label>
+        <Form.Control
           type="text"
           onChange={(e) => setPostHeading(e.target.value)}
           placeholder="Enter the heading..."
           required
         />
-      </label>
-      <br />
-      <label htmlFor="post-description">
-        Description
-        <textarea
-          name="post-description"
-          onChange={(e) => setPostDescription(e.target.value)}
-          placeholder={`Enter your ${postType.toLowerCase()} description here`}
-          required
-        />
-      </label>
-      <br />
-      <label htmlFor="post-stakeholders">
-        Stakeholders:
-        <input
-          name="post-stakeholders"
+      </Form.Group>
+      <Form.Group controlId="post-stakeholders">
+        <Form.Label>Stakeholders</Form.Label>
+        <Form.Control
           type="text"
           onChange={(e) => setStakeholders(e.target.value)}
           placeholder="Stakeholders..."
           required
         />
-      </label>
-      <br />
-      {
-        [...Array(postTypeImageCount[postType]).keys()]
-          .map((key) => (
-            <div key={key}>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleUploadImage(key, e.target.files[0])}
-                required
-              />
-              <br />
-              <img src={uploadedImages[key].url} alt="nothing" />
-            </div>
-          ))
-      }
-      <br />
-      <input type="submit" />
-      <br />
-      <strong>{publishPostError}</strong>
-    </form>
+      </Form.Group>
+      <Form.Group controlId="post-description">
+        <Form.Label>
+          Describe your
+          {postType.toLowerCase()}
+        </Form.Label>
+        <Form.Control
+          as="textarea"
+          className="post-description"
+          onChange={handlePostDescriptionText}
+          placeholder="Enter the description here..."
+          required
+          ref={postDescriptionTextRef}
+        />
+      </Form.Group>
+      <CardDeck className = "justify-content-around">
+        {
+          [...Array(postTypeImageCount[postType]).keys()]
+            .map((key) => (
+              <Form.Group
+                key={key}
+                controlId={`post-image-${key}`}
+              >
+                <Form.Label className="post-image-container">
+                  <div className="post-image-overlay cover-all">
+                    <MdAttachFile
+                      className="center-vert-hor post-image-icon"
+                    />
+                  </div>
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleUploadImage(key, e.target.files[0])}
+                    required
+                    className="post-image-upload cover-all"
+                  />
+                  {
+                    uploadedImages[key].url ? (
+                      <Image
+                        fluid
+                        src={uploadedImages[key].url}
+                        className="center-vert-hor"
+                      />
+                    ) : null
+                  }
+                </Form.Label>
+              </Form.Group>
+            ))
+        }
+      </CardDeck>
+    </Form>
   );
 };
 

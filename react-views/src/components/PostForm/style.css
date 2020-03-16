@@ -1,0 +1,28 @@
+.post-description{
+  resize: none;
+  overflow: hidden;
+}
+
+.post-image-container{
+  width: 100px;
+  height: 100px;
+  border: 1px dashed rgb(190, 189, 189);
+  position: relative;
+}
+
+.post-image-upload{
+  opacity: 0;
+}
+
+.post-image-overlay{
+  position: absolute;
+  background-color: rgb(226, 226, 226);
+}
+
+.post-image-container:hover > .post-image-overlay{
+  background-color: rgb(75, 74, 74);
+  z-index: 1;
+}
+.post-image-container:hover > .post-image-overlay > .post-image-icon{
+  color: rgb(226, 226, 226);
+} 
