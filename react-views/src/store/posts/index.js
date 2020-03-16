@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import { DONE, UPDATE, RESET } from '../util';
-import { isActionTypeEqual, getDomainsAndActionType } from './util';
+import { DONE, UPDATE, RESET } from '../../util';
+import { isActionTypeEqual, getDomainsAndActionType } from '../util';
 // domains
 const POSTS_DOMAIN = 'posts';
 const MY_POSTS_DOMAIN = 'my_posts';
@@ -60,9 +60,9 @@ const createPostsSubReducer = (subDomain) => (state = initialState[subDomain], a
 };
 
 const PostReducer = combineReducers({
-  my_posts: createPostsSubReducer(MY_POSTS_DOMAIN),
-  all_posts: createPostsSubReducer(ALL_POSTS_DOMAIN),
-  publish: createPostsSubReducer(PUBLISH_DOMAIN),
+  [MY_POSTS_DOMAIN]: createPostsSubReducer(MY_POSTS_DOMAIN),
+  [ALL_POSTS_DOMAIN]: createPostsSubReducer(ALL_POSTS_DOMAIN),
+  [PUBLISH_DOMAIN]: createPostsSubReducer(PUBLISH_DOMAIN),
 });
 
 export {

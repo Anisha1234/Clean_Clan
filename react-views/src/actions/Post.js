@@ -1,22 +1,12 @@
 import {
-  PENDING, DONE, FAIL, UPDATE,
-} from '../util';
-import {
   POSTS_DOMAIN, ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN, PUBLISH_DOMAIN,
   UPDATE_POST_LIKE,
-} from '../store/PostReducer';
+} from '../store/posts';
+import {
+  PENDING, DONE, FAIL, UPDATE,
+} from '../util';
 import { getPosts, publishPost, updatePostLike } from '../services/Post';
-
-/**
- * @function- generic action creator to update post data
- * @param  {...any} domains
- * @param {string} actionType
- * @param {object} payload
- */
-const updatePostsAction = (actionType, payload, ...domains) => ({
-  type: [...domains, actionType].join('/'),
-  payload,
-});
+import { updateStoreDataAction } from './util';
 
 /**
  * @function- shorthand action creator to update posts array (either my_posts or all_posts)
@@ -26,7 +16,7 @@ const updatePostsAction = (actionType, payload, ...domains) => ({
  * @param {Object[]} data the posts array get from the server
  */
 function updatePostsDataAction(subDomain, status, message, data) {
-  return updatePostsAction(UPDATE, {
+  return updateStoreDataAction(UPDATE, {
     status, message, data,
   }, POSTS_DOMAIN, subDomain);
 }
@@ -38,7 +28,7 @@ function updatePostsDataAction(subDomain, status, message, data) {
  * @param {*} userID - id of the user
  */
 function updatePostLikeLocallyAction(subDomain, postID, userID) {
-  return updatePostsAction(UPDATE_POST_LIKE, {
+  return updateStoreDataAction(UPDATE_POST_LIKE, {
     postID, userID,
   }, POSTS_DOMAIN, subDomain);
 }
@@ -49,7 +39,7 @@ function updatePostLikeLocallyAction(subDomain, postID, userID) {
  * @param {string} message - correspondent error/success message
  */
 function updatePostPublishAction(status, message) {
-  return updatePostsAction(UPDATE, {
+  return updateStoreDataAction(UPDATE, {
     status, message,
   }, POSTS_DOMAIN, PUBLISH_DOMAIN);
 }

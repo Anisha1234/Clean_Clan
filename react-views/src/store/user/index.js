@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import { PENDING, UPDATE, RESET } from '../util';
-import { isActionTypeEqual, getDomainsAndActionType } from './util';
+import { PENDING, UPDATE, RESET } from '../../util';
+import { isActionTypeEqual, getDomainsAndActionType } from '../util';
 
 // domain
 const USER_DOMAIN = 'user';
@@ -47,14 +47,13 @@ const createUserSubReducer = (subDomain) => (state = initialState[subDomain], ac
 };
 
 const UserReducer = combineReducers({
-  auth: createUserSubReducer(AUTH_DOMAIN),
-  registration: createUserSubReducer(REGISTRATION_DOMAIN),
-  data: createUserSubReducer(USER_DATA_DOMAIN),
+  [AUTH_DOMAIN]: createUserSubReducer(AUTH_DOMAIN),
+  [REGISTRATION_DOMAIN]: createUserSubReducer(REGISTRATION_DOMAIN),
+  [USER_DATA_DOMAIN]: createUserSubReducer(USER_DATA_DOMAIN),
 });
 
 export {
   USER_DOMAIN, AUTH_DOMAIN, REGISTRATION_DOMAIN, USER_DATA_DOMAIN,
 };
-
 
 export default UserReducer;

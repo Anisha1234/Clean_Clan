@@ -1,26 +1,14 @@
 import {
+  USER_DOMAIN, USER_DATA_DOMAIN, REGISTRATION_DOMAIN, AUTH_DOMAIN,
+} from '../store/user';
+import {
   PENDING, DONE, FAIL, UPDATE, RESET,
   LOGGED_IN, LOGGED_OUT,
 } from '../util';
-
-import {
-  USER_DOMAIN, USER_DATA_DOMAIN, REGISTRATION_DOMAIN, AUTH_DOMAIN,
-} from '../store/UserReducer';
-
 import {
   login, logout, checkLoginState, signup, getUserProfile,
 } from '../services/User';
-
-/**
- * @function - generic action creater to update user state (auth, registration, data...)
- * @param  {...string} domains - array of domain name strings
- * @param {string} actionType - action type
- * @param {object} payload - action data
- */
-const updateUserAction = (actionType, payload, ...domains) => ({
-  type: [...domains, actionType].join('/'),
-  payload,
-});
+import { updateStoreDataAction } from './util';
 
 /**
  * @function  - action creator to update user state in auth domain
@@ -28,7 +16,7 @@ const updateUserAction = (actionType, payload, ...domains) => ({
  * @param {string} message - message to show in the UI
  */
 function updateUserAuthAction(status, message = '') {
-  return updateUserAction(UPDATE, {
+  return updateStoreDataAction(UPDATE, {
     status, message,
   }, USER_DOMAIN, AUTH_DOMAIN);
 }
@@ -38,7 +26,7 @@ function updateUserAuthAction(status, message = '') {
  * @param {string} message - message to show in UI
  */
 function updateUserRegistrationAction(status, message = '') {
-  return updateUserAction(UPDATE, {
+  return updateStoreDataAction(UPDATE, {
     status, message,
   }, USER_DOMAIN, REGISTRATION_DOMAIN);
 }
@@ -49,7 +37,7 @@ function updateUserRegistrationAction(status, message = '') {
  * @param {object} data
  */
 function updateUserDataAction(type, data) {
-  return updateUserAction(type, data, USER_DOMAIN, USER_DATA_DOMAIN);
+  return updateStoreDataAction(type, data, USER_DOMAIN, USER_DATA_DOMAIN);
 }
 
 /**
