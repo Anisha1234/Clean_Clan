@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import { DONE, UPDATE, RESET } from '../utilities/constants';
-import { isActionTypeEqual, getDomainsAndActionType } from '../utilities/helpers';
+import { DONE, UPDATE, RESET } from '../util';
+import { isActionTypeEqual, getDomainsAndActionType } from './util';
 // domains
 const POSTS_DOMAIN = 'posts';
 const MY_POSTS_DOMAIN = 'my_posts';

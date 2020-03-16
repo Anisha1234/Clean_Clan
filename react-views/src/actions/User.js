@@ -1,7 +1,7 @@
 import {
   PENDING, DONE, FAIL, UPDATE, RESET,
   LOGGED_IN, LOGGED_OUT,
-} from '../utilities/constants';
+} from '../util';
 
 import {
   USER_DOMAIN, USER_DATA_DOMAIN, REGISTRATION_DOMAIN, AUTH_DOMAIN,

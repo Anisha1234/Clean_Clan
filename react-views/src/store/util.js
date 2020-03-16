@@ -1,13 +1,4 @@
 /**
- * @function - validate a string of email (just the format)
- * @param {string} inputEmail - input email to be verified
- * @return {boolean}
- */
-const validateEmail = (inputEmail) => {
-  const emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-  return emailReg.test(inputEmail);
-};
-/**
  * @function - compare types of action in the form of string array
  * @param {string[]} type1 - first type to compare - [...domains, "action_type"]
  * @param {string[]} type2 - second type to compare
@@ -38,5 +29,5 @@ const getDomainsAndActionType = (type) => {
 };
 
 export {
-  validateEmail, isActionTypeEqual, getDomainsAndActionType,
+  isActionTypeEqual, getDomainsAndActionType,
 };

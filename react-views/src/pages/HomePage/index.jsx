@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/button';
 import { useSelector } from 'react-redux';
 import LogoutButton from '../../components/LogoutButton';
 import './style.css';
-import { LOGGED_IN } from '../../utilities/constants';
+import { LOGGED_IN } from '../../util';
 
 const HomePage = () => {
   const authState = useSelector((state) => state.user.auth.status);

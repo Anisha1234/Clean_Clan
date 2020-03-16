@@ -7,9 +7,9 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { validateEmail } from '../../utilities/helpers';
+import { validateEmail } from '../util';
 import { signupAction } from '../../actions/User';
-import { DONE, FAIL } from '../../utilities/constants';
+import { DONE, FAIL } from '../../util';
 import './style.css';
 
 const givenCity = [
@@ -111,15 +111,15 @@ const SignupForm = () => {
               onChange={(e) => setCity(e.target.value)}
             >
               {
-              givenCity.map((cityOption) => (
-                <option
-                  key={cityOption.value}
-                  value={cityOption.value}
-                >
-                  {cityOption.value}
-                </option>
-              ))
-            }
+                givenCity.map((cityOption) => (
+                  <option
+                    key={cityOption.value}
+                    value={cityOption.value}
+                  >
+                    {cityOption.value}
+                  </option>
+                ))
+              }
             </Form.Control>
           </Form.Group>
           <Form.Group controlId="user-password">

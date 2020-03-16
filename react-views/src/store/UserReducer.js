@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import { PENDING, UPDATE, RESET } from '../utilities/constants';
-import { isActionTypeEqual, getDomainsAndActionType } from '../utilities/helpers';
+import { PENDING, UPDATE, RESET } from '../util';
+import { isActionTypeEqual, getDomainsAndActionType } from './util';
 
 // domain
 const USER_DOMAIN = 'user';

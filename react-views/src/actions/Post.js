@@ -1,6 +1,6 @@
 import {
   PENDING, DONE, FAIL, UPDATE,
-} from '../utilities/constants';
+} from '../util';
 import {
   POSTS_DOMAIN, ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN, PUBLISH_DOMAIN,
   UPDATE_POST_LIKE,

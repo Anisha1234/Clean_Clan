@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { serverRoot } from '../utilities/constants';
+import { serverRoot } from '../util';
 
 const checkLoginState = async () => axios.get(
   `${serverRoot}/auth-check`,

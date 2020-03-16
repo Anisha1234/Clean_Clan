@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAction } from '../../actions/User';
-import { validateEmail } from '../../utilities/helpers';
+import { validateEmail } from '../util';
 import './style.css';
 import profileImg from '../../assets/media/profile.png';
 

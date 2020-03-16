@@ -168,7 +168,7 @@ const PostForm = ({ type, responsePostID }) => {
           ref={postDescriptionTextRef}
         />
       </Form.Group>
-      <CardDeck className = "justify-content-around">
+      <CardDeck className="justify-content-around">
         {
           [...Array(postTypeImageCount[postType]).keys()]
             .map((key) => (

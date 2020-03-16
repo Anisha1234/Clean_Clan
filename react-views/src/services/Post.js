@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { serverRoot } from '../utilities/constants';
+import { serverRoot } from '../util';
 
 const getPosts = async (userID = '') => axios.get(
   `${serverRoot}/timeline/posts`,
