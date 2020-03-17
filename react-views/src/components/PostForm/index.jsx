@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Image from 'react-bootstrap/Image';
 import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
 import { MdAttachFile } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -212,6 +213,18 @@ const PostForm = ({ type, responsePostID }) => {
             ))
         }
       </CardDeck>
+      <Form.Group
+        controlId="user-submit"
+        style={{ textAlign: 'center' }}
+      >
+        <Button
+          variant="outline-info"
+          type="submit"
+          style={{ padding: '10px' }}
+        >
+          Submit
+        </Button>
+      </Form.Group>
       {
           publishMessage ? (
             <Alert

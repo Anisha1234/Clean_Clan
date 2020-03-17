@@ -53,14 +53,14 @@ const Post = ({
           {
             imageBefore ? (
               <Card border="light">
-                <Card.Img src={new URL(imageBefore, 'http://localhost:3000')} />
+                <Card.Img src={imageBefore} />
               </Card>
             ) : null
           }
           {
             imageAfter ? (
               <Card border="light">
-                <Card.Img src={new URL(imageAfter, 'http://localhost:3000')} />
+                <Card.Img src={imageAfter} />
               </Card>
             ) : null
           }

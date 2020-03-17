@@ -20,7 +20,7 @@
 }
 
 .post-image-container:hover > .post-image-overlay{
-  background-color: rgb(75, 74, 74);
+  background-color: rgb(75, 74, 74, 0.8);
   z-index: 1;
 }
 .post-image-container:hover > .post-image-overlay > .post-image-icon{
