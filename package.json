@@ -13,6 +13,10 @@
     "node",
     "npm"
   ],
+  "engine":{
+    "node": ">=8.0.0",
+    "npm": ">=6.0.0"
+  },
   "author": "Anisha Swain",
   "license": "ISC",
   "dependencies": {
