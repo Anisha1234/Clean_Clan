@@ -7,7 +7,7 @@ import { GiPencil } from 'react-icons/gi';
 import PropTypes from 'prop-types';
 import Post from '../Post';
 import PostForm from '../PostForm';
-import { getPostsAction } from '../../actions/Post';
+import { getPostsAction } from '../../store/posts';
 import './style.css';
 
 const Feed = ({ isMine }) => {

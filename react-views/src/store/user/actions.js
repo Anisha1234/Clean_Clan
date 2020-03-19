@@ -1,14 +1,12 @@
 import {
-  USER_DOMAIN, USER_DATA_DOMAIN, REGISTRATION_DOMAIN, AUTH_DOMAIN,
-} from '../store/user';
-import {
   PENDING, DONE, FAIL, UPDATE, RESET,
   LOGGED_IN, LOGGED_OUT,
-} from '../util';
+  USER_DOMAIN, USER_DATA_DOMAIN, REGISTRATION_DOMAIN, AUTH_DOMAIN,
+} from '../../constants';
 import {
   login, logout, checkLoginState, signup, getUserProfile,
-} from '../services/User';
-import { updateStoreDataAction } from './util';
+} from './services';
+import { updateStoreDataAction } from '../util';
 
 /**
  * @function  - action creator to update user state in auth domain

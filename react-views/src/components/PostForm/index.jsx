@@ -9,8 +9,8 @@ import Button from 'react-bootstrap/Button';
 import { MdAttachFile } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { FAIL, DONE } from '../../util';
-import { publishPostAction } from '../../actions/Post';
+import { publishPostAction } from '../../store/posts';
+import { FAIL, DONE } from '../../constants';
 import './style.css';
 
 // 2 types of post, each post type corresponds to an exact amount of images

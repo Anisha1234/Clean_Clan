@@ -2,7 +2,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { logoutAction } from '../actions/User';
+import { logoutAction } from '../store/user';
 
 const LogoutButton = ({ variant }) => {
   const dispatch = useDispatch();

@@ -1,12 +1,10 @@
 import {
   POSTS_DOMAIN, ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN, PUBLISH_DOMAIN,
   UPDATE_POST_LIKE,
-} from '../store/posts';
-import {
   PENDING, DONE, FAIL, UPDATE,
-} from '../util';
-import { getPosts, publishPost, updatePostLike } from '../services/Post';
-import { updateStoreDataAction } from './util';
+} from '../../constants';
+import { getPosts, publishPost, updatePostLike } from './services';
+import { updateStoreDataAction } from '../util';
 
 /**
  * @function- shorthand action creator to update posts array (either my_posts or all_posts)

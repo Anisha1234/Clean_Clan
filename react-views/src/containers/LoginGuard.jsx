@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Loader from '../components/Loader';
-import { PENDING, LOGGED_OUT } from '../util';
+import { PENDING, LOGGED_OUT } from '../constants';
 
 // this is a guard for pages/components that strictly require login
 const LoginGuard = ({ children }) => {

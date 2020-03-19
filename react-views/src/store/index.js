@@ -1,7 +1,8 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
-import UserReducer, { USER_DOMAIN } from './user';
-import PostReducer, { POSTS_DOMAIN } from './posts';
+import UserReducer from './user';
+import PostReducer from './posts';
+import { USER_DOMAIN, POSTS_DOMAIN } from '../constants';
 
 
 const rootReducer = combineReducers({

@@ -8,8 +8,8 @@ import Alert from 'react-bootstrap/Alert';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { validateEmail } from '../util';
-import { signupAction } from '../../actions/User';
-import { DONE, FAIL } from '../../util';
+import { signupAction } from '../../store/user';
+import { DONE, FAIL } from '../../constants';
 import './style.css';
 
 const givenCity = [

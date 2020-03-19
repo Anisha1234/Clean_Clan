@@ -7,7 +7,7 @@ import Badge from 'react-bootstrap/Badge';
 import { MdLocationOn } from 'react-icons/md';
 import { FaHeart, FaRegHeart, FaTwitter } from 'react-icons/fa';
 import PropTypes from 'prop-types';
-import { updatePostLikeAction } from '../actions/Post';
+import { updatePostLikeAction } from '../store/posts';
 
 const Post = ({
   postType, postID, author, date, heading,

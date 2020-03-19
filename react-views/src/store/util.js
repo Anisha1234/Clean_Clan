@@ -1,3 +1,4 @@
+
 /**
  * @function - compare types of action in the form of string array
  * @param {string[]} type1 - first type to compare - [...domains, "action_type"]
@@ -27,7 +28,18 @@ const getDomainsAndActionType = (type) => {
     actionType,
   };
 };
+/**
+ * @function - generic action creater to update user state (auth, registration, data...)
+ * @param  {...string} domains - array of domain name strings
+ * @param {string} actionType - action type
+ * @param {object} payload - action data
+ */
+const updateStoreDataAction = (actionType, payload, ...domains) => ({
+  type: [...domains, actionType].join('/'),
+  payload,
+});
 
 export {
   isActionTypeEqual, getDomainsAndActionType,
+  updateStoreDataAction,
 };

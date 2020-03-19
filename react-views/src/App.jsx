@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import Loader from './components/Loader';
 import LoginGuard from './containers/LoginGuard';
 import LogoutGuard from './containers/LogoutGuard';
-import { checkUserAuthStateAction } from './actions/User';
+import { checkUserAuthStateAction } from './store/user';
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));

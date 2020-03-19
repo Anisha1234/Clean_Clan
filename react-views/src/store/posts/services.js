@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { serverRoot } from '../util';
+import { SERVER_ROOT } from '../../constants';
 
 const getPosts = async (userID = '') => axios.get(
-  `${serverRoot}/timeline/posts`,
+  `${SERVER_ROOT}/timeline/posts`,
   {
     params: {
       user_id: userID,
@@ -13,7 +13,7 @@ const getPosts = async (userID = '') => axios.get(
 
 const publishPost = async (data, responsePostID) => {
   const endPoint = (responsePostID ? `/post/${responsePostID}/solve` : '/post/create');
-  const postURL = new URL(endPoint, serverRoot);
+  const postURL = new URL(endPoint, SERVER_ROOT);
   return axios.post(
     postURL,
     data,
@@ -25,7 +25,7 @@ const publishPost = async (data, responsePostID) => {
 
 const updatePostLike = async (postID, likeStatus) => {
   const endPoint = likeStatus ? `/post/${postID}/like` : `/post/${postID}/unlike`;
-  const updateLikeURL = new URL(endPoint, serverRoot);
+  const updateLikeURL = new URL(endPoint, SERVER_ROOT);
   return axios.put(
     updateLikeURL,
     null,

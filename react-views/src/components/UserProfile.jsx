@@ -8,7 +8,7 @@ import {
   FaCity, FaMailBulk,
   FaAward,
 } from 'react-icons/fa';
-import { getUserProfileAction } from '../actions/User';
+import { getUserProfileAction } from '../store/user';
 import profileImg from '../assets/media/profile.png';
 
 
