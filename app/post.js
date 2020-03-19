@@ -1,260 +1,246 @@
-//require express
-var express = require('express');
-var path = require('path');
-var User = require('../model/user');
-var Post = require('../model/post');
-var multer = require('multer');
+// require express
+var express = require('express')
+var path = require('path')
+var User = require('../model/user')
+var Post = require('../model/post')
+var multer = require('multer')
 
-var mongoose = require('mongoose');
-//create our router object
-var router = express.Router();
-//multer object
+var mongoose = require('mongoose')
+// create our router object
+var router = express.Router()
+// multer object
 var storage = multer.diskStorage({
-  destination: function(request, file, callback) {
-    callback(null, 'public/uploads/');
+  destination: function (request, file, callback) {
+    callback(null, 'public/uploads/')
   },
-  filename: function(request, file, callback) {
-    let fileNameParseResult = path.parse(file.originalname);
-    callback(null, 
+  filename: function (request, file, callback) {
+    const fileNameParseResult = path.parse(file.originalname)
+    callback(null,
         `${fileNameParseResult.name}${Date.now()}${fileNameParseResult.ext}`
-    );
+    )
   }
-});
+})
 
 var upload = multer({
   storage: storage
-});
-
-
-
-var auth = function(req, res, next) {
-  if (req.session && req.session.email)
-    return next();
-  else
-    return res.redirect('/login');
-};
-router.get('/', auth, function(req, res, next) {
-  res.render('./pages/newpost');
 })
 
-router.post('/create', auth, upload.array('images', 12), function(req, res, next) {
+var auth = function (req, res, next) {
+  if (req.session && req.session.email) { return next() } else { return res.redirect('/login') }
+}
+router.get('/', auth, function (req, res, next) {
+  res.render('./pages/newpost')
+})
+
+router.post('/create', auth, upload.array('images', 12), function (req, res, next) {
   // trim the "public" part in the path of the images file.
-  for(let i=0; i< req.files.length; ++i){
-    req.files[i].path = req.files[i].path.slice(7);
+  for (let i = 0; i < req.files.length; ++i) {
+    req.files[i].path = req.files[i].path.slice(7)
   }
-  ///FOR Challenge
-  if(req.body.type_post=="Challenge"){
-      if (req.files.length > 1) {
-        res.statu(502).send("Exceeds file limit");
-      } else {
-        console.log(req.files[0].path);
-        if (!req.body.description || !req.body.location || !req.files[0].path
-          || !req.body.stake_holders || !req.body.heading) {
-          res.status(502).send("Insufficient Field Values")
-        } else {
-          var new_post = new Post({
-            description: req.body.description,
-            location: req.body.location,
-            stake_holders: req.body.stake_holders,
-            heading: req.body.heading,
-            type_post:req.body.type_post,
-            author: req.session.userid.toString(),
-            author_image:req.session.userimage.toString(),
-            image_before: req.files[0].path,
-            image_after:"",
-            like_count:0,
-            likes:[],
-            author_name:req.session.name
-          });
-          new_post.save(function(err, post) {
-            if (err) {
-              console.log(err);
-              return res.status(500).send(err);
-            } else {
-              User.findByIdAndUpdate(req.session.userid, {
-                $inc: {
-                 "like_count": 5
-               }
-              }, {
-                   new: true
-              }, function (err, user) {
-                  if(err){
-                    return res.status(500).send(err);
-                  }
-                  return res.status(200).send("Post saved succesfully");
-              });
-            }
-          });
-        }
-      }
-
-
-  }
-////FOR SOLUTION
-  else{
-    if (req.files.length > 2) {
-      res.status(502).send("Exceeds file limit");
+  /// FOR Challenge
+  if (req.body.type_post == 'Challenge') {
+    if (req.files.length > 1) {
+      res.statu(502).send('Exceeds file limit')
     } else {
+      console.log(req.files[0].path)
       if (!req.body.description || !req.body.location || !req.files[0].path ||
-        !req.files[1].path || !req.body.stake_holders || !req.body.heading) {
-        res.status(502).send("Insufficient Field Values");
+          !req.body.stake_holders || !req.body.heading) {
+        res.status(502).send('Insufficient Field Values')
       } else {
         var new_post = new Post({
           description: req.body.description,
           location: req.body.location,
           stake_holders: req.body.stake_holders,
           heading: req.body.heading,
-          type_post:req.body.type_post,
+          type_post: req.body.type_post,
           author: req.session.userid.toString(),
-          author_image:req.session.userimage.toString(),
+          author_image: req.session.userimage.toString(),
           image_before: req.files[0].path,
-          image_after: req.files[1].path,
-          like_count:0,
-          likes:[],
-          author_name:req.session.name
-        });
-        new_post.save(function(err, post) {
+          image_after: '',
+          like_count: 0,
+          likes: [],
+          author_name: req.session.name
+        })
+        new_post.save(function (err, post) {
           if (err) {
-            console.log(err);
-            res.status(500).send(err);
+            console.log(err)
+            return res.status(500).send(err)
           } else {
-              res.status(200).send("Post saved succesfully");
-            }
-        });
+            User.findByIdAndUpdate(req.session.userid, {
+              $inc: {
+                like_count: 5
+              }
+            }, {
+              new: true
+            }, function (err, user) {
+              if (err) {
+                return res.status(500).send(err)
+              }
+              return res.status(200).send('Post saved succesfully')
+            })
+          }
+        })
       }
     }
   }
-});
+  /// /FOR SOLUTION
+  else {
+    if (req.files.length > 2) {
+      res.status(502).send('Exceeds file limit')
+    } else {
+      if (!req.body.description || !req.body.location || !req.files[0].path ||
+        !req.files[1].path || !req.body.stake_holders || !req.body.heading) {
+        res.status(502).send('Insufficient Field Values')
+      } else {
+        var new_post = new Post({
+          description: req.body.description,
+          location: req.body.location,
+          stake_holders: req.body.stake_holders,
+          heading: req.body.heading,
+          type_post: req.body.type_post,
+          author: req.session.userid.toString(),
+          author_image: req.session.userimage.toString(),
+          image_before: req.files[0].path,
+          image_after: req.files[1].path,
+          like_count: 0,
+          likes: [],
+          author_name: req.session.name
+        })
+        new_post.save(function (err, post) {
+          if (err) {
+            console.log(err)
+            res.status(500).send(err)
+          } else {
+            res.status(200).send('Post saved succesfully')
+          }
+        })
+      }
+    }
+  }
+})
 
-
-router.post('/:postId/solve',auth,upload.array('images', 12),function(req,res,next){
-  console.log("Received solve request");
-  Post.findById(req.params.postId,function(err,challenge_post){
-    if(err){
-      console.log(err);
-    }else{
-      if(challenge_post.type_post !== "Challenge"){
-        console.log("Not a challenge");
-        res.send("This post cannot be solved as it is not a challenge")
-      }else{
-        console.log("This is a challenge , continue");
-        for(let i=0; i< req.files.length; ++i){
-          req.files[i].path = req.files[i].path.slice(7);
+router.post('/:postId/solve', auth, upload.array('images', 12), function (req, res, next) {
+  console.log('Received solve request')
+  Post.findById(req.params.postId, function (err, challenge_post) {
+    if (err) {
+      console.log(err)
+    } else {
+      if (challenge_post.type_post !== 'Challenge') {
+        console.log('Not a challenge')
+        res.send('This post cannot be solved as it is not a challenge')
+      } else {
+        console.log('This is a challenge , continue')
+        for (let i = 0; i < req.files.length; ++i) {
+          req.files[i].path = req.files[i].path.slice(7)
         }
         if (req.files.length > 2) {
-          res.send("Exceeds file limit");
-        }else{
+          res.send('Exceeds file limit')
+        } else {
           if (!req.body.description || !req.body.location || !req.files[0].path ||
             !req.files[1].path || !req.body.stake_holders || !req.body.heading) {
-            res.status(502).send("Insufficient Field Values")
-          }else{
+            res.status(502).send('Insufficient Field Values')
+          } else {
             var new_post = new Post({
               description: req.body.description,
               location: req.body.location,
               stake_holders: req.body.stake_holders,
               heading: req.body.heading,
-              type_post:req.body.type_post,
+              type_post: req.body.type_post,
               author: req.session.userid.toString(),
-              author_image:req.session.userimage.toString(),
+              author_image: req.session.userimage.toString(),
               image_before: req.files[0].path,
               image_after: req.files[1].path,
-              like_count:0,
-              likes:[],
-              author_name:req.session.name,
-              challenge_user_name:challenge_post.author_name
-            });
-            new_post.save(function(err,solution_post){
-              console.log(solution_post._id);
+              like_count: 0,
+              likes: [],
+              author_name: req.session.name,
+              challenge_user_name: challenge_post.author_name
+            })
+            new_post.save(function (err, solution_post) {
+              console.log(solution_post._id)
               Post.findByIdAndUpdate(
                 challenge_post._id.toString(),
                 {
-                  $set:{
-                    "solutions":solution_post._id.toString(),
-                    "solutions_user_name":solution_post.author_name
+                  $set: {
+                    solutions: solution_post._id.toString(),
+                    solutions_user_name: solution_post.author_name
                   }
                 },
-                function(err,post){
-                  if(err){
-                    console.log(err);
-                  }else{
+                function (err, post) {
+                  if (err) {
+                    console.log(err)
+                  } else {
                     User.findByIdAndUpdate(req.session.userid, {
                       $inc: {
-                      "like_count": 15
-                    }
+                        like_count: 15
+                      }
                     }, {
-                        new: true
+                      new: true
                     }, function (err, user) {
-                        if(err) res.send(err);
-                        res.send("Post saved succesfully");
+                      if (err) res.send(err)
+                      res.send('Post saved succesfully')
                     })
                   }
                 }
-              );
-            });
+              )
+            })
           }
         }
       }
     }
   })
 })
-router.put('/:postId/like',auth,function(req,res,next){
+router.put('/:postId/like', auth, function (req, res, next) {
   Post.findByIdAndUpdate(req.params.postId, {
     $push: {
-     likes: req.session.userid
+      likes: req.session.userid
     },
-    $inc:{
-      "like_count": 1
+    $inc: {
+      like_count: 1
     }
   }, {
-       new: true
+    new: true
   }, function (err, post) {
-      if(err) res.status(500).send(error);
-      User.findByIdAndUpdate(post.author.toString(), {
-        $inc: {
-         "like_count":1
-       }
-      }, {
-           new: true
-      }, function (err, user) {
-        if(err){
-          return res.status(500).send(err);
-        }
-        return res.status(200).send("ok");
-      });
-  });
+    if (err) res.status(500).send(error)
+    User.findByIdAndUpdate(post.author.toString(), {
+      $inc: {
+        like_count: 1
+      }
+    }, {
+      new: true
+    }, function (err, user) {
+      if (err) {
+        return res.status(500).send(err)
+      }
+      return res.status(200).send('ok')
+    })
+  })
+})
 
-
-
-});
-
-router.put('/:postId/unlike',auth,function(req,res,next){
+router.put('/:postId/unlike', auth, function (req, res, next) {
   Post.findByIdAndUpdate(req.params.postId, {
     $pull: {
-     likes: req.session.userid
-    }, 
+      likes: req.session.userid
+    },
     $inc: {
-      "like_count":-1
+      like_count: -1
     }
   }, {
     new: true
   }, function (err, post) {
     User.findByIdAndUpdate(post.author.toString(), {
       $inc: {
-       "like_count":-1
-     }
-    }, {
-         new: true
-    }, function (err, user) {
-      if(err){
-        return res.status(500).send(err);
+        like_count: -1
       }
-      return res.status(200).send("ok");
-    });
-
-
-  });
-
-});
+    }, {
+      new: true
+    }, function (err, user) {
+      if (err) {
+        return res.status(500).send(err)
+      }
+      return res.status(200).send('ok')
+    })
+  })
+})
 
 // router.get('/:postId/checklike',auth,function(req,res,next){
 //   Post.findById(req.params.postId, function(err,post){
@@ -268,7 +254,6 @@ router.put('/:postId/unlike',auth,function(req,res,next){
 // })
 //
 // });
-
 
 //
 // router.put('/:userlike',auth,function(req,res,next){
@@ -285,6 +270,5 @@ router.put('/:postId/unlike',auth,function(req,res,next){
 //
 // });
 
-
-//export our router
-module.exports = router;
+// export our router
+module.exports = router
