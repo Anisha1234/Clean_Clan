@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "lint": "standard --fix",
+    "lint": "semistandard --fix",
     "dev": "concurrently \"npm run react-dev\" \"npm start\" "
   },
   "keywords": [
@@ -22,6 +22,7 @@
   "dependencies": {
     "bcrypt": "^4.0.1",
     "body-parser": "^1.15.2",
+    "cors": "^2.8.5",
     "ejs": "^2.5.2",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.2.0",
@@ -29,8 +30,10 @@
     "express-session": "^1.17.0",
     "formidable": "^1.2.2",
     "fs": "0.0.2",
+    "gridfs-stream": "^1.1.1",
     "mongoose": "^5.9.3",
     "multer": "^1.2.1",
+    "multer-gridfs-storage": "^4.0.2",
     "nodemailer": "^6.4.4",
     "nodemon": "^2.0.2",
     "pre": "^0.1.3",

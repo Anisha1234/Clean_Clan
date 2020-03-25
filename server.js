@@ -1,40 +1,37 @@
-/// //////////////////  EXPRESS //////////////////
-// require our dependencies
-var express = require('express')
-var mongoose = require('mongoose')
-var session = require('express-session')
-var multer = require('multer')
-var serveIndex = require('serve-index')
-var body_parser = require('body-parser')
+const app = require('express')();
+const serveIndex = require('serve-index');
 
-mongoose.connect('mongodb://localhost/tcs', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false
-})
-// handle error in connection
-  .catch(function (error) {
-  // handle error
-    console.log(error)
-  })
-var db = mongoose.connection
-db.on('error', console.error.bind(console, 'connection error:'))
-db.once('open', function () {
-  console.log('connection established to db')
-})
-// var formidable = require('express-formidable')
-var app = express()
-var port = 3000
+const setUpServer = require('./bin/www');
+const setUpDB = require('./bin/db');
+const setUpCors = require('./bin/cors');
+const setUpSession = require('./bin/session');
 
-// development cors
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Credentials', true)
-  res.header('Access-Control-Allow-Origin', ['http://localhost:5000'])
-  res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-  next()
-})
+const {fileUploadInit, fileRouteInit} = require('./app/fileHandler');
+
+const config = require('./config');
+
+//set up function
+const setUp= async ()=>{
+  //set up server
+  setUpServer(app, config.port);
+  //cors
+  setUpCors(app);
+  //session
+  setUpSession(app, config.session);
+  //set up mongoDB connection
+  const dbInstance = await setUpDB(config.database);
+  //set up file upload handler (middleware and route)
+  const imageUpload = fileUploadInit(config.database, 'images');
+  const imageRoute = fileRouteInit(dbInstance, "images");
+  //initiate routes
+  
+  //set routes
+  app.use("/images", imageRoute);
+};  
+
+setUp()
+  .catch(error=>console.log(error));
+
 
 // route our app
 var router = require('./app/routes')
@@ -50,21 +47,6 @@ var report = require('./app/report')
 // set static files(css or js or imgs)
 app.use(express.static(__dirname + '/public'))
 app.use('/uploads', serveIndex('public/uploads'))
-
-app.use(body_parser.json({ limit: '10mb' }))
-app.use(body_parser.urlencoded({ extended: true }))
-// app.use(formidable());
-
-app.use(session({
-  secret: 'tcshack',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 3600000,
-    path: '/'
-  }
-}))
-
 // setup ejs
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
@@ -91,9 +73,4 @@ app.get('/auth-check', function (req, res) {
     return res.status(200).send({ is_login: true, user_data: userData })
   }
   return res.status(200).send({ is_login: false, user_data: null })
-})
-
-// start your server
-app.listen(port, function () {
-  console.log('App started')
 })
