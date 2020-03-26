@@ -1,23 +1,24 @@
-const GridStream = require("gridfs-stream");
 const mongoose = require("mongoose");
 
 /**
  * @function: create read stream to get a file from db
- * @param {GridStream} fileStream: gridfs stream
- * @return {function resolving a read stream} 
+ * @param {GridFSBucket} fileStream: gridfs bucket stream
+ * @return {function resolving a download stream} 
  * (later we pipe this read stream to response object in the request)
  */
-const getFile = (fileStream) => (fileID) => new Promise((resolve, reject)=>{
-  fileStream.files.findOne({_id: fileID}, (err, file)=>{
-    if(err) 
+const getFile = (fileStream) => (fileName) => new Promise((resolve, reject)=>{
+  fileStream.find({filename: fileName}).toArray((err, files)=>{
+    if(err){
       reject(err);
-    if(!file || file.length===0) 
+      return;
+    } 
+    //files here is the array, but because we find by id => files.length <=1
+    //if files.length === 0 => cannot find the file
+    if(!files || files.length===0){
       reject(new Error("Cannot find the file"));
-    resolve(
-      fileStream.createReadStream({
-        _id: fileID
-      })
-    );
+      return;
+    } 
+    resolve(fileStream.openDownloadStreamByName(fileName));
   });
 }); 
 
@@ -27,8 +28,9 @@ const getFile = (fileStream) => (fileID) => new Promise((resolve, reject)=>{
  * @param {Db} dbInstance: mongoDB instance
  */
 module.exports = (dbInstance, bucketName)=>{
-  const fileStream = GridStream(dbInstance, mongoose.mongo);
-  fileStream.collection(bucketName);
+  const fileStream = new mongoose.mongo.GridFSBucket(dbInstance, {
+    bucketName
+  });
   return {
     getFile: getFile(fileStream)
   }

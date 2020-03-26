@@ -6,9 +6,6 @@ const userServiceURL = `${SERVER_ROOT}/user`;
 const checkLoginState = async () => axios.get(
   `${userServiceURL}/`,
   {
-    params: {
-      only_auth_check: true,
-    },
     timeout: 4500,
     withCredentials: true,
   },
@@ -43,6 +40,15 @@ const getUserProfile = async () => axios.get(
   },
 );
 
+const updateUserProfilePic = async (data) => axios.post(
+  `${userServiceURL}/profile/image`,
+  data,
+  {
+    withCredentials: true,
+  },
+);
+
 export {
-  checkLoginState, login, logout, signup, getUserProfile,
+  checkLoginState, login, logout, signup,
+  getUserProfile, updateUserProfilePic,
 };

@@ -7,7 +7,10 @@ const userSchema = new mongoose.Schema({
   email: String,
   city: String,
   password: String,
-  image: String,
+  image: {
+    current: String,
+    all: [String],
+  },
   like_count: Number,
   user_details: String,
 }, { collection: 'user' });

@@ -10,6 +10,8 @@ module.exports = (dbConfig)=>{
     mongoose.connect(url, options)
       .then(()=>{
         const dbConnection = mongoose.connection;
+        //set the option
+        mongoose.set('useFindAndModify', false);
         //event listener for database connection error handling
         dbConnection.on('error', console.error.bind(console, "db connection error: "));
         resolve(dbConnection);

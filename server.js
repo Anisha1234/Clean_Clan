@@ -26,12 +26,13 @@ const setUp= async ()=>{
   //set up main components
     //image handler
   const {
-    FileRoute: ImageRoute
+    FileRoute: ImageRoute,
+    FileUpload: ImageUpload
   } = fileHandlerInit(config.database, dbConnection.db, 'images');
     //user component
   const {
     UserRoute
-  } = userComponentInit();
+  } = userComponentInit(ImageUpload);
   //set routes
   app.use("/images", ImageRoute);
   app.use("/user", UserRoute);

@@ -1,7 +1,10 @@
 const UserService = require('./services');
 const UserRouteInit = require('./routes');
 
-module.exports = () => ({
+/**
+ * @param {Multer} ImageUpload: image upload middleware, useful for user profile pic update
+ */
+module.exports = (ImageUpload) => ({
   UserService,
-  UserRoute: UserRouteInit()
+  UserRoute: UserRouteInit(ImageUpload)
 });

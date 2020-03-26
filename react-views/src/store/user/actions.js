@@ -4,7 +4,8 @@ import {
   USER_DOMAIN, USER_DATA_DOMAIN, REGISTRATION_DOMAIN, AUTH_DOMAIN,
 } from '../../constants';
 import {
-  login, logout, checkLoginState, signup, getUserProfile,
+  login, logout, checkLoginState, signup,
+  getUserProfile, updateUserProfilePic,
 } from './services';
 import { updateStoreDataAction } from '../util';
 
@@ -75,7 +76,7 @@ const loginAction = (email, password) => async (dispatch) => {
       dispatch(updateUserAuthAction(LOGGED_OUT, error.response.data.toString()));
       return;
     }
-    dispatch(updateUserAuthAction(error.toString()));
+    dispatch(updateUserAuthAction(LOGGED_OUT, error.toString()));
   }
 };
 
@@ -102,6 +103,31 @@ const getUserProfileAction = () => async (dispatch) => {
     dispatch(updateUserDataAction(UPDATE, userData));
   } catch (error) {
     dispatch(updateUserDataAction(RESET, null));
+  }
+};
+/**
+ * @function: update user profile pic
+ * @param {string} oldImageName: file name of the old profile pic (not the current one)
+ * @param {File} newImageFile : file of the new profile pic
+ */
+const updateUserPicAction = (oldImageName, newImageFile) => async (dispatch) => {
+  try {
+    const data = new FormData();
+    data.append('oldImageName', oldImageName);
+    data.append('image', newImageFile);
+    const { data: { user_data: userData } } = await updateUserProfilePic(data);
+    dispatch(updateUserDataAction(UPDATE, userData));
+    return;
+  } catch (error) {
+    if (error && error.response) {
+      dispatch(updateUserDataAction(UPDATE, {
+        error: error.response.data.toString(),
+      }));
+      return;
+    }
+    dispatch(updateUserDataAction(UPDATE, {
+      error: error.toString(),
+    }));
   }
 };
 
@@ -134,5 +160,6 @@ const signupAction = (name, email, details, city, password) => async (dispatch) 
 };
 
 export {
-  checkUserAuthStateAction, loginAction, logoutAction, getUserProfileAction, signupAction,
+  checkUserAuthStateAction, loginAction, logoutAction, signupAction,
+  getUserProfileAction, updateUserPicAction,
 };

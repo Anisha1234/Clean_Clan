@@ -10,8 +10,8 @@ module.exports = (dbInstance, bucketName)=>{
   const router = express.Router();
   router
     //read an file
-    .get('/:fileID', (req, res)=>{
-      getFile(req.params.fileID)
+    .get('/:fileName', (req, res)=>{
+      getFile(req.params.fileName)
         .then(fileReadStream => fileReadStream.pipe(res))
         .catch(error=> res.status(404).send(error));
     });

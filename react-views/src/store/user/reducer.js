@@ -21,6 +21,11 @@ const initialState = {
     user_details: '',
     city: '',
     email: '',
+    image: {
+      current: '',
+      all: [],
+    },
+    error: '',
   },
 };
 

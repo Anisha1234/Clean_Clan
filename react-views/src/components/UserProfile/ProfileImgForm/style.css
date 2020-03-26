@@ -1,0 +1,25 @@
+.user-pic-preview{
+  width: 96%;
+  min-height: 300px;
+  border: 1px dashed rgb(190, 189, 189);
+  margin: 10px;
+  position: relative;
+}
+.user-pic-upload-control{
+  position: relative;
+  
+}
+/*the input*/
+.user-pic-upload{
+  opacity: 0;
+  position: absolute;
+  left: -80px;
+  top: 0;
+  width: 230px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.user-pic-upload:hover + .user-pic-upload-label{
+  text-decoration: underline;
+}

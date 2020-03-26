@@ -1,9 +1,10 @@
 const express = require('express');
 const UserService = require('../services');
 const {authCheck} = require('../middlewares');
-
-
-module.exports = ()=>{
+/**
+ * @param {Multer} ImageUpload: image upload middleware for user profile pic update
+ */
+module.exports = (ImageUpload)=>{
   const router = express.Router();
   router
     //check user auth status
@@ -78,6 +79,26 @@ module.exports = ()=>{
       } catch(error){
         res.status(500).send(error.toString());
       }
-    });
+    })
+    //update user profile image
+    .post(
+      '/profile/image', 
+      authCheck, 
+      ImageUpload.single('image'),
+      async (req, res)=>{
+        try{
+          const oldImageName = req.body && req.body.oldImageName;
+          const fileName = req.file && req.file.filename;
+          const userID = req.session.userid;
+          const user = await UserService.updateUserImage(userID, oldImageName, fileName);
+          res.status(200).send({
+            message: "ok",
+            user_data: user
+          });
+        }catch(error){
+          res.status(500).send(error.toString());
+        }
+      }
+    );
   return router;
-}
+};

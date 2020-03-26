@@ -4,7 +4,7 @@ const UserModel = require("./userModel");
  * @function findSingleUser find an user that match the options
  * @param {object} options - mongodb query filter
  */
-const findSingleUser = async (options)=> new Promise((resolve, reject)=>{
+const findSingleUser = (options)=> new Promise((resolve, reject)=>{
   UserModel.findOne(options, (error, user)=>{
     if(error){
       reject(error);
@@ -21,10 +21,13 @@ const findSingleUser = async (options)=> new Promise((resolve, reject)=>{
  * 
  * @param {object} data - signup data {name, email, user_details, password, city}
  */
-const saveNewUser = async (data) => new Promise((resolve, reject)=>{
+const saveNewUser = (data) => new Promise((resolve, reject)=>{
   const newUser = new UserModel({
     ...data,
-    image: '',
+    image: {
+      current: '',
+      all: []
+    },
     like_count: 0
   });
   newUser.save((error, user)=>{
@@ -32,8 +35,29 @@ const saveNewUser = async (data) => new Promise((resolve, reject)=>{
     resolve(user);
   });
 });
-
+/**
+ * 
+ * @param {string} userID 
+ * @param {object} data 
+ */
+const updateUserData = (userID, data) => new Promise((resolve, reject)=>{
+  UserModel.findByIdAndUpdate(userID, {
+    $set: data
+  }, {
+    new: true
+  }, (error, user)=>{
+    if(error){
+      reject(error);
+      return;
+    } 
+    if(user){
+      resolve(user.toObject());
+      return;
+    } 
+    resolve(null);
+  });
+});
 
 module.exports = {
-  findSingleUser, saveNewUser
+  findSingleUser, saveNewUser, updateUserData
 }

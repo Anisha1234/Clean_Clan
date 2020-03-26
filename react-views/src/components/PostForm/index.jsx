@@ -178,6 +178,15 @@ const PostForm = ({ type, responsePostID }) => {
           ref={postDescriptionTextRef}
         />
       </Form.Group>
+      {
+          publishMessage ? (
+            <Alert
+              variant={publishStatus === FAIL ? 'danger' : 'info'}
+            >
+              {publishMessage}
+            </Alert>
+          ) : null
+        }
       <CardDeck className="justify-content-around">
         {
           [...Array(postTypeImageCount[postType]).keys()]
@@ -225,15 +234,6 @@ const PostForm = ({ type, responsePostID }) => {
           Submit
         </Button>
       </Form.Group>
-      {
-          publishMessage ? (
-            <Alert
-              variant={publishStatus === FAIL ? 'danger' : 'info'}
-            >
-              {publishMessage}
-            </Alert>
-          ) : null
-        }
     </Form>
   );
 };
