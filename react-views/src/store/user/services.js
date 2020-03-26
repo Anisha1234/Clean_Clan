@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { SERVER_ROOT } from '../../constants';
 
+const userServiceURL = `${SERVER_ROOT}/user`;
+
 const checkLoginState = async () => axios.get(
-  `${SERVER_ROOT}/auth-check`,
+  `${userServiceURL}/`,
   {
     params: {
       only_auth_check: true,
@@ -13,7 +15,7 @@ const checkLoginState = async () => axios.get(
 );
 
 const login = async (email, password) => axios.post(
-  `${SERVER_ROOT}/login`,
+  `${userServiceURL}/login`,
   { email, password },
   {
     withCredentials: true,
@@ -21,18 +23,21 @@ const login = async (email, password) => axios.post(
 );
 
 const logout = async () => axios.get(
-  `${SERVER_ROOT}/logout`,
+  `${userServiceURL}/logout`,
+  {
+    withCredentials: true,
+  },
 );
 
 const signup = async (name, email, details, city, password) => axios.post(
-  `${SERVER_ROOT}/signup`,
+  `${userServiceURL}/signup`,
   {
     name, email, user_details: details, city, password,
   },
 );
 
 const getUserProfile = async () => axios.get(
-  `${SERVER_ROOT}/profile/my-profile`,
+  `${userServiceURL}/profile/`,
   {
     withCredentials: true,
   },

@@ -45,13 +45,10 @@ const checkUserAuthStateAction = () => async (dispatch) => {
   try {
     dispatch(updateUserAuthAction(PENDING));
     const { data } = await checkLoginState();
-    const { is_login: isLogin, user_data: userData } = data;
-    if (isLogin) {
-      dispatch(updateUserAuthAction(LOGGED_IN));
-      dispatch(updateUserDataAction(UPDATE, userData));
-      return;
-    }
-    throw new Error();
+    const { user_data: userData } = data;
+    dispatch(updateUserAuthAction(LOGGED_IN));
+    dispatch(updateUserDataAction(UPDATE, userData));
+    return;
   } catch (error) {
     dispatch(updateUserAuthAction(LOGGED_OUT));
     dispatch(updateUserDataAction(RESET, null));
@@ -67,16 +64,18 @@ const loginAction = (email, password) => async (dispatch) => {
   try {
     dispatch(updateUserAuthAction(PENDING, ''));
     const { data } = await login(email, password);
-    const { message, user_data: userData } = data;
-    if (message === 'Success') {
-      dispatch(updateUserAuthAction(LOGGED_IN, ''));
-      dispatch(updateUserDataAction(UPDATE, userData));
-      return;
-    }
-    throw message;
+    const { error, user_data: userData } = data;
+    if (error) throw error;
+    dispatch(updateUserAuthAction(LOGGED_IN, ''));
+    dispatch(updateUserDataAction(UPDATE, userData));
+    return;
   } catch (error) {
     dispatch(updateUserDataAction(RESET, null));
-    dispatch(updateUserAuthAction(LOGGED_OUT, error.toString()));
+    if (error && error.response) {
+      dispatch(updateUserAuthAction(LOGGED_OUT, error.response.data.toString()));
+      return;
+    }
+    dispatch(updateUserAuthAction(error.toString()));
   }
 };
 
@@ -85,8 +84,8 @@ const loginAction = (email, password) => async (dispatch) => {
  */
 const logoutAction = () => async (dispatch) => {
   try {
-    const { data: logoutMessage } = await logout();
-    throw logoutMessage;
+    await logout();
+    throw new Error('log out');
   } catch (error) {
     dispatch(updateUserDataAction(RESET, null));
     dispatch(updateUserAuthAction(LOGGED_OUT));
@@ -99,7 +98,7 @@ const logoutAction = () => async (dispatch) => {
 
 const getUserProfileAction = () => async (dispatch) => {
   try {
-    const { data: userData } = await getUserProfile();
+    const { data: { user_data: userData } } = await getUserProfile();
     dispatch(updateUserDataAction(UPDATE, userData));
   } catch (error) {
     dispatch(updateUserDataAction(RESET, null));
@@ -117,17 +116,19 @@ const getUserProfileAction = () => async (dispatch) => {
 const signupAction = (name, email, details, city, password) => async (dispatch) => {
   try {
     dispatch(updateUserRegistrationAction(PENDING, ''));
-    const { data: message } = await signup(name, email, details, city, password);
-    if (message === 'ok') {
-      dispatch(updateUserRegistrationAction(
-        DONE,
-        `Your account has been registered. 
-        You will be redirected to login page shortly`,
-      ));
+    const { data: { error } } = await signup(name, email, details, city, password);
+    if (error) throw error;
+    dispatch(updateUserRegistrationAction(
+      DONE,
+      `Your account has been registered. 
+      You will be redirected to login page shortly`,
+    ));
+    return;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      dispatch(updateUserRegistrationAction(FAIL, error.response.data.toString()));
       return;
     }
-    throw message;
-  } catch (error) {
     dispatch(updateUserRegistrationAction(FAIL, error.toString()));
   }
 };

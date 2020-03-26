@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 /**
  * @function: set up mongoDB connection
  * @param {object} dbConfig: database config option
- * @return mongodb.Db instance - useful for set up file handler
+ * @return mongoose connection - useful for set up file handler and session store
  */
 module.exports = (dbConfig)=>{
   const {url, options} = dbConfig;
@@ -12,8 +12,7 @@ module.exports = (dbConfig)=>{
         const dbConnection = mongoose.connection;
         //event listener for database connection error handling
         dbConnection.on('error', console.error.bind(console, "db connection error: "));
-        //succesfully connnect => resolve the mongodb.Db instance 
-        dbConnection.once('open', ()=>resolve(dbConnection.db));
+        resolve(dbConnection);
       })
       .catch((error)=> reject(error));
   });

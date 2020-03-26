@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "lint": "semistandard --fix",
+    "react-dev": "cd react-views && npm start",
     "dev": "concurrently \"npm run react-dev\" \"npm start\" "
   },
   "keywords": [
@@ -22,6 +23,7 @@
   "dependencies": {
     "bcrypt": "^4.0.1",
     "body-parser": "^1.15.2",
+    "connect-mongo": "^3.2.0",
     "cors": "^2.8.5",
     "ejs": "^2.5.2",
     "express": "^4.17.1",
@@ -42,6 +44,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
+    "eslint-config-standard": "^13.0.1",
     "neutrino": "^9.1.0",
     "semistandard": "^14.2.0"
   },

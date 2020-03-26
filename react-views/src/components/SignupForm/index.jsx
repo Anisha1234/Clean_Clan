@@ -1,5 +1,5 @@
 import React, {
-  useState, useCallback, useEffect, useRef,
+  useState, useCallback, useEffect,
 } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
@@ -30,8 +30,6 @@ const SignupForm = () => {
   const signupStatus = useSelector((state) => state.user.registration.status);
   const history = useHistory();
   const dispatch = useDispatch();
-  const userDetailTextRef = useRef();
-
   // update sign-up form submission message
   useEffect(() => {
     setSignupMessage(submitSignupFormMessage);
@@ -51,12 +49,6 @@ const SignupForm = () => {
       }
     };
   }, [history, signupStatus]);
-
-  const handleUserDetailsText = useCallback((e) => {
-    setDetails(e.target.value);
-    userDetailTextRef.current.style.height = '40px';
-    userDetailTextRef.current.style.height = `${`${e.target.scrollHeight}px`}`;
-  }, [userDetailTextRef]);
 
   const submitSignupData = useCallback((e) => {
     e.preventDefault();
@@ -95,12 +87,11 @@ const SignupForm = () => {
           <Form.Group controlId="user-details">
             <Form.Label>Description</Form.Label>
             <Form.Control
-              as="textarea"
-              onChange={handleUserDetailsText}
+              type="text"
+              onChange={(e) => setDetails(e.target.value)}
               placeholder="Describe about yourself..."
               className="user-description"
               required
-              ref={userDetailTextRef}
             />
           </Form.Group>
           <Form.Group controlId="user-city">
@@ -132,6 +123,17 @@ const SignupForm = () => {
               required
             />
           </Form.Group>
+          <Form.Group controlId="user-signup-message">
+            {
+            signupMessage ? (
+              <Alert
+                variant={signupStatus === FAIL ? 'danger' : 'info'}
+              >
+                {signupMessage}
+              </Alert>
+            ) : null
+          }
+          </Form.Group>
           <Form.Group
             controlId="user-submit"
             style={{ textAlign: 'center' }}
@@ -148,17 +150,6 @@ const SignupForm = () => {
           </Form.Group>
         </Form>
       </Card.Body>
-      <Card.Footer>
-        {
-          signupMessage ? (
-            <Alert
-              variant={signupStatus === FAIL ? 'danger' : 'info'}
-            >
-              {signupMessage}
-            </Alert>
-          ) : null
-        }
-      </Card.Footer>
     </Card>
   );
 };
