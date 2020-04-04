@@ -1,5 +1,8 @@
-import React, { useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {
+  useState, useCallback, useEffect, useRef,
+} from 'react';
+import { useDispatch } from 'react-redux';
+import { useFormik } from 'formik';
 import Alert from 'react-bootstrap/Alert';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
@@ -8,88 +11,134 @@ import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import { MdCloudUpload } from 'react-icons/md';
 import PropTypes from 'prop-types';
-import { updateUserPicAction } from '../../../store/user';
+import { updateUserPic } from '../../../store/user';
 import './style.css';
 
+const OLD_IMAGE_TAB = 'old';
+const NEW_IMAGE_TAB = 'new';
+
 const ProfileImgForm = ({ allImages }) => {
-  const [keyAction, setKeyAction] = useState('upload new');
-  const userDataError = useSelector((state) => state.user.data.error);
-  const [newProfileImg, setNewProfileImg] = useState({
-    file: null,
-    url: '',
-  });
+  const isMounted = useRef(true);
+  useEffect(() => () => { isMounted.current = false; }, []);
+
+  const [activeTab, setActiveTab] = useState(NEW_IMAGE_TAB);
+  const [newImageURL, setNewImageURL] = useState('');
+  useEffect(() => () => {
+    if (newImageURL) {
+      URL.revokeObjectURL(newImageURL);
+    }
+  }, [newImageURL]);
+  const [updateStatus, setUpdateStatus] = useState(false);
+  useEffect(() => {
+    if (updateStatus) {
+      window.location.reload();
+    }
+  }, [updateStatus]);
+  const [updateError, setUpdateError] = useState('');
   const dispatch = useDispatch();
-
-  const handleUploadImage = useCallback((file) => {
-    setNewProfileImg((currentImg) => {
-      if (currentImg.file) {
-        URL.revokeObjectURL(currentImg.url);
+  const imageFileRef = useRef();
+  const formHandler = useFormik({
+    initialValues: {
+      newImageFile: null,
+      oldImageName: '',
+    },
+    validate: (values) => {
+      const { newImageFile, oldImageName } = values;
+      if (!newImageFile && !oldImageName) {
+        setUpdateStatus(false);
+        setUpdateError("You haven't pick an profile picture yet!");
+        return 'error';
       }
-      return {
-        file,
-        url: URL.createObjectURL(file),
-      };
-    });
-  }, []);
+      return null;
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    onSubmit: async (values) => {
+      try {
+        const { newImageFile, oldImageName } = values;
+        await dispatch(updateUserPic(oldImageName, newImageFile));
+        if (!isMounted.current) return;
+        setUpdateStatus(true);
+      } catch (error) {
+        if (!isMounted.current) return;
+        setUpdateStatus(false);
+        setUpdateError(error.toString());
+      }
+    },
+  });
 
-  const submitNewProfileImg = useCallback((e) => {
-    e.preventDefault();
-    dispatch(updateUserPicAction('', newProfileImg.file));
-  }, [dispatch, newProfileImg]);
+  const handleUploadImage = useCallback((e) => {
+    const file = e.target.files[0];
+    setNewImageURL((currentURL) => {
+      URL.revokeObjectURL(currentURL);
+      return URL.createObjectURL(file);
+    });
+    formHandler.setFieldValue('newImageFile', file);
+  }, [formHandler]);
+
+  const handleChangeTab = useCallback((chosenTab) => {
+    if (chosenTab === OLD_IMAGE_TAB) {
+      setNewImageURL((currentURL) => {
+        URL.revokeObjectURL(currentURL);
+        return '';
+      });
+      imageFileRef.current.value = null;
+      formHandler.setFieldValue('newImageFile', null);
+    }
+    setActiveTab(chosenTab);
+  }, [formHandler, imageFileRef]);
 
   return (
-    <Tabs
-      activeKey={keyAction}
-      onSelect={(action) => setKeyAction(action)}
-      className="justify-content-center"
+    <Form
+      className="justify-content-center cover-all"
+      encType="multipart/form-data"
+      onSubmit={formHandler.handleSubmit}
     >
-      <Tab
-        eventKey="upload new"
-        title="Upload new pic"
+      <Tabs
+        activeKey={activeTab}
+        onSelect={handleChangeTab}
+        className="justify-content-center"
       >
-        <Form
-          className="justify-content-center text-center"
-          encType="multipart/form-data"
-          onSubmit={submitNewProfileImg}
+        <Tab
+          eventKey={NEW_IMAGE_TAB}
+          title="Upload new pic"
+          className="text-center"
         >
           <div className="user-pic-preview">
             <h2 className="center-vert-hor text-muted">Preview</h2>
-            <Image fluid className="center-vert-hor" src={newProfileImg.url} />
+            <Image fluid className="center-vert-hor" src={newImageURL} />
           </div>
-          <Form.Group controlId="user-pic">
-            <Form.Label className="user-pic-upload-control">
-              <Form.Control
-                className="user-pic-upload cover-all"
-                name="user-pic"
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleUploadImage(e.target.files[0])}
-                required
-              />
-              <Button variant="link" className="user-pic-upload-label">
-                <MdCloudUpload />
-                {' '}
-                {' '}
-                Upload an image
-              </Button>
-            </Form.Label>
+          <Form.Group controlId="newImageFile" className="text-center">
+            <Form.Control
+              name="newImageFile"
+              type="file"
+              accept="image/*"
+              ref={imageFileRef}
+              onChange={handleUploadImage}
+            />
           </Form.Group>
-          <Form.Group>
-            <Button variant="outline-primary" type="submit">Submit</Button>
-          </Form.Group>
-          {
-          userDataError ? (
-            <Alert variant="danger">{userDataError}</Alert>
-          ) : null
+        </Tab>
+        <Tab
+          eventKey={OLD_IMAGE_TAB}
+          title="Choose old pic"
+          disabled={!allImages || allImages.length === 0}
+        />
+      </Tabs>
+      <Form.Group>
+        {
+          !updateStatus && updateError
+            ? <Alert variant="danger">{updateError}</Alert> : null
         }
-        </Form>
-      </Tab>
-      <Tab
-        eventKey="pick old"
-        title="Choose old pic"
-        disabled={!allImages || allImages.length === 0}
-      />
-    </Tabs>
+      </Form.Group>
+      <Form.Group className="text-center">
+        <Button variant="outline-primary" type="submit">
+          <MdCloudUpload />
+          {' '}
+          {' '}
+          Submit
+        </Button>
+      </Form.Group>
+    </Form>
   );
 };
 

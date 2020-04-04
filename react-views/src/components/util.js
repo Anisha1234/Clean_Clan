@@ -4,12 +4,16 @@
  * @return {boolean}
  */
 const validateEmail = (inputEmail) => {
+  if (!inputEmail) {
+    return false;
+  }
   const emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
   return emailReg.test(inputEmail);
 };
 
-const doSth = () => {};
+const dosth = () => {};
 
 export {
-  validateEmail, doSth,
+  dosth,
+  validateEmail,
 };

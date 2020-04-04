@@ -1,21 +1,11 @@
-
+import { UPDATE, RESET } from '../constants';
 /**
  * @function - compare types of action in the form of string array
  * @param {string[]} type1 - first type to compare - [...domains, "action_type"]
  * @param {string[]} type2 - second type to compare
  * @return {boolean}
  */
-const isActionTypeEqual = (type1, type2) => {
-  if (type1.length !== type2.length) {
-    return false;
-  }
-  for (let i = 0; i < type1.length; i += 1) {
-    if (type1[i] !== type2[i]) {
-      return false;
-    }
-  }
-  return true;
-};
+const isActionTypeEqual = (type1, type2) => type1.join('/') === type2.join('/');
 /**
  * @function:'domain1/domain2/.../actionType'=> [...domains], actionType
  * @param {string} type
@@ -38,8 +28,29 @@ const updateStoreDataAction = (actionType, payload, ...domains) => ({
   type: [...domains, actionType].join('/'),
   payload,
 });
+/**
+ * @function - create sub reducers for user
+ * @param {object} initialState
+ * @param {string[]} givenDomains - array of domains from high-to-low levels
+ * @return {function} - a reducer
+ */
+function createCommonSubreducer(initialState, ...givenDomains) {
+  return (state = initialState, action) => {
+    const { type, payload } = action;
+    const { domains, actionType } = getDomainsAndActionType(type);
+    if (!isActionTypeEqual(givenDomains, domains)) return state;
+    switch (actionType) {
+      case UPDATE:
+        return { ...state, ...payload };
+      case RESET:
+        return { ...state, ...initialState };
+      default:
+        return state;
+    }
+  };
+}
 
 export {
-  isActionTypeEqual, getDomainsAndActionType,
+  isActionTypeEqual, getDomainsAndActionType, createCommonSubreducer,
   updateStoreDataAction,
 };

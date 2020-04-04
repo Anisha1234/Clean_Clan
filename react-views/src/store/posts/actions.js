@@ -55,7 +55,7 @@ const getPostsAction = (isMine) => async (dispatch, getState) => {
     let userID = '';
     // if isMine === true, userID is current user's id
     if (isMine) {
-      userID = getState().user.data.userid;
+      userID = getState().user.user_data.data.userid;
       if (!userID) {
         throw new Error("Cannot get your posts. Maybe you haven't signed in yet");
       }
@@ -103,7 +103,7 @@ const publishPostAction = (postData, responsePostID = '') => async (dispatch) =>
  */
 const updatePostLikeAction = (postID, likeStatus) => (dispatch, getState) => {
   // first update locally
-  const currentUserID = getState().user.data.userid;
+  const currentUserID = getState().user.user_data.data.userid;
   if (!currentUserID) {
     return;
   }

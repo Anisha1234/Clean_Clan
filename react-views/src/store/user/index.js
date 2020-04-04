@@ -1,11 +1,16 @@
 import UserReducer from './reducer';
 import {
   getUserProfileAction, checkUserAuthStateAction,
-  loginAction, logoutAction, signupAction, updateUserPicAction,
+  loginAction, logoutAction, updateUserPicAction,
 } from './actions';
+import { signup } from './services';
 
 export default UserReducer;
 export {
-  getUserProfileAction, checkUserAuthStateAction,
-  loginAction, logoutAction, signupAction, updateUserPicAction,
+  getUserProfileAction as getUserProfile,
+  checkUserAuthStateAction as checkUserAuthState,
+  loginAction as login,
+  logoutAction as logout,
+  signup,
+  updateUserPicAction as updateUserPic,
 };

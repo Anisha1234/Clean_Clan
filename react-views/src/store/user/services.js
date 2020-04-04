@@ -25,12 +25,18 @@ const logout = async () => axios.get(
     withCredentials: true,
   },
 );
-
-const signup = async (name, email, details, city, password) => axios.post(
+/**
+ * @param {{
+ *  email: string,
+ *  password:string,
+ *  name: string,
+ *  user_details: string,
+ *  city: string
+ * }} registrationData - registration form data
+ */
+const signup = async (registrationData) => axios.post(
   `${userServiceURL}/signup`,
-  {
-    name, email, user_details: details, city, password,
-  },
+  registrationData,
 );
 
 const getUserProfile = async () => axios.get(

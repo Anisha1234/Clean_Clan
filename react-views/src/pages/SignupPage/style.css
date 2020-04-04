@@ -1,4 +1,4 @@
 .signup-container{
   background-image: url('../../assets/media/signup.jpg');
-  overflow: hidden;
+  overflow: auto;
 }

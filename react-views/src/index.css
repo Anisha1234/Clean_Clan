@@ -5,6 +5,18 @@
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
+.center-vert{
+  position: absolute;
+  left: 50%;
+  -ms-transform: translate(-50%);
+  transform: translate(-50%);
+}
+.center-hor{
+  position: absolute;
+  top: 50%;
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
 .cover-all{
   margin: 0; 
   padding: 0;

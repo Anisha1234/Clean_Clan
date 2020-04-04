@@ -7,17 +7,17 @@ import {
 import { isActionTypeEqual, getDomainsAndActionType } from '../util';
 
 const initialState = {
-  my_posts: {
+  [MY_POSTS_DOMAIN]: {
     status: '',
     message: '',
     data: [],
   },
-  all_posts: {
+  [ALL_POSTS_DOMAIN]: {
     status: '',
     message: '',
     data: [],
   },
-  publish: {
+  [PUBLISH_DOMAIN]: {
     status: '',
     message: '',
   },

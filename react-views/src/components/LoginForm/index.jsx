@@ -1,40 +1,50 @@
-import React, {
-  useState, useCallback, useEffect,
-} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginAction } from '../../store/user';
+import { useDispatch } from 'react-redux';
+import { useFormik } from 'formik';
+import { login } from '../../store/user';
 import { validateEmail } from '../util';
 import './style.css';
 import profileImg from '../../assets/media/profile.png';
 
 
 const LoginForm = () => {
-  const [email, setEmail] = useState(undefined);
-  const [password, setPassword] = useState(undefined);
-  const [loginMessage, setLoginMessage] = useState(null);
-  const submitLoginFormMessage = useSelector((state) => state.user.auth.message);
+  const isMounted = useRef(true);
+  useEffect(() => () => { isMounted.current = false; }, []);
+
+  const [loginError, setLoginError] = useState('');
   const dispatch = useDispatch();
+  const formHandler = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: async (values) => {
+      try {
+        const { email, password } = values;
+        await dispatch(login(email, password));
+      } catch (error) {
+        if (!isMounted.current) return;
+        setLoginError(error.toString());
+      }
+    },
+    validate: (values) => {
+      const { email, password } = values;
+      const error = {};
+      if (!validateEmail(email)) error.email = 'Invalid email format';
+      if (!password) error.password = 'Invalid password format';
+      return error;
+    },
+    validateOnChange: false,
+    validateOnBlur: false,
+  });
 
-  useEffect(() => {
-    setLoginMessage(submitLoginFormMessage);
-  }, [submitLoginFormMessage]);
-
-  const submitLoginData = useCallback((e) => {
-    e.preventDefault();
-    if (!validateEmail(email)) {
-      setLoginMessage('invalid email');
-      return;
-    }
-    // submit data
-    dispatch(loginAction(email, password));
-  }, [dispatch, email, password]);
   return (
     <Card className="center-vert-hor login-form-container">
-      <Card.Header style={{ textAlign: 'center' }}>
+      <Card.Header className="text-center">
         <Card.Img
           src={profileImg}
           style={{ width: '100px', margin: 'auto' }}
@@ -42,35 +52,42 @@ const LoginForm = () => {
         <Card.Title><h2>SIGN IN</h2></Card.Title>
       </Card.Header>
       <Card.Body style={{ padding: '15px' }}>
-        <Form onSubmit={submitLoginData}>
-          <Form.Group controlId="user-email">
+        <Form onSubmit={formHandler.handleSubmit}>
+          <Form.Group controlId="email">
             <Form.Label>Email address</Form.Label>
             <Form.Control
-              type="email"
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={formHandler.values.email}
+              onChange={formHandler.handleChange}
               placeholder="example@email.com"
-              required
+              isInvalid={formHandler.errors.email}
             />
+            <Form.Control.Feedback type="invalid">
+              {formHandler.errors.email}
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="user-password">
+          <Form.Group controlId="password">
             <Form.Label>Password</Form.Label>
             <Form.Control
+              name="password"
               type="password"
-              onChange={(e) => setPassword(e.target.value)}
+              value={formHandler.values.password}
+              onChange={formHandler.handleChange}
               placeholder="password"
-              required
+              isInvalid={formHandler.errors.password}
             />
+            <Form.Control.Feedback type="invalid">
+              {formHandler.errors.password}
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group
-            controlId="user-submit"
-            style={{ textAlign: 'center' }}
-          >
+          <Form.Group className="text-center">
             <Button
               variant="outline-dark"
               type="submit"
               style={{ padding: '10px' }}
+              disabled={formHandler.isSubmitting}
             >
-              Submit
+              Sign in now
             </Button>
             <br />
             <Button variant="link" href="/signup">Create new account</Button>
@@ -79,8 +96,8 @@ const LoginForm = () => {
       </Card.Body>
       <Card.Footer>
         {
-          loginMessage ? (
-            <Alert variant="danger">{loginMessage}</Alert>
+          loginError ? (
+            <Alert variant="danger">{loginError}</Alert>
           ) : null
         }
       </Card.Footer>

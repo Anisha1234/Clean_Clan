@@ -8,7 +8,7 @@ import {
   FaAward,
 } from 'react-icons/fa';
 import ProfileImage from './ProfileImage';
-import { getUserProfileAction } from '../../store/user';
+import { getUserProfile } from '../../store/user';
 import './style.css';
 
 
@@ -16,7 +16,7 @@ const UserProfile = () => {
   const currentUser = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getUserProfileAction());
+    dispatch(getUserProfile());
   }, [dispatch]);
 
   return (
@@ -57,7 +57,7 @@ const UserProfile = () => {
               <FaAward className="user-profile-icon" />
               Reputation:
               {' '}
-              {` ${parseInt(currentUser.like_count, 10) * 10}`}
+              { parseInt(currentUser.like_count, 10) * 10 }
             </Card.Text>
           </Card.Body>
         </Card>

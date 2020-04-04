@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import Loader from './components/Loader';
 import LoginGuard from './containers/LoginGuard';
 import LogoutGuard from './containers/LogoutGuard';
-import { checkUserAuthStateAction } from './store/user';
+import { checkUserAuthState } from './store/user';
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -19,7 +19,7 @@ const HomePage = lazy(() => import('./pages/HomePage'));
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(checkUserAuthStateAction());
+    dispatch(checkUserAuthState());
   }, [dispatch]);
   return (
     <Router>

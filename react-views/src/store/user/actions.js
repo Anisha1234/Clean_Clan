@@ -1,10 +1,10 @@
 import {
-  PENDING, DONE, FAIL, UPDATE, RESET,
+  UPDATE, RESET,
   LOGGED_IN, LOGGED_OUT,
-  USER_DOMAIN, USER_DATA_DOMAIN, REGISTRATION_DOMAIN, AUTH_DOMAIN,
+  USER_DOMAIN, USER_DATA_DOMAIN, AUTH_DOMAIN,
 } from '../../constants';
 import {
-  login, logout, checkLoginState, signup,
+  login, logout, checkLoginState,
   getUserProfile, updateUserProfilePic,
 } from './services';
 import { updateStoreDataAction } from '../util';
@@ -14,26 +14,16 @@ import { updateStoreDataAction } from '../util';
  * @param {string} status - status of the auth (logged in, logged out, pending...)
  * @param {string} message - message to show in the UI
  */
-function updateUserAuthAction(status, message = '') {
-  return updateStoreDataAction(UPDATE, {
-    status, message,
-  }, USER_DOMAIN, AUTH_DOMAIN);
-}
-/**
- * @function - action creator to update user state in registration domain
- * @param {string} status - status of the sign in action (pending, done, fail,...)
- * @param {string} message - message to show in UI
- */
-function updateUserRegistrationAction(status, message = '') {
-  return updateStoreDataAction(UPDATE, {
-    status, message,
-  }, USER_DOMAIN, REGISTRATION_DOMAIN);
+function updateUserAuthAction(status) {
+  return updateStoreDataAction(UPDATE, { status }, USER_DOMAIN, AUTH_DOMAIN);
 }
 
 /**
  * @function - action creator update user state in data domain
  * @param {string} type - either UPDATE or RESET
- * @param {object} data
+ * @param {string} status - either FAIL, PENDING, DONE
+ * @param {string} message - error/success message from actions
+ * @param {object} data - user data
  */
 function updateUserDataAction(type, data) {
   return updateStoreDataAction(type, data, USER_DOMAIN, USER_DATA_DOMAIN);
@@ -44,15 +34,14 @@ function updateUserDataAction(type, data) {
  */
 const checkUserAuthStateAction = () => async (dispatch) => {
   try {
-    dispatch(updateUserAuthAction(PENDING));
     const { data } = await checkLoginState();
     const { user_data: userData } = data;
     dispatch(updateUserAuthAction(LOGGED_IN));
     dispatch(updateUserDataAction(UPDATE, userData));
     return;
   } catch (error) {
-    dispatch(updateUserAuthAction(LOGGED_OUT));
     dispatch(updateUserDataAction(RESET, null));
+    dispatch(updateUserAuthAction(LOGGED_OUT));
   }
 };
 
@@ -63,20 +52,19 @@ const checkUserAuthStateAction = () => async (dispatch) => {
  */
 const loginAction = (email, password) => async (dispatch) => {
   try {
-    dispatch(updateUserAuthAction(PENDING, ''));
     const { data } = await login(email, password);
     const { error, user_data: userData } = data;
     if (error) throw error;
-    dispatch(updateUserAuthAction(LOGGED_IN, ''));
     dispatch(updateUserDataAction(UPDATE, userData));
+    dispatch(updateUserAuthAction(LOGGED_IN));
     return;
   } catch (error) {
     dispatch(updateUserDataAction(RESET, null));
+    dispatch(updateUserAuthAction(LOGGED_OUT));
     if (error && error.response) {
-      dispatch(updateUserAuthAction(LOGGED_OUT, error.response.data.toString()));
-      return;
+      throw error.response.data.toString();
     }
-    dispatch(updateUserAuthAction(LOGGED_OUT, error.toString()));
+    throw error.toString();
   }
 };
 
@@ -120,46 +108,13 @@ const updateUserPicAction = (oldImageName, newImageFile) => async (dispatch) => 
     return;
   } catch (error) {
     if (error && error.response) {
-      dispatch(updateUserDataAction(UPDATE, {
-        error: error.response.data.toString(),
-      }));
-      return;
+      throw error.response.data.toString();
     }
-    dispatch(updateUserDataAction(UPDATE, {
-      error: error.toString(),
-    }));
-  }
-};
-
-/**
- * @function - action to send user's sign-up form
- * @param {string} name
- * @param {string} email
- * @param {string} details
- * @param {string} city
- * @param {string} password
- */
-const signupAction = (name, email, details, city, password) => async (dispatch) => {
-  try {
-    dispatch(updateUserRegistrationAction(PENDING, ''));
-    const { data: { error } } = await signup(name, email, details, city, password);
-    if (error) throw error;
-    dispatch(updateUserRegistrationAction(
-      DONE,
-      `Your account has been registered. 
-      You will be redirected to login page shortly`,
-    ));
-    return;
-  } catch (error) {
-    if (error.response && error.response.data) {
-      dispatch(updateUserRegistrationAction(FAIL, error.response.data.toString()));
-      return;
-    }
-    dispatch(updateUserRegistrationAction(FAIL, error.toString()));
+    throw error.toString();
   }
 };
 
 export {
-  checkUserAuthStateAction, loginAction, logoutAction, signupAction,
+  checkUserAuthStateAction, loginAction, logoutAction,
   getUserProfileAction, updateUserPicAction,
 };

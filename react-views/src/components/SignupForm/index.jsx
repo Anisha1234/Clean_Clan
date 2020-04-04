@@ -1,18 +1,15 @@
-import React, {
-  useState, useCallback, useEffect,
-} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import { useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useFormik } from 'formik';
 import { validateEmail } from '../util';
-import { signupAction } from '../../store/user';
-import { DONE, FAIL } from '../../constants';
+import { signup } from '../../store/user';
 import './style.css';
 
-const givenCity = [
+const givenCities = [
   { value: 'Bhubaneswar' },
   { value: 'Mumbai' },
   { value: 'Kolkata' },
@@ -20,25 +17,16 @@ const givenCity = [
 ];
 
 const SignupForm = () => {
-  const [name, setName] = useState(undefined);
-  const [email, setEmail] = useState(undefined);
-  const [city, setCity] = useState(givenCity[0].value);
-  const [details, setDetails] = useState(undefined);
-  const [password, setPassword] = useState(undefined);
-  const [signupMessage, setSignupMessage] = useState(undefined);
-  const submitSignupFormMessage = useSelector((state) => state.user.registration.message);
-  const signupStatus = useSelector((state) => state.user.registration.status);
-  const history = useHistory();
-  const dispatch = useDispatch();
-  // update sign-up form submission message
-  useEffect(() => {
-    setSignupMessage(submitSignupFormMessage);
-  }, [submitSignupFormMessage]);
+  const isMounted = useRef(true);
+  useEffect(() => () => { isMounted.current = false; }, []);
 
+  const [registrationStatus, setRegistrationStatus] = useState(false);
+  const [registrationMessage, setRegistrationMessage] = useState('');
+  const history = useHistory();
   // if submit succesfully, redirect to login
   useEffect(() => {
     let timer;
-    if (signupStatus === DONE) {
+    if (registrationStatus) {
       timer = setTimeout(() => {
         history.push('/login');
       }, 2500);
@@ -48,61 +36,122 @@ const SignupForm = () => {
         clearTimeout(timer);
       }
     };
-  }, [history, signupStatus]);
+  }, [history, registrationStatus]);
 
-  const submitSignupData = useCallback((e) => {
-    e.preventDefault();
-    if (!validateEmail(email)) {
-      setSignupMessage('Invalid email');
-      return;
-    }
-    dispatch(signupAction(name, email, details, city, password));
-  }, [dispatch, name, email, details, city, password]);
+  // form handler
+  const formHandler = useFormik({
+    initialValues: {
+      name: '',
+      email: '',
+      city: givenCities[0].value,
+      password: '',
+      user_details: '',
+    },
+    onSubmit: async (values) => {
+      try {
+        await signup(values);
+        if (!isMounted.current) return;
+        setRegistrationStatus(true);
+        setRegistrationMessage(
+          `Your account has been registered. 
+          You will be redirected to sign-in page shortly`,
+        );
+        return;
+      } catch (error) {
+        if (!isMounted.current) return;
+        setRegistrationStatus(false);
+        if (error && error.response) {
+          setRegistrationMessage(error.response.data.tostring());
+        }
+        setRegistrationMessage(error.toString());
+      }
+    },
+    validate: (values) => {
+      const {
+        name, email, password, user_details: userDetails,
+      } = values;
+      const error = {};
+      if (!name) error.name = 'Invalid name';
+      if (!validateEmail(email)) error.email = 'Invalid email';
+      if (!password) error.password = 'Invalid password';
+      if (!userDetails) error.user_details = 'Invalid details';
+      return error;
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+  });
 
   return (
-    <Card className="signup-form-container center-vert-hor">
-      <Card.Header style={{ textAlign: 'center', height: '50px' }}>
+    <Card className="signup-form-container center-vert">
+      <Card.Header style={{ height: '50px' }} className="text-center">
         <Card.Title>SIGN UP</Card.Title>
       </Card.Header>
       <Card.Body>
-        <Form onSubmit={submitSignupData}>
-          <Form.Group controlId="user-name">
+        <Form onSubmit={formHandler.handleSubmit}>
+          <Form.Group controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control
-              type="text"
-              onChange={(e) => setName(e.target.value)}
+              name="name"
+              value={formHandler.values.name}
+              onChange={formHandler.handleChange}
               placeholder="Elon Musk"
-              required
+              isInvalid={formHandler.errors.name}
             />
+            <Form.Control.Feedback type="invalid">
+              {formHandler.errors.name}
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="user-email">
+          <Form.Group controlId="email">
             <Form.Label>Email address</Form.Label>
             <Form.Control
-              type="text"
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={formHandler.values.email}
+              onChange={formHandler.handleChange}
               placeholder="example@email.com"
-              required
+              isInvalid={formHandler.errors.email}
             />
+            <Form.Control.Feedback type="invalid">
+              {formHandler.errors.email}
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="user-details">
+          <Form.Group controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              name="password"
+              value={formHandler.values.password}
+              onChange={formHandler.handleChange}
+              placeholder="password"
+              isInvalid={formHandler.errors.password}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formHandler.errors.password}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="user_details">
             <Form.Label>Description</Form.Label>
             <Form.Control
+              name="user_details"
               type="text"
-              onChange={(e) => setDetails(e.target.value)}
+              value={formHandler.values.user_details}
+              onChange={formHandler.handleChange}
               placeholder="Describe about yourself..."
-              className="user-description"
-              required
+              isInvalid={formHandler.errors.user_details}
             />
+            <Form.Control.Feedback type="invalid">
+              {formHandler.errors.user_details}
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="user-city">
+          <Form.Group controlId="city">
             <Form.Label>Current city</Form.Label>
             <Form.Control
               as="select"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+              name="city"
+              value={formHandler.values.city}
+              onChange={formHandler.handleChange}
             >
               {
-                givenCity.map((cityOption) => (
+                givenCities.map((cityOption) => (
                   <option
                     key={cityOption.value}
                     value={cityOption.value}
@@ -113,37 +162,25 @@ const SignupForm = () => {
               }
             </Form.Control>
           </Form.Group>
-          <Form.Group controlId="user-password">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              name="password"
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="password"
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="user-signup-message">
+          <Form.Group controlId="registration-message">
             {
-            signupMessage ? (
+            registrationMessage ? (
               <Alert
-                variant={signupStatus === FAIL ? 'danger' : 'info'}
+                variant={registrationStatus ? 'info' : 'danger'}
               >
-                {signupMessage}
+                {registrationMessage}
               </Alert>
             ) : null
           }
           </Form.Group>
-          <Form.Group
-            controlId="user-submit"
-            style={{ textAlign: 'center' }}
-          >
+          <Form.Group className="text-center">
             <Button
               variant="outline-dark"
               type="submit"
               style={{ padding: '10px' }}
+              disabled={formHandler.isSubmitting && !registrationStatus}
             >
-              Submit
+              Register now
             </Button>
             <br />
             <Button variant="link" href="/login">Already have account? Sign in!</Button>

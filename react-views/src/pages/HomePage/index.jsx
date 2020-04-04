@@ -7,7 +7,7 @@ import './style.css';
 
 const HomePage = () => {
   const authState = useSelector((state) => state.user.auth.status);
-  const user = useSelector((state) => state.user.data);
+  const userName = useSelector((state) => state.user.data.name);
   return (
     <div className="header-content cover-all have-background-img">
       <div className="header-content-inner center-vert-hor">
@@ -19,12 +19,12 @@ const HomePage = () => {
           &quot;Ab khel khel me badlega Bharat&quot;
         </p>
         <div className="homepage-navigation">
-          {authState === LOGGED_IN && user && user.name ? (
+          {authState === LOGGED_IN && userName ? (
             <>
               <Button variant="primary" href="/profile" block>
                 Continue as
                 {' '}
-                <strong>{user.name}</strong>
+                <strong>{userName}</strong>
               </Button>
               <br />
               <LogoutButton />
