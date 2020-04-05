@@ -9,6 +9,7 @@ const setUpSession = require('./bin/session');
 //main components
 const FileComponentInit = require('./app/files');
 const UserComponentInit = require('./app/user');
+const PostComponentInit = require('./app/posts');
 
 //config object
 const config = require('./config');
@@ -34,9 +35,13 @@ const setUp= async ()=>{
     AuthCheck,
     UserRoute,
   } = UserComponentInit(ImageUpload);
+  const {
+    PostRoute
+  } = PostComponentInit(ImageUpload, UserService);
   //set routes
   app.use("/images", ImageRoute);
   app.use("/user", UserRoute);
+  app.use('/posts', AuthCheck, PostRoute);
   return;
 };  
 

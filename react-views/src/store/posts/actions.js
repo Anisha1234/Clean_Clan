@@ -46,21 +46,13 @@ function updatePostPublishAction(status, message) {
  * @func- action that that get posts data
  * @param {boolean} isMine - flag to indicate whether data belongs to my_posts or all_posts
  */
-const getPostsAction = (isMine) => async (dispatch, getState) => {
+const getPostsAction = (isMine) => async (dispatch) => {
   const subDomain = isMine ? MY_POSTS_DOMAIN : ALL_POSTS_DOMAIN;
   try {
     dispatch(updatePostsDataAction(
       subDomain, PENDING, 'Waiting to get the posts', [],
     ));
-    let userID = '';
-    // if isMine === true, userID is current user's id
-    if (isMine) {
-      userID = getState().user.user_data.data.userid;
-      if (!userID) {
-        throw new Error("Cannot get your posts. Maybe you haven't signed in yet");
-      }
-    }
-    const { data: posts } = await getPosts(userID);
+    const { data: posts } = await getPosts(isMine);
     // reverse the posts that newest go first
     posts.reverse();
     dispatch(updatePostsDataAction(subDomain, DONE, '', posts));

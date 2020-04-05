@@ -1,15 +1,15 @@
-var mongoose = require('mongoose')
-var Schema = mongoose.Schema
-var ObjectId = mongoose.Types.ObjectId
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var commentSchema = new Schema({
+const commentSchema = new Schema({
   comment: { type: String, required: true },
   author: { type: String, required: true }
 }, {
   timestamps: true
-})
+});
 
-var postSchema = new Schema({
+const postSchema = new Schema({
+  id: String,
   date: { type: Date, default: Date.now },
   heading: String,
   like_count: { type: Number, default: 0 },
@@ -30,7 +30,14 @@ var postSchema = new Schema({
   // this stores name of solver of this challenge
   solutions_user_name: String,
   comments: [commentSchema]
-}, { collection: 'post' })
+}, { collection: 'post' });
 
-var Post = mongoose.model('Post', postSchema)
-module.exports = Post
+postSchema.pre('save', function(next){
+  const post=this;
+  post.id = post._id.toString();
+  next();
+});
+
+const Post = mongoose.model('Post', postSchema);
+
+module.exports = Post;
