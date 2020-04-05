@@ -1,104 +1,45 @@
 const express = require('express');
-const UserService = require('../services');
-const {authCheck} = require('../middlewares');
 /**
- * @param {Multer} ImageUpload: image upload middleware for user profile pic update
+ * @param {Multer} ImageUploadHander: image upload middleware for user profile pic update
+ * @param {{
+ *  LoginHandler: (req: Express.Request, res: Express.Response) => Promise<void>
+ *  LogoutHandler: (req: Express.Request, res: Express.Response) => Promise<void>
+ *  AuthCheck: (req: Express.Request, res: Express.Response) => void
+ * }} AuthHandlers: handlers for auth services
+ * @param { (req: Express.Request, res: Express.Response) => Promise<void> } RegistrationHandler
+ * - handler for registration service
+ * @param {{
+ *  GetHandler: (req: Express.Request, res: Express.Response) => Promise<void>
+ *  ImageUpdateHandler: (req: Express.Request, res: Express.Response) => Promise<void>
+ * }} UserProfileHandlers - handlers for user-profile services
  */
-module.exports = (ImageUpload)=>{
+module.exports = (
+  ImageUploadHandler, AuthHandlers, 
+  RegistrationHandler, UserProfileHandlers
+)=>{
   const router = express.Router();
+  const { AuthCheck, LoginHandler, LogoutHandler } = AuthHandlers;
+  const { GetHandler: GetProfileHandler, ImageUpdateHandler } = UserProfileHandlers;
   router
     //check user auth status
-    .get('/', authCheck, (req, res)=>{
-      const user = {
-        userid: req.session.userd,
-        name: req.session.name,
-      }
+    .get('/', AuthCheck, (req, res)=>{
       res.status(200).send({
         message: "User is logged in",
-        user_data: user
+        user_data: {
+          userid: req.session.userid,
+          name: req.session.name
+        }
       });
     })
     //login
-    .post('/login', async (req, res)=>{
-      try{
-        const {email, password} = req.body;
-        const userData = await UserService.login(email, password);
-        if(!userData){
-          return res.status(200).send({
-            error: "This email hasn't been registerd yet"
-          });
-        }
-        await UserService.createSession(req.session, userData);
-        res.status(200).send({
-          message: "ok",
-          user_data: userData
-        });
-        return;
-      }catch(error){
-        console.log(error);
-        res.status(500).send(error.toString());
-      }
-    })
+    .post('/login', LoginHandler)
     // logout
-    .get('/logout', async (req, res)=>{
-      try{
-        await UserService.logout(req.session);
-        res.status(200).send({
-          message: "ok"
-        });
-      } catch(error){
-        res.status(500).send(error.toString());
-      }
-    })
+    .get('/logout', LogoutHandler)
     // register
-    .post('/signup', async (req, res)=>{
-      try{
-        const isEmailValid = UserService.register(req.body);
-        if(isEmailValid){
-          res.status(200).send({
-            message: "ok"
-          });
-          return;
-        }
-        res.status(200).send({
-          error: "This email has been registerd!"
-        });
-      } catch(error){
-        res.status(500).send(error.toString());
-      }
-    })
+    .post('/signup', RegistrationHandler)
     //get user profile
-    .get('/profile', authCheck, async (req, res)=>{
-      try{
-        const {userid: userID} = req.session;
-        const userData = await UserService.getUserProfile(userID);
-        res.status(200).send({
-          message: "ok", 
-          user_data: userData
-        });
-      } catch(error){
-        res.status(500).send(error.toString());
-      }
-    })
+    .get('/profile', AuthCheck, GetProfileHandler)
     //update user profile image
-    .post(
-      '/profile/image', 
-      authCheck, 
-      ImageUpload.single('image'),
-      async (req, res)=>{
-        try{
-          const oldImageName = req.body && req.body.oldImageName;
-          const fileName = req.file && req.file.filename;
-          const userID = req.session.userid;
-          const user = await UserService.updateUserImage(userID, oldImageName, fileName);
-          res.status(200).send({
-            message: "ok",
-            user_data: user
-          });
-        }catch(error){
-          res.status(500).send(error.toString());
-        }
-      }
-    );
+    .post('/profile/image', AuthCheck, ImageUploadHandler.single('image'), ImageUpdateHandler);
   return router;
 };

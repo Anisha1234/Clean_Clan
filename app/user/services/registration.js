@@ -1,4 +1,3 @@
-const UserDB = require('../db');
 /**
  * @function signup user
  * @param {object} data : signup data {name, email, user_details, password, city}
@@ -13,5 +12,21 @@ async function register(data){
   }
   return false;
 }
-
-module.exports = {register};
+/**
+ * @function: create registration service
+ * @param {{
+ *  findSingleUser: (options: any) => Promise<any>
+ *  saveNewUser: (data: any) => Promise<any>
+ * }} UserDB - user database object
+ */
+module.exports = (UserDB) => ({
+  register: async (data) => {
+    let {email} = data;
+    const registeredUser = await UserDB.findSingleUser({email});
+    if(!registeredUser){
+      await UserDB.saveNewUser(data);
+      return true;
+    }
+    return false;
+  }
+})
