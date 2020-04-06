@@ -180,7 +180,7 @@ const PostForm = ({ type, responsePostID }) => {
                 />
                 <Image fluid className="center-vert-hor" src={imageURLs[key]} />
               </Form.Label>
-              <br/>
+              <br />
               <small className="text-muted">{imageTitles[key]}</small>
             </Form.Group>
           ))
@@ -200,11 +200,11 @@ const PostForm = ({ type, responsePostID }) => {
         </Button>
         {
           publishError
-          ? (
-            <Alert variant="danger">
-              {publishError}
-            </Alert>
-          ) : null
+            ? (
+              <Alert variant="danger">
+                {publishError}
+              </Alert>
+            ) : null
         }
       </Form.Group>
     </Form>

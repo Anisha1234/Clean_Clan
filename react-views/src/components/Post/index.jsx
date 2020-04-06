@@ -77,37 +77,44 @@ const Post = ({
               <Badge variant="info" pill>{likeCount}</Badge>
             </button>
             {
-              postType === 'Challenge'
+              postType === 'Challenge' && author !== currentUserID
                 ? (
-                <button type="button" onClick={()=>setSolFormOpen(true)}>
-                  <Badge variant="success">
-                    <AiOutlineSolution style = {{fontSize: '16px'}}/>
-                    {' Solve'} 
-                  </Badge>
-                </button>
+                  <button type="button" onClick={() => setSolFormOpen(true)}>
+                    <Badge variant="success">
+                      <AiOutlineSolution style={{ fontSize: '16px' }} />
+                      {' Solve'}
+                    </Badge>
+                  </button>
                 ) : null
             }
             <a href={`https://twitter.com/intent/tweet?text=${description}`}>
-              <FaTwitter style={{ fontSize: '20px', color: ' #38A1F3', }}/>
+              <FaTwitter style={{ fontSize: '20px', color: ' #38A1F3' }} />
             </a>
           </Row>
         </Card.Body>
       </Card>
-      <Modal show={solFormOpen} onHide={()=>setSolFormOpen(false)}>
+      <Modal show={solFormOpen} onHide={() => setSolFormOpen(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Solve this post</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Card border="light">
             <Media>
-              <img width={50} height={50} src = {createFileURL(imageBefore)}/>
+              <img width={50} height={50} src={createFileURL(imageBefore)} alt="something" />
               <Media.Body>
-                <h6> &nbsp;{heading}</h6>
-                <p><MdLocationOn /> {` ${location}`}</p>
+                <h6>
+                  {' '}
+                  {heading}
+                </h6>
+                <p>
+                  <MdLocationOn />
+                  {' '}
+                  {` ${location}`}
+                </p>
               </Media.Body>
             </Media>
           </Card>
-          <PostForm type="Solution" responsePostID={postID}/>
+          <PostForm type="Solution" responsePostID={postID} />
         </Modal.Body>
       </Modal>
     </>

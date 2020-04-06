@@ -11,7 +11,6 @@ const HomePage = () => {
   const authState = useSelector((state) => state.user.auth.status);
   const userName = useSelector((state) => state.user.data.name);
   const userPic = useSelector((state) => state.user.data.image.current);
-  console.log(userPic);
   const userPicURL = useMemo(() => createFileURL(userPic), [userPic]);
   return (
     <div className="header-content cover-all have-background-img">

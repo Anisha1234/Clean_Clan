@@ -42,9 +42,9 @@ function updatePostStatusAction(subDomain, status) {
  * @param {boolean} isMine - flag to indicate whether data belongs to my_posts or all_posts
  */
 const getPostsAction = (isMine) => async (dispatch, getState) => {
+  const subDomain = isMine ? MY_POSTS_DOMAIN : ALL_POSTS_DOMAIN;
   try {
-    const subDomain = isMine ? MY_POSTS_DOMAIN : ALL_POSTS_DOMAIN;
-    const userID = (isMine ? getState().user.data.userid: '');
+    const userID = (isMine ? getState().user.data.userid : '');
     dispatch(updatePostStatusAction(subDomain, PENDING));
     const { data: posts } = await getPosts(userID);
     // reverse the posts that newest go first

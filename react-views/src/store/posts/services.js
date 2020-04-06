@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { SERVER_ROOT } from '../../constants';
 
-const getPosts = async (userID='') => axios.get(
+const getPosts = async (userID = '') => axios.get(
   `${SERVER_ROOT}/posts/feed`,
   {
     params: {
