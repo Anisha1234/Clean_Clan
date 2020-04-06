@@ -19,7 +19,7 @@ module.exports = function(PostService, UserService){
   const createLikeHandler = (likeAction) => async (req, res) => {
     try{
       const postID = req.params && req.params.postID;
-      const userID = req.session.userID;
+      const userID = req.session.userid;
       if(!postID || !userID ){
         res.status(404).send("Fail to interact with post");
         return;
@@ -34,6 +34,7 @@ module.exports = function(PostService, UserService){
       });
       res.status(200).send("ok");
     } catch(error){
+      console.log(error);
       res.status(500).send(error);
     }
   }

@@ -4,16 +4,12 @@ const PostModel = require('./postModel');
  * @param {string} postID 
  */
 const getPostByID = (postID) => new Promise((resolve, reject)=>{
-  PostModel.findById(postID, (error, post)=>{
+  PostModel.findById(postID, null, { lean: true }, (error, post)=>{
     if(error){
       reject(error);
       return;
     }
-    if(!post){
-      resolve(null);
-      return;
-    }
-    resolve(post.toObject());
+    resolve(post);
   });
 });
 /**
@@ -21,16 +17,12 @@ const getPostByID = (postID) => new Promise((resolve, reject)=>{
  * @param {object} obtions - filter object, could be null
  */
 const getPosts = (options) => new Promise((resolve, reject)=>{
-  PostModel.find(options, (error, posts)=>{
+  PostModel.find(options, null, { lean: true }, (error, posts) => {
     if(error){
       reject(error);
       return;
     }
-    if(!posts || !posts.length){
-      resolve([]);
-      return;
-    }
-    resolve(posts.toObject());
+    resolve(posts);
   });
 });
 /**
@@ -48,12 +40,14 @@ const updatePostLike = (postID, userID, likeStatus) => new Promise((resolve, rej
       like_count: likeStatus ? 1: -1
     }
   }
-  PostModel.findByIdAndUpdate(postID, updateQuery, { new: true }, (error, post)=>{
-    if(error || post){
-      reject(error || new Error("Could not find that post"));
+  PostModel.findByIdAndUpdate(postID, updateQuery, 
+    { new: true, lean: true }, 
+    (error, post)=>{
+    if(error || !post){
+      reject(error || "Could not find that post");
       return;
     }
-    resolve(post.toObject());
+    resolve(post);
   });
 });
 /**
@@ -64,12 +58,12 @@ const updatePostLike = (postID, userID, likeStatus) => new Promise((resolve, rej
 const updatePostData = (postID, newData) => new Promise((resolve, reject)=>{
   PostModel.findByIdAndUpdate(postID, {
     $set: newData
-  }, { new: true }, (error, post) => {
-    if(error || post){
-      reject(error || new Error("Could not find that post"));
+  }, { new: true, lean: true }, (error, post) => {
+    if(error){
+      reject(error);
       return;
     }
-    resolve(post.toObject());
+    resolve(post);
   });
 });
 
@@ -85,11 +79,11 @@ const saveNewPost = (data) => new Promise((resolve, reject)=>{
     comments: []
   });
   newPost.save((error, post)=>{
-    if(error || !post){
-      reject(error || new Error("Could not save post"));
+    if(error){
+      reject(error);
       return;
     }
-    resolve(post.toObject());
+    resolve(post);
   });
 });
 

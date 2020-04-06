@@ -19,7 +19,10 @@ module.exports = (
 )=>{
   const router = express.Router();
   const { AuthCheck, LoginHandler, LogoutHandler } = AuthHandlers;
-  const { GetHandler: GetProfileHandler, ImageUpdateHandler } = UserProfileHandlers;
+  const { 
+    GetHandler: GetProfileHandler, 
+    ImageUpdateHandler: UserPicUpdateHandler
+  } = UserProfileHandlers;
   router
     //check user auth status
     .get('/', AuthCheck, (req, res)=>{
@@ -27,7 +30,8 @@ module.exports = (
         message: "User is logged in",
         user_data: {
           userid: req.session.userid,
-          name: req.session.name
+          name: req.session.name,
+          image: req.session.image
         }
       });
     })
@@ -40,6 +44,6 @@ module.exports = (
     //get user profile
     .get('/profile', AuthCheck, GetProfileHandler)
     //update user profile image
-    .post('/profile/image', AuthCheck, ImageUploadHandler.single('image'), ImageUpdateHandler);
+    .post('/profile/image', AuthCheck, ImageUploadHandler.single('image'), UserPicUpdateHandler);
   return router;
 };

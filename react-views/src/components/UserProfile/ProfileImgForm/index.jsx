@@ -106,7 +106,7 @@ const ProfileImgForm = ({ allImages }) => {
         >
           <div className="user-pic-preview">
             <h2 className="center-vert-hor text-muted">Preview</h2>
-            <Image fluid className="center-vert-hor" src={newImageURL} />
+            <Image fluid src={newImageURL}/>
           </div>
           <Form.Group controlId="newImageFile" className="text-center">
             <Form.Control

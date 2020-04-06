@@ -21,3 +21,10 @@
   max-width: 300px;
   margin: auto;
 }
+
+.header-content .header-content-inner .homepage-navigation .user-pic{
+  width: 24px;
+  height: 100%;
+  float: left;
+  margin: auto;
+}

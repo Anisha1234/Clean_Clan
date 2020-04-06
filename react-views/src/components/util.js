@@ -11,9 +11,8 @@ const validateEmail = (inputEmail) => {
   return emailReg.test(inputEmail);
 };
 
-const dosth = () => {};
+export const dosth = () => {};
 
 export {
-  dosth,
   validateEmail,
 };

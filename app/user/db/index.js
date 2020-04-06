@@ -5,16 +5,12 @@ const UserModel = require("./userModel");
  * @param {object} options - mongodb query filter
  */
 const findSingleUser = (options)=> new Promise((resolve, reject)=>{
-  UserModel.findOne(options, (error, user)=>{
+  UserModel.findOne(options, null, { lean: true }, (error, user)=>{
     if(error){
       reject(error);
       return;
     } 
-    if(user){
-      resolve(user.toObject());
-      return;
-    } 
-    resolve(null);
+    resolve(user);
   });
 });
 /**
@@ -32,7 +28,7 @@ const saveNewUser = (data) => new Promise((resolve, reject)=>{
   });
   newUser.save((error, user)=>{
     if(error) reject(error);
-    resolve(user);
+    resolve(user.toObject());
   });
 });
 /**
@@ -44,17 +40,14 @@ const updateUserData = (userID, data) => new Promise((resolve, reject)=>{
   UserModel.findByIdAndUpdate(userID, {
     $set: data
   }, {
+    lean: true,
     new: true
   }, (error, user)=>{
     if(error){
       reject(error);
       return;
     } 
-    if(user){
-      resolve(user.toObject());
-      return;
-    } 
-    resolve(null);
+    resolve(user);
   });
 });
 

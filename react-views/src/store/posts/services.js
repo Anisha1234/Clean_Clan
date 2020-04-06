@@ -1,20 +1,19 @@
 import axios from 'axios';
 import { SERVER_ROOT } from '../../constants';
 
-const postServiceURL = `${SERVER_ROOT}/posts`
-
-const getPosts = async (isMine=false) => axios.get(
-  `${postServiceURL}/feed`,
+const getPosts = async (userID='') => axios.get(
+  `${SERVER_ROOT}/posts/feed`,
   {
     params: {
-      isMine,
+      author: userID,
     },
     withCredentials: true,
   },
 );
 
-const publishPost = async (data, responsePostID) => {
-  const endPoint = (responsePostID ? `/post/${responsePostID}/solve` : '/post/create');
+const publishPost = async (postType, responsePostID, data) => {
+  const endPoint = postType === 'Solution' && responsePostID
+    ? `/posts/${responsePostID}/solution` : '/posts/challenge';
   const postURL = new URL(endPoint, SERVER_ROOT);
   return axios.post(
     postURL,
@@ -26,7 +25,7 @@ const publishPost = async (data, responsePostID) => {
 };
 
 const updatePostLike = async (postID, likeStatus) => {
-  const endPoint = likeStatus ? `/post/${postID}/like` : `/post/${postID}/unlike`;
+  const endPoint = likeStatus ? `posts/${postID}/like` : `posts/${postID}/unlike`;
   const updateLikeURL = new URL(endPoint, SERVER_ROOT);
   return axios.put(
     updateLikeURL,

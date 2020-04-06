@@ -22,6 +22,7 @@ module.exports = (UserService) => ({
         user_data: userData
       });
     } catch(error){
+      console.log(error);
       res.status(500).send(error.toString());
     }
   },
@@ -41,6 +42,7 @@ module.exports = (UserService) => ({
         user_data: user
       });
     }catch(error){
+      console.log(error);
       res.status(500).send(error.toString());
     }
   }

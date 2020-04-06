@@ -6,233 +6,206 @@ import CardDeck from 'react-bootstrap/CardDeck';
 import Image from 'react-bootstrap/Image';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+import Badge from 'react-bootstrap/Badge';
 import { MdAttachFile } from 'react-icons/md';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import { publishPostAction } from '../../store/posts';
-import { FAIL, DONE } from '../../constants';
+import { publishPost } from '../../store/posts';
 import './style.css';
 
 // 2 types of post, each post type corresponds to an exact amount of images
-const postTypeImageCount = {
+const imageCount = {
   Challenge: 1,
   Solution: 2,
 };
+
+const imageTitles = ['Before', 'After'];
 
 /**
  * @function- initiate the uploaded images array
  * @param {number} size
  */
-const initiateUploadedImages = (size) => (
-  [...Array(size)].map(() => ({
-    file: null,
-    url: '',
-  }))
-);
+const uploadImageURLsInit = (size) => [...Array(size)].map(() => '');
 
-// type: intended post type (Challenge/Solution)
-// responsePostID: if type === Solution, then it could be solution to some responseID.
 const PostForm = ({ type, responsePostID }) => {
-  const [postLocation, setPostLocation] = useState(undefined);
-  const [postType, setPostType] = useState(type);
-  const [postHeading, setPostHeading] = useState(undefined);
-  const [postDescription, setPostDescription] = useState(undefined);
-  const [stakeholders, setStakeholders] = useState(undefined);
-  const [uploadedImages, setUploadedImages] = useState(
-    initiateUploadedImages(postTypeImageCount[postType]),
-  );
-  const publishMessage = useSelector((state) => state.posts.publish.message);
-  const publishStatus = useSelector((state) => state.posts.publish.status);
-  const dispatch = useDispatch();
-  const postDescriptionTextRef = useRef();
+  const isMounted = useRef(true);
+  useEffect(() => () => { isMounted.current = false; }, []);
 
+  const [publishStatus, setPublishStatus] = useState(false);
   useEffect(() => {
-    if (publishStatus === DONE) {
+    if (publishStatus) {
       window.location.reload();
     }
   }, [publishStatus]);
 
-  const submitNewPost = useCallback((e) => {
-    e.preventDefault();
-    dispatch(
-      publishPostAction({
-        location: postLocation,
-        type_post: postType,
-        heading: postHeading,
-        description: postDescription,
-        stake_holders: stakeholders,
-        images: uploadedImages,
-      }, responsePostID),
-    );
-  }, [
-    dispatch, responsePostID,
-    postLocation, postType, postDescription, postHeading, stakeholders, uploadedImages,
-  ]);
+  const [publishError, setPublishError] = useState('');
+  const [imageURLs, setImageURLs] = useState(
+    uploadImageURLsInit(imageCount[type]),
+  );
+  useEffect(() => () => {
+    imageURLs.forEach((url) => {
+      if (url) URL.revokeObjectURL(url);
+    });
+  }, [imageURLs]);
 
+  const dispatch = useDispatch();
+  const formHandler = useFormik({
+    initialValues: {
+      location: '',
+      heading: '',
+      stakeholders: '',
+      description: '',
+      images: [...Array(imageCount[type])],
+    },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validate: (values) => {
+      const {
+        location, heading, stakeholders, description, images,
+      } = values;
+      const error = {};
+      if (!location) error.location = 'Location cannot be empty';
+      if (!heading) error.heading = 'Title cannot be empty';
+      if (!description) error.description = 'Description cannot be empty';
+      if (!stakeholders) error.stakeholders = 'Stakeholers cannot be empty';
+      if (images.length < imageCount[type]) error.images = 'Invalid images';
+      if (images.filter((imageFile) => (!imageFile)).length > 0) { error.images = `Should have ${imageCount[type]} images`; }
+      return error;
+    },
+    onSubmit: async (values) => {
+      try {
+        await dispatch(publishPost(type, responsePostID, values));
+        if (!isMounted.current) return;
+        setPublishStatus(true);
+      } catch (error) {
+        if (!isMounted.current) return;
+        setPublishStatus(false);
+        setPublishError(error.toString());
+      }
+    },
+  });
+  // handle description text area
+  const postDescriptionTextRef = useRef();
   const handlePostDescriptionText = useCallback((e) => {
-    setPostDescription(e.target.value);
+    formHandler.handleChange(e);
     postDescriptionTextRef.current.style.height = '60px';
     postDescriptionTextRef.current.style.height = `${`${e.target.scrollHeight}px`}`;
-  }, [postDescriptionTextRef]);
-
-  // onChange the post type
-  const updateSelectedPostType = useCallback((chosenType) => {
-    // resize uploaded images array first
-    const newUploadedImages = initiateUploadedImages(postTypeImageCount[chosenType]);
-    for (let i = 0; i < uploadedImages.length; i += 1) {
-      // if the image element fits the new array => copy into the new array
-      if (i < newUploadedImages.length) {
-        newUploadedImages[i] = { ...uploadedImages[i] };
-      }
-      // revoke the url of the old uploaded images array to free the memory
-      URL.revokeObjectURL(uploadedImages[i].url);
-    }
-    // now set the state
-    setUploadedImages(newUploadedImages);
-    // change the post type
-    setPostType(chosenType);
-  }, [uploadedImages]);
+  }, [formHandler, postDescriptionTextRef]);
 
   // onChange upload image
   const handleUploadImage = useCallback((imageIndex, imageFile) => {
-    if (imageIndex >= postTypeImageCount[postType]) {
+    const { images } = formHandler.values;
+    if (imageIndex >= images.length) {
+      formHandler.setFieldError('images', 'Could not upload images');
       return;
     }
-    setUploadedImages(uploadedImages.map(
-      (currentImage, index) => {
-        if (index !== imageIndex) return currentImage;
-        URL.revokeObjectURL(currentImage.url);
-        const url = URL.createObjectURL(imageFile);
-        return {
-          file: imageFile,
-          url,
-        };
-      },
-    ));
-  }, [uploadedImages, postType]);
-
+    images[imageIndex] = imageFile;
+    formHandler.setFieldValue('images', images);
+    setImageURLs(
+      (urlArray) => urlArray.map((url, index) => {
+        if (index !== imageIndex) return url;
+        URL.revokeObjectURL(url);
+        return URL.createObjectURL(imageFile);
+      }),
+    );
+  }, [formHandler]);
   return (
     <Form
       encType="multipart/form-data"
-      onSubmit={submitNewPost}
+      onSubmit={formHandler.handleSubmit}
     >
-      {
-        responsePostID ? null : (
-          <Form.Group controlId="post-type">
-            <Form.Label>What do you want to propose?</Form.Label>
-            <Form.Control
-              as="select"
-              value={postType}
-              onChange={(e) => updateSelectedPostType(e.target.value)}
-            >
-              {Object.keys(postTypeImageCount).map((pType) => (
-                <option
-                  key={pType}
-                  value={pType}
-                >
-                  {pType}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-        )
-      }
-      <Form.Group controlId="post-location">
+      <Badge variant={type === 'Challenge' ? 'danger' : 'success'}>
+        {type}
+      </Badge>
+      <Form.Group controlId="location">
         <Form.Label>Location</Form.Label>
         <Form.Control
           type="text"
-          onChange={(e) => setPostLocation(e.target.value)}
+          name="location"
+          onChange={formHandler.handleChange}
           placeholder="Mumbai"
-          required
+          isInvalid={formHandler.errors.location}
         />
       </Form.Group>
-      <Form.Group controlId="post-heading">
+      <Form.Group controlId="heading">
         <Form.Label>Title</Form.Label>
         <Form.Control
           type="text"
-          onChange={(e) => setPostHeading(e.target.value)}
+          name="heading"
+          onChange={formHandler.handleChange}
           placeholder="Enter the heading..."
-          required
+          isInvalid={formHandler.errors.heading}
         />
       </Form.Group>
-      <Form.Group controlId="post-stakeholders">
+      <Form.Group controlId="stakeholders">
         <Form.Label>Stakeholders</Form.Label>
         <Form.Control
           type="text"
-          onChange={(e) => setStakeholders(e.target.value)}
+          name="stakeholders"
+          onChange={formHandler.handleChange}
           placeholder="Stakeholders..."
-          required
+          isInvalid={formHandler.errors.stakeholders}
         />
       </Form.Group>
-      <Form.Group controlId="post-description">
+      <Form.Group controlId="description">
         <Form.Label>
           Describe your
-          {postType.toLowerCase()}
+          {' '}
+          {type.toLowerCase()}
         </Form.Label>
         <Form.Control
           as="textarea"
+          name="description"
           className="post-description"
           onChange={handlePostDescriptionText}
           placeholder="Enter the description here..."
-          required
           ref={postDescriptionTextRef}
+          isInvalid={formHandler.errors.description}
         />
       </Form.Group>
+      <CardDeck className="justify-content-around text-center">
+        {
+          [...Array(imageCount[type]).keys()].map((key) => (
+            <Form.Group key={key}>
+              <Form.Label className="post-image-container">
+                <div className="post-image-overlay cover-all">
+                  <MdAttachFile className="center-vert-hor post-image-icon" />
+                </div>
+                <Form.Control
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleUploadImage(key, e.target.files[0])}
+                  className="post-image-upload cover-all"
+                />
+                <Image fluid className="center-vert-hor" src={imageURLs[key]} />
+              </Form.Label>
+              <br/>
+              <small className="text-muted">{imageTitles[key]}</small>
+            </Form.Group>
+          ))
+        }
+      </CardDeck>
       {
-          publishMessage ? (
-            <Alert
-              variant={publishStatus === FAIL ? 'danger' : 'info'}
-            >
-              {publishMessage}
+          formHandler.errors.images
+            ? (
+              <Alert variant="danger">
+                {formHandler.errors.images}
+              </Alert>
+            ) : null
+        }
+      <Form.Group className="text-center">
+        <Button variant="outline-info" type="submit" style={{ padding: '10px' }}>
+          Submit
+        </Button>
+        {
+          publishError
+          ? (
+            <Alert variant="danger">
+              {publishError}
             </Alert>
           ) : null
         }
-      <CardDeck className="justify-content-around">
-        {
-          [...Array(postTypeImageCount[postType]).keys()]
-            .map((key) => (
-              <Form.Group
-                key={key}
-                controlId={`post-image-${key}`}
-              >
-                <Form.Label className="post-image-container">
-                  <div className="post-image-overlay cover-all">
-                    <MdAttachFile
-                      className="center-vert-hor post-image-icon"
-                    />
-                  </div>
-                  <Form.Control
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleUploadImage(key, e.target.files[0])}
-                    required
-                    className="post-image-upload cover-all"
-                  />
-                  {
-                    uploadedImages[key].url ? (
-                      <Image
-                        fluid
-                        src={uploadedImages[key].url}
-                        className="center-vert-hor"
-                      />
-                    ) : null
-                  }
-                </Form.Label>
-              </Form.Group>
-            ))
-        }
-      </CardDeck>
-      <Form.Group
-        controlId="user-submit"
-        style={{ textAlign: 'center' }}
-      >
-        <Button
-          variant="outline-info"
-          type="submit"
-          style={{ padding: '10px' }}
-        >
-          Submit
-        </Button>
       </Form.Group>
     </Form>
   );
@@ -241,11 +214,10 @@ const PostForm = ({ type, responsePostID }) => {
 export default PostForm;
 
 PostForm.propTypes = {
-  type: PropTypes.string,
+  type: PropTypes.oneOf(Object.keys(imageCount)).isRequired,
   responsePostID: PropTypes.string,
 };
 
 PostForm.defaultProps = {
-  type: 'Solution',
   responsePostID: '',
 };

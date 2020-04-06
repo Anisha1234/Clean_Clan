@@ -29,7 +29,7 @@ const SignupForm = () => {
     if (registrationStatus) {
       timer = setTimeout(() => {
         history.push('/login');
-      }, 2500);
+      }, 1250);
     }
     return () => {
       if (timer) {
@@ -82,7 +82,7 @@ const SignupForm = () => {
   });
 
   return (
-    <Card className="signup-form-container center-vert">
+    <Card className="signup-form-container center-hor">
       <Card.Header style={{ height: '50px' }} className="text-center">
         <Card.Title>SIGN UP</Card.Title>
       </Card.Header>

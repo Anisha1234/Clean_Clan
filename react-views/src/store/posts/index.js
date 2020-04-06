@@ -5,5 +5,7 @@ import PostReducer from './reducer';
 
 export default PostReducer;
 export {
-  getPostsAction, publishPostAction, updatePostLikeAction,
+  getPostsAction as getPosts,
+  publishPostAction as publishPost,
+  updatePostLikeAction as updatePostLike,
 };

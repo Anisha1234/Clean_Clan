@@ -7,18 +7,18 @@ import { GiPencil } from 'react-icons/gi';
 import PropTypes from 'prop-types';
 import Post from '../Post';
 import PostForm from '../PostForm';
-import { getPostsAction } from '../../store/posts';
+import { getPosts } from '../../store/posts';
 import './style.css';
 
 const Feed = ({ isMine }) => {
   const [postFormShow, setPostFormShow] = useState(false);
   const dispatch = useDispatch();
   const posts = useSelector((state) => (
-    isMine ? state.posts.my_posts.data
-      : state.posts.all_posts.data
+    isMine ? state.posts.my_posts
+      : state.posts.all_posts
   ));
   useEffect(() => {
-    dispatch(getPostsAction(isMine));
+    dispatch(getPosts(isMine));
   }, [dispatch, isMine]);
 
   return (
@@ -29,18 +29,15 @@ const Feed = ({ isMine }) => {
           onClick={() => setPostFormShow(true)}
         >
           <GiPencil style={{ fontSize: '40px' }} />
-          Create a post
+          Create a challenge
         </Button>
       </Row>
-      <Modal
-        show={postFormShow}
-        onHide={() => setPostFormShow(false)}
-      >
+      <Modal show={postFormShow} onHide={() => setPostFormShow(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Share your idea</Modal.Title>
+          <Modal.Title>Create a post</Modal.Title>
         </Modal.Header>
         <Modal.Body className="post-form-modal">
-          <PostForm />
+          <PostForm type="Challenge" />
         </Modal.Body>
       </Modal>
       {
@@ -50,7 +47,7 @@ const Feed = ({ isMine }) => {
             className="justify-content-center feed-row"
           >
             <Post
-              postType={post.type_post}
+              postType={post.post_type}
               postID={post.id}
               author={post.author}
               date={post.date}

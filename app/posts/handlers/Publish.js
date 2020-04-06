@@ -63,6 +63,7 @@ module.exports = (PostService, UserService) => ({
       await updateUserBonusPoint(UserService, req.session.userid, NEW_CHALLENGE_PRIZE);
       res.status(200).send("ok");
     } catch(error){
+      console.log(error);
       res.status(500).send(error);
     }
   },
@@ -78,6 +79,7 @@ module.exports = (PostService, UserService) => ({
       await updateUserBonusPoint(UserService, req.session.userid, NEW_SOLUTION_PRIZE);
       res.status(200).send("ok");
     } catch(error){
+      console.log(error);
       res.status(500).send(error);
     }
   }

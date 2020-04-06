@@ -1,7 +1,7 @@
 import {
-  POSTS_DOMAIN, ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN, PUBLISH_DOMAIN,
-  UPDATE_POST_LIKE,
-  PENDING, DONE, FAIL, UPDATE,
+  POSTS_DOMAIN, ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN, POSTS_STATUS,
+  UPDATE_POST_LIKE, UPDATE_POST_DATA, UPDATE,
+  PENDING, DONE, FAIL,
 } from '../../constants';
 import { getPosts, publishPost, updatePostLike } from './services';
 import { updateStoreDataAction } from '../util';
@@ -9,83 +9,78 @@ import { updateStoreDataAction } from '../util';
 /**
  * @function- shorthand action creator to update posts array (either my_posts or all_posts)
  * @param {string} subDomain either ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN or PUBLISH_DOMAIN
- * @param {string} status PENDING, DONE, FAIL
- * @param {string} message correspondent error/success message
  * @param {Object[]} data the posts array get from the server
  */
-function updatePostsDataAction(subDomain, status, message, data) {
-  return updateStoreDataAction(UPDATE, {
-    status, message, data,
-  }, POSTS_DOMAIN, subDomain);
+function updatePostsDataAction(subDomain, data) {
+  return updateStoreDataAction(UPDATE_POST_DATA, data, POSTS_DOMAIN, subDomain);
 }
 
 /**
  * @function- shorthand action creator to update user like in either my_posts or all_posts
  * @param {string} subDomain either ALL_POSTS_DOMAIN or MY_POSTS_DOMAIN
- * @param {*} postID - id that user like that post
- * @param {*} userID - id of the user
+ * @param {string} postID - post id that user like that post
+ * @param {string} userID - user id
  */
 function updatePostLikeLocallyAction(subDomain, postID, userID) {
   return updateStoreDataAction(UPDATE_POST_LIKE, {
     postID, userID,
   }, POSTS_DOMAIN, subDomain);
 }
-
 /**
- * @func - shorthand action creator that update data in publish domain
- * @param {string} status - DONE, FAIL, PENDING
- * @param {string} message - correspondent error/success message
+ * @function: short hand action creator to update status in getting posts data
+ * @param {string} subDomain - either ALL_POSTS_DOMAIN or MY_POSTS_DOMAIN
+ * @param {string} status - PENDING/DONE/FAIL
  */
-function updatePostPublishAction(status, message) {
+function updatePostStatusAction(subDomain, status) {
   return updateStoreDataAction(UPDATE, {
-    status, message,
-  }, POSTS_DOMAIN, PUBLISH_DOMAIN);
+    [subDomain]: status,
+  }, POSTS_DOMAIN, POSTS_STATUS);
 }
 
 /**
  * @func- action that that get posts data
  * @param {boolean} isMine - flag to indicate whether data belongs to my_posts or all_posts
  */
-const getPostsAction = (isMine) => async (dispatch) => {
-  const subDomain = isMine ? MY_POSTS_DOMAIN : ALL_POSTS_DOMAIN;
+const getPostsAction = (isMine) => async (dispatch, getState) => {
   try {
-    dispatch(updatePostsDataAction(
-      subDomain, PENDING, 'Waiting to get the posts', [],
-    ));
-    const { data: posts } = await getPosts(isMine);
+    const subDomain = isMine ? MY_POSTS_DOMAIN : ALL_POSTS_DOMAIN;
+    const userID = (isMine ? getState().user.data.userid: '');
+    dispatch(updatePostStatusAction(subDomain, PENDING));
+    const { data: posts } = await getPosts(userID);
     // reverse the posts that newest go first
     posts.reverse();
-    dispatch(updatePostsDataAction(subDomain, DONE, '', posts));
+    dispatch(updatePostStatusAction(subDomain, DONE));
+    dispatch(updatePostsDataAction(subDomain, posts));
     return;
   } catch (error) {
-    dispatch(updatePostsDataAction(
-      subDomain, FAIL, error.toString(), [],
-    ));
+    dispatch(updatePostStatusAction(subDomain, FAIL));
   }
 };
 
 /**
  *
  * @param {object} postData - post data
+ * @param {string} postType - either 'Challenge' or 'Solution'
  * @param {string} responsePostID - the post ID this uploaded post responds to.
  */
-const publishPostAction = (postData, responsePostID = '') => async (dispatch) => {
+const publishPostAction = (postType, responsePostID, postData) => async () => {
   try {
     const data = new FormData();
     Object.entries(postData).forEach(([key, value]) => {
       if (key === 'images') {
-        value.forEach(({ file }) => {
+        value.forEach((file) => {
           data.append('images', file);
         });
         return;
       }
       data.append(key, value);
     });
-    dispatch(updatePostPublishAction(PENDING, 'Your post is publishing...'));
-    await publishPost(data, responsePostID);
-    dispatch(updatePostPublishAction(DONE, 'Your post has succesfully been published...'));
+    await publishPost(postType, responsePostID, data);
   } catch (error) {
-    dispatch(updatePostPublishAction(FAIL, `Publishing error: ${error.toString()}`));
+    if (error && error.response) {
+      throw error.response.data.toString();
+    }
+    throw error.toString();
   }
 };
 /**
@@ -95,7 +90,7 @@ const publishPostAction = (postData, responsePostID = '') => async (dispatch) =>
  */
 const updatePostLikeAction = (postID, likeStatus) => (dispatch, getState) => {
   // first update locally
-  const currentUserID = getState().user.user_data.data.userid;
+  const currentUserID = getState().user.data.userid;
   if (!currentUserID) {
     return;
   }

@@ -56,8 +56,10 @@ const UserProfile = () => {
             <Card.Text>
               <FaAward className="user-profile-icon" />
               Reputation:
-              {' '}
-              { parseInt(currentUser.like_count, 10) * 10 }
+              <strong>
+                {' '}
+                { parseInt(currentUser.like_count, 10) * 10 }
+              </strong>
             </Card.Text>
           </Card.Body>
         </Card>

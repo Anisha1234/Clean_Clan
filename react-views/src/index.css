@@ -5,13 +5,13 @@
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
-.center-vert{
+.center-hor{
   position: absolute;
   left: 50%;
   -ms-transform: translate(-50%);
   transform: translate(-50%);
 }
-.center-hor{
+.center-vert{
   position: absolute;
   top: 50%;
   -ms-transform: translate(0, -50%);

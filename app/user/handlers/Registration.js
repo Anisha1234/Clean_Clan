@@ -20,6 +20,7 @@ module.exports = (UserService) => async (req, res) => {
       error: "This email has been registerd!"
     });
   } catch(error){
+    console.log(error);
     res.status(500).send(error.toString());
   }
 };
