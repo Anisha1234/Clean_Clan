@@ -11,8 +11,15 @@ const PostRouteInit = require('./routes');
  */
 module.exports = (ImageUploadHandler, UserService) => {
   const PostService = PostServiceInit(PostDB);
-  const { PostShowHandlers } = PostHandlersInit(PostService);
-  const PostRoute = PostRouteInit(ImageUploadHandler, PostShowHandlers);
+  const { 
+    PostShowHandlers, 
+    PostLikeHandler,
+    PublishHandlers
+  } = PostHandlersInit(PostService, UserService);
+  const PostRoute = PostRouteInit(
+    ImageUploadHandler, 
+    PostShowHandlers, PostLikeHandler, PublishHandlers
+  );
   return {
     PostRoute
   };

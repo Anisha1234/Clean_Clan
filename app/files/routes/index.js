@@ -1,7 +1,7 @@
 const express = require('express');
 /**
  * @param {
-    (req: Express.Request, res: Response) => Promise<void>
+    (req: Express.Request, res: Express.Response) => Promise<void>
   } FileStreamHandler
  */
 module.exports = (FileStreamHandler)=>{

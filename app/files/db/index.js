@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 /**
  * @function: create read stream to get a file from db
  * @param {GridFSBucket} fileStream: gridfs bucket stream
- * @return {function resolving a download stream} 
+ * @return { (fileName) => Promise<ReadableStream> } 
  * (later we pipe this read stream to response object in the request)
  */
 const getFile = (fileStream) => (fileName) => new Promise((resolve, reject)=>{

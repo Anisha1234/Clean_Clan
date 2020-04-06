@@ -13,22 +13,20 @@ const postSchema = new Schema({
   date: { type: Date, default: Date.now },
   heading: String,
   like_count: { type: Number, default: 0 },
-  stake_holders: String,
+  stakeholders: String,
   likes: [String],
   author_name: String,
   description: String,
   author: String,
   location: String,
-  type_post: { type: String, default: 'Solution' },
+  post_type: { type: String, default: 'Solution' },
   author_image: String,
   image_before: String,
-  image_after: String,
-  // this stores name of challenger of this solution
-  challenge_user_name: String,
+  image_after: { type: String, default: '' },
+  // this stores post id of challenge of this solution
+  challenge : { type: String, default: '' },
   // this stores post id of solutions to this challenge
-  solutions: { type: String, default: '' },
-  // this stores name of solver of this challenge
-  solutions_user_name: String,
+  solution: { type: String, default: '' },
   comments: [commentSchema]
 }, { collection: 'post' });
 

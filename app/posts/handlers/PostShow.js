@@ -20,6 +20,10 @@ module.exports = (PostService) => ({
         queryOptions.author = req.session.userid;
       }
       const posts = await PostService.getMultiplePosts(queryOptions);
+      if(!posts || !posts.length){
+        res.status(404).send("Not found!");
+        return;
+      }
       res.status(200).send(posts);
     } catch(error){
       res.status(500).send(error);
@@ -38,9 +42,13 @@ module.exports = (PostService) => ({
         return;
       }
       const post = await PostService.getSinglePost(postID);
+      if(!post){
+        res.status(404).send("Cannot find the post");
+        return;
+      }
       res.status(200).send(post);
     } catch(error){
       res.status(500).send(error);
     }
   }
-})
+});
