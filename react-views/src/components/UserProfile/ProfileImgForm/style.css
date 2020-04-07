@@ -10,3 +10,16 @@
   margin: auto;
   vertical-align: middle;
 }
+.user-pic-upload{
+  width: 300px;
+  margin-left: calc(50% - 84px);
+}
+.user-old-pic-checkbox{
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.user-old-pic-chosen{
+  border: 3px solid blue;
+}

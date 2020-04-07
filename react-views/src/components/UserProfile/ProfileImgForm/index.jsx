@@ -9,9 +9,11 @@ import Tab from 'react-bootstrap/Tab';
 import Form from 'react-bootstrap/Form';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import { MdCloudUpload } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import { updateUserPic } from '../../../store/user';
+import { createFileURL } from '../../../util';
 import './style.css';
 
 const OLD_IMAGE_TAB = 'old';
@@ -88,9 +90,17 @@ const ProfileImgForm = ({ allImages }) => {
     setActiveTab(chosenTab);
   }, [formHandler, imageFileRef]);
 
+  const onChooseOldImage = useCallback((imageName, isChosen) => {
+    if (isChosen) {
+      formHandler.setFieldValue('oldImageName', imageName);
+      return;
+    }
+    formHandler.setFieldValue('oldImageName', '');
+  }, [formHandler]);
+
   return (
     <Form
-      className="justify-content-center cover-all"
+      className="cover-all"
       encType="multipart/form-data"
       onSubmit={formHandler.handleSubmit}
     >
@@ -99,12 +109,8 @@ const ProfileImgForm = ({ allImages }) => {
         onSelect={handleChangeTab}
         className="justify-content-center"
       >
-        <Tab
-          eventKey={NEW_IMAGE_TAB}
-          title="Upload new pic"
-          className="text-center"
-        >
-          <div className="user-pic-preview">
+        <Tab eventKey={NEW_IMAGE_TAB} title="Upload new pic">
+          <div className="user-pic-preview text-center">
             <h2 className="center-vert-hor text-muted">Preview</h2>
             <Image fluid src={newImageURL} />
           </div>
@@ -115,14 +121,37 @@ const ProfileImgForm = ({ allImages }) => {
               accept="image/*"
               ref={imageFileRef}
               onChange={handleUploadImage}
+              className="user-pic-upload"
             />
           </Form.Group>
         </Tab>
         <Tab
           eventKey={OLD_IMAGE_TAB}
           title="Choose old pic"
-          disabled={!allImages || allImages.length === 0}
-        />
+          disabled={allImages.length === 0}
+        >
+          <Form.Group style={{ marginTop: '20px' }}>
+            {
+              allImages.map((imageName) => (
+                <Card
+                  key={imageName}
+                  style={{ maxWidth: '100px', display: 'inline-block' }}
+                  className={
+                    formHandler.values.oldImageName === imageName ? 'user-old-pic-chosen' : ''
+                  }
+                >
+                  <input
+                    type="checkbox"
+                    className="user-old-pic-checkbox"
+                    value={formHandler.values.oldImageName === imageName}
+                    onChange={(e) => onChooseOldImage(imageName, e.target.value)}
+                  />
+                  <Image fluid src={createFileURL(imageName)} />
+                </Card>
+              ))
+            }
+          </Form.Group>
+        </Tab>
       </Tabs>
       <Form.Group>
         {
@@ -131,7 +160,7 @@ const ProfileImgForm = ({ allImages }) => {
         }
       </Form.Group>
       <Form.Group className="text-center">
-        <Button variant="outline-primary" type="submit">
+        <Button variant="outline-primary" type="submit" disabled={formHandler.isSubmitting}>
           <MdCloudUpload />
           {' '}
           {' '}

@@ -72,14 +72,18 @@ const Post = ({
             }
           </CardGroup>
           <Row className="justify-content-around post-interaction-bar">
-            <button type="button" onClick={togglePostLike}>
+            <button type="button" className="hidden-btn" onClick={togglePostLike}>
               {haveUserLiked ? <FaHeart style={{ color: 'red' }} /> : <FaRegHeart />}
               <Badge variant="info" pill>{likeCount}</Badge>
             </button>
             {
               postType === 'Challenge' && author !== currentUserID
                 ? (
-                  <button type="button" onClick={() => setSolFormOpen(true)}>
+                  <button
+                    type="button"
+                    className="hidden-btn"
+                    onClick={() => setSolFormOpen(true)}
+                  >
                     <Badge variant="success">
                       <AiOutlineSolution style={{ fontSize: '16px' }} />
                       {' Solve'}
@@ -93,7 +97,7 @@ const Post = ({
           </Row>
         </Card.Body>
       </Card>
-      <Modal show={solFormOpen} onHide={() => setSolFormOpen(false)}>
+      <Modal show={solFormOpen} onHide={() => setSolFormOpen(false)} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Solve this challenge</Modal.Title>
         </Modal.Header>

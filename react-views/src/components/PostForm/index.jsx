@@ -195,7 +195,12 @@ const PostForm = ({ type, responsePostID }) => {
             ) : null
         }
       <Form.Group className="text-center">
-        <Button variant="outline-info" type="submit" style={{ padding: '10px' }}>
+        <Button
+          variant="outline-info"
+          type="submit"
+          style={{ padding: '10px' }}
+          disabled={formHandler.isSubmitting}
+        >
           Submit
         </Button>
         {
