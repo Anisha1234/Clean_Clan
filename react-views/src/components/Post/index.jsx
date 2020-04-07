@@ -6,7 +6,7 @@ import CardGroup from 'react-bootstrap/CardGroup';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 import Media from 'react-bootstrap/Media';
-import { MdLocationOn } from 'react-icons/md';
+import { MdLocationOn, MdTextFields } from 'react-icons/md';
 import { AiOutlineSolution } from 'react-icons/ai';
 import { FaHeart, FaRegHeart, FaTwitter } from 'react-icons/fa';
 import PropTypes from 'prop-types';
@@ -95,21 +95,22 @@ const Post = ({
       </Card>
       <Modal show={solFormOpen} onHide={() => setSolFormOpen(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Solve this post</Modal.Title>
+          <Modal.Title>Solve this challenge</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Card border="light">
             <Media>
-              <img width={50} height={50} src={createFileURL(imageBefore)} alt="something" />
+              <img width={60} height={60} src={createFileURL(imageBefore)} alt="something" />
               <Media.Body>
                 <h6>
+                  <MdTextFields />
                   {' '}
                   {heading}
                 </h6>
                 <p>
                   <MdLocationOn />
                   {' '}
-                  {` ${location}`}
+                  {location}
                 </p>
               </Media.Body>
             </Media>

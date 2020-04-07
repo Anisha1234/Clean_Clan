@@ -34,7 +34,7 @@ const Feed = ({ isMine }) => {
       </Row>
       <Modal show={postFormShow} onHide={() => setPostFormShow(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Create a post</Modal.Title>
+          <Modal.Title>Create a challenge</Modal.Title>
         </Modal.Header>
         <Modal.Body className="post-form-modal">
           <PostForm type="Challenge" />

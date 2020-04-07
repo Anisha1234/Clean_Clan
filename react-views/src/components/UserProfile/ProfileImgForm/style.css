@@ -1,6 +1,6 @@
 .user-pic-preview{
   width: 96%;
-  height: 300px;
+  min-height: 300px;
   line-height: 300px;
   border: 1px dashed rgb(190, 189, 189);
   margin: 10px;
