@@ -11,4 +11,8 @@ module.exports = (PostDB) => ({
    * @param {boolean} likeStatus: true for like, false for unlike
    */
   updatePostLike: async (postID, userID, likeStatus) => PostDB.updatePostLike(postID, userID, likeStatus)
+<<<<<<< HEAD
 });
+=======
+})
+>>>>>>> 998de7b... update post component: like and publish services

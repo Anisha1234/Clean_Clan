@@ -11,7 +11,11 @@ module.exports = (PostDB) => ({
    */
   createNewChallenge: async (data) => PostDB.saveNewPost({
     ...data,
+<<<<<<< HEAD
     post_type: 'Challenge'
+=======
+    post_type: "Challenge"
+>>>>>>> 998de7b... update post component: like and publish services
   }),
   /**
    * @function: create a new solution
@@ -21,11 +25,21 @@ module.exports = (PostDB) => ({
   createNewSolution: async (data, challengeID) => {
     const solutionPost = await PostDB.saveNewPost({
       ...data,
+<<<<<<< HEAD
       post_type: 'Solution',
+=======
+      post_type: "Solution",
+>>>>>>> 998de7b... update post component: like and publish services
       challenge: challengeID
     });
     await PostDB.updatePostData(challengeID, {
       solution: solutionPost.id
     });
+<<<<<<< HEAD
   }
 });
+=======
+    return;
+  }
+});
+>>>>>>> 998de7b... update post component: like and publish services

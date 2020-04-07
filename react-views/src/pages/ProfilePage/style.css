@@ -1,4 +1,17 @@
 .profile-page-content{
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
   padding: 80px 10px;
   margin: 0 0;
+=======
+  margin: 120px 20px;
+>>>>>>> f770ec9... bootstrap navbar
+=======
+  padding: 80px 15px;
+=======
+  padding: 80px 10px;
+>>>>>>> 2e6e55f... bootstrap post component
+  margin: 0 0;
+>>>>>>> a81005f... bootstrap user profile component
 }

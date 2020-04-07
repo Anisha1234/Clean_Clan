@@ -6,7 +6,15 @@ import CardGroup from 'react-bootstrap/CardGroup';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 import Media from 'react-bootstrap/Media';
+<<<<<<< HEAD
+<<<<<<< HEAD
 import { MdLocationOn, MdTextFields } from 'react-icons/md';
+=======
+import { MdLocationOn } from 'react-icons/md';
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
+=======
+import { MdLocationOn, MdTextFields } from 'react-icons/md';
+>>>>>>> f81d4bb... Lint react-views
 import { AiOutlineSolution } from 'react-icons/ai';
 import { FaHeart, FaRegHeart, FaTwitter } from 'react-icons/fa';
 import PropTypes from 'prop-types';
@@ -77,6 +85,8 @@ const Post = ({
               <Badge variant="info" pill>{likeCount}</Badge>
             </button>
             {
+<<<<<<< HEAD
+<<<<<<< HEAD
               postType === 'Challenge' && author !== currentUserID
                 ? (
                   <button type="button" onClick={() => setSolFormOpen(true)}>
@@ -89,17 +99,55 @@ const Post = ({
             }
             <a href={`https://twitter.com/intent/tweet?text=${description}`}>
               <FaTwitter style={{ fontSize: '20px', color: ' #38A1F3' }} />
+=======
+              postType === 'Challenge'
+=======
+              postType === 'Challenge' && author !== currentUserID
+>>>>>>> 25138db... Lint react-views
+                ? (
+                  <button type="button" onClick={() => setSolFormOpen(true)}>
+                    <Badge variant="success">
+                      <AiOutlineSolution style={{ fontSize: '16px' }} />
+                      {' Solve'}
+                    </Badge>
+                  </button>
+                ) : null
+            }
+            <a href={`https://twitter.com/intent/tweet?text=${description}`}>
+<<<<<<< HEAD
+              <FaTwitter style={{ fontSize: '20px', color: ' #38A1F3', }}/>
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
+=======
+              <FaTwitter style={{ fontSize: '20px', color: ' #38A1F3' }} />
+>>>>>>> 25138db... Lint react-views
             </a>
           </Row>
         </Card.Body>
       </Card>
+<<<<<<< HEAD
+<<<<<<< HEAD
       <Modal show={solFormOpen} onHide={() => setSolFormOpen(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Solve this challenge</Modal.Title>
+=======
+      <Modal show={solFormOpen} onHide={()=>setSolFormOpen(false)}>
+=======
+      <Modal show={solFormOpen} onHide={() => setSolFormOpen(false)}>
+>>>>>>> 25138db... Lint react-views
+        <Modal.Header closeButton>
+<<<<<<< HEAD
+          <Modal.Title>Solve this post</Modal.Title>
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
+=======
+          <Modal.Title>Solve this challenge</Modal.Title>
+>>>>>>> f81d4bb... Lint react-views
         </Modal.Header>
         <Modal.Body>
           <Card border="light">
             <Media>
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
               <img width={60} height={60} src={createFileURL(imageBefore)} alt="something" />
               <Media.Body>
                 <h6>
@@ -116,6 +164,34 @@ const Post = ({
             </Media>
           </Card>
           <PostForm type="Solution" responsePostID={postID} />
+=======
+              <img width={50} height={50} src = {createFileURL(imageBefore)}/>
+=======
+              <img width={50} height={50} src={createFileURL(imageBefore)} alt="something" />
+>>>>>>> 25138db... Lint react-views
+=======
+              <img width={60} height={60} src={createFileURL(imageBefore)} alt="something" />
+>>>>>>> f81d4bb... Lint react-views
+              <Media.Body>
+                <h6>
+                  <MdTextFields />
+                  {' '}
+                  {heading}
+                </h6>
+                <p>
+                  <MdLocationOn />
+                  {' '}
+                  {location}
+                </p>
+              </Media.Body>
+            </Media>
+          </Card>
+<<<<<<< HEAD
+          <PostForm type="Solution" responsePostID={postID}/>
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
+=======
+          <PostForm type="Solution" responsePostID={postID} />
+>>>>>>> 25138db... Lint react-views
         </Modal.Body>
       </Modal>
     </>

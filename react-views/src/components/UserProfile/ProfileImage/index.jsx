@@ -6,7 +6,15 @@ import Modal from 'react-bootstrap/Modal';
 import { MdCameraAlt } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import ProfileImgForm from '../ProfileImgForm';
+<<<<<<< HEAD
+<<<<<<< HEAD
 import { createFileURL } from '../../../util';
+=======
+import { SERVER_ROOT } from '../../../constants';
+>>>>>>> 992e396... Allow user to upload profile picture
+=======
+import { createFileURL } from '../../../util';
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
 import profileImg from '../../../assets/media/profile.png';
 import './style.css';
 
@@ -21,10 +29,26 @@ const ProfileImage = ({ currentImage, allImages }) => {
           bg="light"
         >
           <Image
+<<<<<<< HEAD
+<<<<<<< HEAD
             src={currentImage ? createFileURL(currentImage) : profileImg}
             roundedCircle
             fluid
             alt="profile-pic"
+=======
+            src={
+                currentImage
+                  ? new URL(`/images/${currentImage}`, SERVER_ROOT) : profileImg
+              }
+            roundedCircle
+            fluid
+>>>>>>> 992e396... Allow user to upload profile picture
+=======
+            src={currentImage ? createFileURL(currentImage) : profileImg}
+            roundedCircle
+            fluid
+            alt="profile-pic"
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
           />
           <button
             className="user-img-update"

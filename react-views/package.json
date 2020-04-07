@@ -14,13 +14,34 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.2",
+<<<<<<< HEAD
+<<<<<<< HEAD
     "bootstrap": "^4.4.1",
     "formik": "^2.1.4",
+<<<<<<< HEAD
+=======
+>>>>>>> 4bf6afb... set mock server and fix lint error
+=======
+    "bootstrap": "^4.4.1",
+>>>>>>> 4054e8b... add react-bootstrap and design home page
+=======
+>>>>>>> 560a7fe... add formik + reform redux store
     "prop-types": "^15.7.2",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0-beta.17",
     "react-dom": "^16.13.0",
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     "react-icons": "^3.9.0",
+=======
+    "react-hot-loader": "^4.12.19",
+>>>>>>> cf31634... Install redux, react-redux
+=======
+>>>>>>> 5a5f4aa... Create logout feature
+=======
+    "react-icons": "^3.9.0",
+>>>>>>> a81005f... bootstrap user profile component
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.5",

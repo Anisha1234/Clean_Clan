@@ -1,12 +1,56 @@
 .user-pic-preview{
   width: 96%;
+<<<<<<< HEAD
+<<<<<<< HEAD
   min-height: 300px;
+<<<<<<< HEAD
+  line-height: 300px;
+=======
+>>>>>>> 992e396... Allow user to upload profile picture
+  border: 1px dashed rgb(190, 189, 189);
+  margin: 10px;
+  position: relative;
+<<<<<<< HEAD
+}
+<<<<<<< HEAD
+=======
+  height: 300px;
+=======
+  min-height: 300px;
+>>>>>>> f81d4bb... Lint react-views
   line-height: 300px;
   border: 1px dashed rgb(190, 189, 189);
   margin: 10px;
   position: relative;
 }
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
 .user-pic-preview > img{
   margin: auto;
   vertical-align: middle;
 }
+<<<<<<< HEAD
+=======
+.user-pic-upload-control{
+  position: relative;
+  
+}
+/*the input*/
+.user-pic-upload{
+  opacity: 0;
+  position: absolute;
+  left: -80px;
+  top: 0;
+  width: 230px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.user-pic-upload:hover + .user-pic-upload-label{
+  text-decoration: underline;
+}
+>>>>>>> 992e396... Allow user to upload profile picture
+=======
+}
+>>>>>>> 560a7fe... add formik + reform redux store
+=======
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)

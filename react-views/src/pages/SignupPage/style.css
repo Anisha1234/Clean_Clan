@@ -1,4 +1,15 @@
 .signup-container{
   background-image: url('../../assets/media/signup.jpg');
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
   overflow: auto;
+=======
+>>>>>>> b7879d0... bootstrap login and signup page
+=======
+  overflow: hidden;
+>>>>>>> f770ec9... bootstrap navbar
+=======
+  overflow: auto;
+>>>>>>> 560a7fe... add formik + reform redux store
 }

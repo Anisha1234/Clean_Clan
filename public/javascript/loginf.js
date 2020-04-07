@@ -8,6 +8,10 @@ function validateEmail ($email) {
 $(document).ready(function () {
   $('#loginform').submit(function (event) {
     event.preventDefault()
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 33a516f... Add standardjs lint
     if (validateEmail($('#email').val())) {
       var n = $('#loginbutton')
       $.post(document.URL, {
@@ -45,3 +49,47 @@ $(document).ready(function () {
   })
   return false
 })
+<<<<<<< HEAD
+=======
+    if(validateEmail($("#email").val())) {
+        var n = $("#loginbutton")
+        $.post(document.URL, {
+            email: $('#email').val(),
+            password: $('#passwordconf').val()
+          }).done(function(data) {
+            console.log(data);
+            var loginMessage = data.message;
+            if (loginMessage == "Not registered") {
+              $(n).siblings('.msg').empty().append("<strong>Not Registered !</strong> </br></br><strong>You will be redirected to signup page shortly</strong>");
+              $(n).siblings('.msg').addClass("alert alert-danger alert-dismissible");
+              setTimeout(function() {
+                s = document.URL;
+                window.location.href = s.substr(0, s.lastIndexOf('/')) + '/signup';
+              }, 2500);
+            }
+            if (loginMessage == "Success") {
+              s = document.URL;
+              window.location.href = s.substr(0, s.lastIndexOf('/')) + '/profile';
+            }
+            if (loginMessage == "wrong password") {
+              $(n).siblings('.msg').empty().append("<strong>Wrong Password</strong>");
+              $(n).siblings('.msg').addClass("alert alert-danger alert-dismissible");
+            }
+          })
+          .fail(function(xhr, status, error) {
+            console.log(error);
+            $(n).siblings('.msg').empty().append("<strong>" + error + "  error,<br> there might be insufficient Data</strong>");
+            $(n).siblings('.msg').addClass("alert alert-danger alert-dismissible");
+          })
+
+      }
+      else{
+        $('#loginbutton').siblings('.msg').empty().append("<strong>Not a valid Email</strong>");
+        $('#loginbutton').siblings('.msg').addClass("alert alert-success alert-dismissible");
+      }
+  });
+  return false;
+});
+>>>>>>> 909282d... finish login: recreate session
+=======
+>>>>>>> 33a516f... Add standardjs lint

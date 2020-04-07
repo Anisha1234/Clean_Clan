@@ -1,6 +1,27 @@
 .header-content {
+<<<<<<< HEAD
+<<<<<<< HEAD
   text-align: center;
   background-image: url("../../assets//media/logout.jpg");
+=======
+  position: relative;
+=======
+>>>>>>> b7879d0... bootstrap login and signup page
+  text-align: center;
+  background-image: url("../../assets//media/logout.jpg");
+<<<<<<< HEAD
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.header-content-inner{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+>>>>>>> 4054e8b... add react-bootstrap and design home page
+=======
+>>>>>>> b7879d0... bootstrap login and signup page
 }
 .header-content .header-content-inner h1 {
   font-weight: 700;
@@ -20,6 +41,10 @@
   width: 100%;
   max-width: 300px;
   margin: auto;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
 }
 
 .header-content .header-content-inner .homepage-navigation .user-pic{
@@ -27,4 +52,9 @@
   height: 100%;
   float: left;
   margin: auto;
+<<<<<<< HEAD
+=======
+>>>>>>> 4054e8b... add react-bootstrap and design home page
+=======
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
 }

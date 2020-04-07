@@ -6,15 +6,34 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
+<<<<<<< HEAD
+<<<<<<< HEAD
     "lint": "semistandard --fix",
     "react-dev": "cd react-views && npm start",
+<<<<<<< HEAD
+=======
+    "lint": "standard --fix",
+>>>>>>> 33a516f... Add standardjs lint
+=======
+    "lint": "semistandard --fix",
+>>>>>>> 8664d7c... set up fileHandler service and create user service
+=======
+>>>>>>> 316f811... Finish user services, lint react-views
     "dev": "concurrently \"npm run react-dev\" \"npm start\" "
   },
   "keywords": [
     "node",
     "npm"
   ],
+<<<<<<< HEAD
+<<<<<<< HEAD
   "engine": {
+=======
+  "engine":{
+>>>>>>> 59bb5c1... Add node and npm version
+=======
+  "engine": {
+>>>>>>> 33a516f... Add standardjs lint
     "node": ">=8.0.0",
     "npm": ">=6.0.0"
   },
@@ -23,7 +42,14 @@
   "dependencies": {
     "bcrypt": "^4.0.1",
     "body-parser": "^1.15.2",
+<<<<<<< HEAD
+<<<<<<< HEAD
     "connect-mongo": "^3.2.0",
+=======
+>>>>>>> 8664d7c... set up fileHandler service and create user service
+=======
+    "connect-mongo": "^3.2.0",
+>>>>>>> 316f811... Finish user services, lint react-views
     "cors": "^2.8.5",
     "ejs": "^2.5.2",
     "express": "^4.17.1",
@@ -34,18 +60,44 @@
     "fs": "0.0.2",
     "mongoose": "^5.9.3",
     "multer": "^1.2.1",
+<<<<<<< HEAD
+<<<<<<< HEAD
     "multer-gridfs-storage": "^4.0.2",
     "nodemailer": "^6.4.4",
     "nodemon": "^2.0.2",
+=======
+=======
+    "multer-gridfs-storage": "^4.0.2",
+>>>>>>> 8664d7c... set up fileHandler service and create user service
+    "nodemailer": "^6.4.4",
+<<<<<<< HEAD
+    "nodemon": "^1.11.0",
+>>>>>>> 909282d... finish login: recreate session
+=======
+    "nodemon": "^2.0.2",
+>>>>>>> 32bd209... Remove standardjs, use semistandardjs
     "pre": "^0.1.3",
     "rand-token": "^0.4.0",
     "serve-index": "^1.8.0"
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
+<<<<<<< HEAD
+<<<<<<< HEAD
     "eslint-config-standard": "^13.0.1",
     "neutrino": "^9.1.0",
     "semistandard": "^14.2.0"
+=======
+=======
+    "eslint-config-standard": "^13.0.1",
+>>>>>>> 316f811... Finish user services, lint react-views
+    "neutrino": "^9.1.0",
+<<<<<<< HEAD
+    "standard": "^14.3.3"
+>>>>>>> 33a516f... Add standardjs lint
+=======
+    "semistandard": "^14.2.0"
+>>>>>>> 32bd209... Remove standardjs, use semistandardjs
   },
   "repository": {
     "type": "git",
@@ -55,7 +107,15 @@
     "url": "https://github.com/Anisha1234/nodesite/issues"
   },
   "homepage": "https://github.com/Anisha1234/nodesite#readme",
+<<<<<<< HEAD
+<<<<<<< HEAD
   "semistandard": {
+=======
+  "standard":{
+>>>>>>> 33a516f... Add standardjs lint
+=======
+  "semistandard": {
+>>>>>>> 32bd209... Remove standardjs, use semistandardjs
     "ignore": [
       "react-views/",
       "views/",

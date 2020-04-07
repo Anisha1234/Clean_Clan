@@ -5,18 +5,40 @@
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 .center-hor{
+=======
+.center-vert{
+>>>>>>> 560a7fe... add formik + reform redux store
+=======
+.center-hor{
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
   position: absolute;
   left: 50%;
   -ms-transform: translate(-50%);
   transform: translate(-50%);
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
 .center-vert{
+=======
+.center-hor{
+>>>>>>> 560a7fe... add formik + reform redux store
+=======
+.center-vert{
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
   position: absolute;
   top: 50%;
   -ms-transform: translate(0, -50%);
   transform: translate(0, -50%);
 }
+<<<<<<< HEAD
+=======
+>>>>>>> b7879d0... bootstrap login and signup page
+=======
+>>>>>>> 560a7fe... add formik + reform redux store
 .cover-all{
   margin: 0; 
   padding: 0;

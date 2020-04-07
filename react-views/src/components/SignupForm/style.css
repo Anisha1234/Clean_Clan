@@ -1,6 +1,25 @@
 .signup-form-container{
+<<<<<<< HEAD
+<<<<<<< HEAD
   width: 90%;
   max-width: 500px;
   margin-top: 10px;
   padding:0;
+=======
+  margin: 20px;
+  padding: 0;
+=======
+>>>>>>> f770ec9... bootstrap navbar
+  width: 90%;
+  max-width: 500px;
+  margin-top: 10px;
+  padding:0;
+<<<<<<< HEAD
+}
+.user-description{
+  resize: none;
+  overflow: hidden;
+>>>>>>> b7879d0... bootstrap login and signup page
+=======
+>>>>>>> 316f811... Finish user services, lint react-views
 }

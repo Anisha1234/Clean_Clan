@@ -20,7 +20,15 @@
 }
 
 .post-image-container:hover > .post-image-overlay{
+<<<<<<< HEAD
+<<<<<<< HEAD
   background-color: rgb(75, 74, 74, 0.8);
+=======
+  background-color: rgb(75, 74, 74);
+>>>>>>> cb1dc93... Design post form
+=======
+  background-color: rgb(75, 74, 74, 0.8);
+>>>>>>> 243be1d... add submit button to post form
   z-index: 1;
 }
 .post-image-container:hover > .post-image-overlay > .post-image-icon{

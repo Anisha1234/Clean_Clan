@@ -8,7 +8,15 @@ import {
   FaAward,
 } from 'react-icons/fa';
 import ProfileImage from './ProfileImage';
+<<<<<<< HEAD
+<<<<<<< HEAD
 import { getUserProfile } from '../../store/user';
+=======
+import { getUserProfileAction } from '../../store/user';
+>>>>>>> 992e396... Allow user to upload profile picture
+=======
+import { getUserProfile } from '../../store/user';
+>>>>>>> 560a7fe... add formik + reform redux store
 import './style.css';
 
 
@@ -16,7 +24,15 @@ const UserProfile = () => {
   const currentUser = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
   useEffect(() => {
+<<<<<<< HEAD
+<<<<<<< HEAD
     dispatch(getUserProfile());
+=======
+    dispatch(getUserProfileAction());
+>>>>>>> 992e396... Allow user to upload profile picture
+=======
+    dispatch(getUserProfile());
+>>>>>>> 560a7fe... add formik + reform redux store
   }, [dispatch]);
 
   return (
@@ -56,10 +72,25 @@ const UserProfile = () => {
             <Card.Text>
               <FaAward className="user-profile-icon" />
               Reputation:
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
               <strong>
                 {' '}
                 { parseInt(currentUser.like_count, 10) * 10 }
               </strong>
+<<<<<<< HEAD
+=======
+              {' '}
+<<<<<<< HEAD
+              {` ${parseInt(currentUser.like_count, 10) * 10}`}
+>>>>>>> 992e396... Allow user to upload profile picture
+=======
+              { parseInt(currentUser.like_count, 10) * 10 }
+>>>>>>> 560a7fe... add formik + reform redux store
+=======
+>>>>>>> 2d5cfb4... finish post component (backend and frontend)
             </Card.Text>
           </Card.Body>
         </Card>
