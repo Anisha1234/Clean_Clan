@@ -14,20 +14,20 @@ const express = require('express');
  * }} UserProfileHandlers - handlers for user-profile services
  */
 module.exports = (
-  ImageUploadHandler, AuthHandlers, 
+  ImageUploadHandler, AuthHandlers,
   RegistrationHandler, UserProfileHandlers
-)=>{
+) => {
   const router = express.Router();
   const { AuthCheck, LoginHandler, LogoutHandler } = AuthHandlers;
-  const { 
-    GetHandler: GetProfileHandler, 
+  const {
+    GetHandler: GetProfileHandler,
     ImageUpdateHandler: UserPicUpdateHandler
   } = UserProfileHandlers;
   router
-    //check user auth status
-    .get('/', AuthCheck, (req, res)=>{
+    // check user auth status
+    .get('/', AuthCheck, (req, res) => {
       res.status(200).send({
-        message: "User is logged in",
+        message: 'User is logged in',
         user_data: {
           userid: req.session.userid,
           name: req.session.name,
@@ -35,15 +35,15 @@ module.exports = (
         }
       });
     })
-    //login
+    // login
     .post('/login', LoginHandler)
     // logout
     .get('/logout', LogoutHandler)
     // register
     .post('/signup', RegistrationHandler)
-    //get user profile
+    // get user profile
     .get('/profile', AuthCheck, GetProfileHandler)
-    //update user profile image
+    // update user profile image
     .post('/profile/image', AuthCheck, ImageUploadHandler.single('image'), UserPicUpdateHandler);
   return router;
 };

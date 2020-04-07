@@ -9,4 +9,4 @@ module.exports = (UserService) => ({
   AuthHandlers: AuthHandlersInit(UserService),
   RegistrationHandler: RegistrationHandlerInit(UserService),
   UserProfileHandlers: UserProfileHandlersInit(UserService)
-})
+});

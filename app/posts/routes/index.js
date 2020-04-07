@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const MAX_CHALLENGE_IMAGES_COUNT = 1;
 const MAX_SOLUTION_IMAGES_COUNT = 2;
 /**
@@ -18,11 +18,11 @@ const MAX_SOLUTION_IMAGES_COUNT = 2;
  * }} PublishHandlers
  */
 module.exports = (
-  ImageUploadHandler, 
-  PostShowHandlers, 
-  PostLikeHandler, 
+  ImageUploadHandler,
+  PostShowHandlers,
+  PostLikeHandler,
   PublishHandlers
-)=>{
+) => {
   const router = express.Router();
   const { FeedHandler, SinglePostHandler } = PostShowHandlers;
   const { ChallengeHandler, SolutionHandler } = PublishHandlers;
@@ -32,14 +32,14 @@ module.exports = (
     .put('/:postID/like', PostLikeHandler(true))
     .put('/:postID/unlike', PostLikeHandler(false))
     .post(
-      '/challenge', 
-      ImageUploadHandler.array('images', MAX_CHALLENGE_IMAGES_COUNT), 
+      '/challenge',
+      ImageUploadHandler.array('images', MAX_CHALLENGE_IMAGES_COUNT),
       ChallengeHandler
     )
     .post(
-      '/:challengeID/solution', 
+      '/:challengeID/solution',
       ImageUploadHandler.array('images', MAX_SOLUTION_IMAGES_COUNT),
       SolutionHandler
     );
   return router;
-}
+};

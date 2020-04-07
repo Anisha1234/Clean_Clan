@@ -1,6 +1,6 @@
 const PostDB = require('./db');
 const PostServiceInit = require('./services');
-const PostHandlersInit = require("./handlers");
+const PostHandlersInit = require('./handlers');
 const PostRouteInit = require('./routes');
 /**
  * @param {Multer} ImageUploadHandler - a middleware for image upload
@@ -11,16 +11,16 @@ const PostRouteInit = require('./routes');
  */
 module.exports = (ImageUploadHandler, UserService) => {
   const PostService = PostServiceInit(PostDB);
-  const { 
-    PostShowHandlers, 
+  const {
+    PostShowHandlers,
     PostLikeHandler,
     PublishHandlers
   } = PostHandlersInit(PostService, UserService);
   const PostRoute = PostRouteInit(
-    ImageUploadHandler, 
+    ImageUploadHandler,
     PostShowHandlers, PostLikeHandler, PublishHandlers
   );
   return {
     PostRoute
   };
-}
+};
