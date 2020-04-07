@@ -11,7 +11,7 @@ module.exports = (PostDB) => ({
    */
   createNewChallenge: async (data) => PostDB.saveNewPost({
     ...data,
-    post_type: "Challenge"
+    post_type: 'Challenge'
   }),
   /**
    * @function: create a new solution
@@ -21,12 +21,11 @@ module.exports = (PostDB) => ({
   createNewSolution: async (data, challengeID) => {
     const solutionPost = await PostDB.saveNewPost({
       ...data,
-      post_type: "Solution",
+      post_type: 'Solution',
       challenge: challengeID
     });
     await PostDB.updatePostData(challengeID, {
       solution: solutionPost.id
     });
-    return;
   }
 });

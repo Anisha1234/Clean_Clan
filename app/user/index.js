@@ -8,19 +8,19 @@ const UserHandlersInit = require('./handlers');
  */
 module.exports = (ImageUploadHandler) => {
   const UserService = UserServiceInit(UserDB);
-  const { 
-    AuthHandlers, 
-    RegistrationHandler, 
-    UserProfileHandlers 
+  const {
+    AuthHandlers,
+    RegistrationHandler,
+    UserProfileHandlers
   } = UserHandlersInit(UserService);
   const { AuthCheck } = AuthHandlers;
   const UserRoute = UserRouteInit(
-    ImageUploadHandler, AuthHandlers, 
+    ImageUploadHandler, AuthHandlers,
     RegistrationHandler, UserProfileHandlers
   );
   return {
     UserService,
     AuthCheck,
-    UserRoute,
+    UserRoute
   };
-}
+};
