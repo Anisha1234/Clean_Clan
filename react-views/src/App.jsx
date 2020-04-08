@@ -14,7 +14,8 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const SignupPage = lazy(() => import('./pages/SignupPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
-const TimelinePage = lazy(()=>import('./pages/TimelinePage'));
+const TimelinePage = lazy(() => import('./pages/TimelinePage'));
+const PostPage = lazy(() => import('./pages/PostPage'));
 
 
 const App = () => {
@@ -53,12 +54,21 @@ const App = () => {
               </LogoutGuard>
             )}
           />
-          <Route 
+          <Route
             exact
             path="/timeline"
             render={() => (
               <LoginGuard>
                 <TimelinePage />
+              </LoginGuard>
+            )}
+          />
+          <Route
+            exact
+            path="/post/:postID"
+            render={({ match }) => (
+              <LoginGuard>
+                <PostPage postID={match.params.postID} />
               </LoginGuard>
             )}
           />

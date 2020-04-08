@@ -12,9 +12,9 @@ const givenPaths = ['/timeline', '/issue', '/ranking'];
 const givenLinkName = ['Timeline', 'Issue', 'Ranking'];
 
 const NavBar = () => {
-  const [activePath, setActivePath] = useState("");
-  const userPic = useSelector((state)=>state.user.data.image.current);
-  const userName = useSelector((state)=>state.user.data.name);
+  const [activePath, setActivePath] = useState('');
+  const userPic = useSelector((state) => state.user.data.image.current);
+  const userName = useSelector((state) => state.user.data.name);
   useEffect(() => {
     setActivePath(window.location.pathname);
   }, []);
@@ -30,14 +30,14 @@ const NavBar = () => {
       >
         <Nav variant="pills">
           <Nav.Item key="Profile">
-            <Nav.Link 
-              href="/profile" 
+            <Nav.Link
+              href="/profile"
               active={activePath === '/profile'}
               className="nav-link"
             >
-              <Image 
-                roundedCircle 
-                fluid 
+              <Image
+                roundedCircle
+                fluid
                 src={createImageURL(userPic) || profileImg}
                 className="user-pic"
               />
@@ -58,7 +58,7 @@ const NavBar = () => {
               </Nav.Item>
             ))
           }
-          <Nav.Item style={{ width: '100px', marginLeft:'8px' }}>
+          <Nav.Item style={{ width: '100px', marginLeft: '8px' }}>
             <LogoutButton variant="outline-light" />
           </Nav.Item>
         </Nav>

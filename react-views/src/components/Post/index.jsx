@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
@@ -23,18 +23,20 @@ const Post = ({
   date, heading, location, description,
   imageBefore, imageAfter,
   likeCount, likes,
-  solution, challenge
+  solution, challenge,
 }) => {
   const [solFormOpen, setSolFormOpen] = useState(false);
   const currentUserID = useSelector((state) => state.user.data.userid);
   const dispatch = useDispatch();
-  const haveUserLiked = useMemo(
-    () => likes.indexOf(currentUserID) > -1,
-    [likes, currentUserID],
-  );
+  const [haveUserLiked, setHaveUserLiked] = useState(likes.indexOf(currentUserID) !== -1);
+  const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
   const togglePostLike = useCallback(() => {
-    dispatch(updatePostLike(postID, !haveUserLiked));
-  }, [dispatch, haveUserLiked, postID]);
+    setHaveUserLiked((currentLikeStatus) => {
+      dispatch(updatePostLike(postID, !currentLikeStatus));
+      setCurrentLikeCount((c) => c + (currentLikeStatus ? -1 : 1));
+      return !currentLikeStatus;
+    });
+  }, [dispatch, postID]);
 
   return (
     <>
@@ -43,29 +45,39 @@ const Post = ({
         border="light"
       >
         <Card.Header>
-          <AuthorBar authorName={authorName} authorImage={authorImage}/>
+          <AuthorBar authorName={authorName} authorImage={authorImage} />
         </Card.Header>
         <Card.Body>
-          <Card.Title>{heading}</Card.Title>
+          <Card.Title><a href={`/post/${postID}`}>{heading}</a></Card.Title>
           <Card.Subtitle>
             <Badge variant={postType === 'Challenge' ? 'danger' : 'success'}>
               {postType}
             </Badge>
             {
-              (()=>{
-                if(postType === "Solution") return;
-                const alreadySolved = (<><AiFillCheckCircle />Already solved!</>);
-                const notSolved = (<><AiOutlineSolution />Solve now!</>);
-                if(solution){
+              (() => {
+                if (postType === 'Solution') return null;
+                const alreadySolved = (
+                  <>
+                    <AiFillCheckCircle />
+                    Already solved!
+                  </>
+                );
+                const notSolved = (
+                  <>
+                    <AiOutlineSolution />
+                    Solve now!
+                  </>
+                );
+                if (solution) {
                   return (
                     <Button variant="link">
                       {alreadySolved}
                     </Button>
                   );
                 }
-                if(author !== currentUserID){
+                if (author !== currentUserID) {
                   return (
-                    <Button variant="link" onClick={()=>setSolFormOpen(true)}>
+                    <Button variant="link" onClick={() => setSolFormOpen(true)}>
                       {notSolved}
                     </Button>
                   );
@@ -79,9 +91,9 @@ const Post = ({
             <MdLocationOn />
             {` ${location}`}
           </small>
-          {solution && <PostPreview postID={solution}/>}
-          {challenge && <PostPreview postID={challenge}/>}
-          <Card.Text>  
+          {solution && <PostPreview postID={solution} />}
+          {challenge && <PostPreview postID={challenge} />}
+          <Card.Text>
             {description}
           </Card.Text>
           <CardGroup>
@@ -103,7 +115,7 @@ const Post = ({
           <Row className="justify-content-around post-interaction-bar">
             <button type="button" className="hidden-btn" onClick={togglePostLike}>
               {haveUserLiked ? <FaHeart style={{ color: 'red' }} /> : <FaRegHeart />}
-              <Badge variant="info" pill>{likeCount}</Badge>
+              <Badge variant="info" pill>{currentLikeCount}</Badge>
             </button>
             <a href={`https://twitter.com/intent/tweet?text=${description}`}>
               <FaTwitter style={{ fontSize: '20px', color: ' #38A1F3' }} />
@@ -116,7 +128,7 @@ const Post = ({
           <Modal.Title>Solve this challenge</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <PostPreview postID={postID}/>
+          <PostPreview postID={postID} />
           <PostForm type="Solution" responsePostID={postID} />
         </Modal.Body>
       </Modal>
@@ -141,11 +153,11 @@ Post.propTypes = {
   imageBefore: PropTypes.string.isRequired,
   imageAfter: PropTypes.string,
   solution: PropTypes.string,
-  challenge: PropTypes.string
+  challenge: PropTypes.string,
 };
 
 Post.defaultProps = {
   imageAfter: '',
   solution: '',
-  challenge: ''
+  challenge: '',
 };

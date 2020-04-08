@@ -1,7 +1,7 @@
 import {
-  getPostsAction, getSinglePostAction, 
+  getPostsAction, getSinglePostAction,
   publishPostAction, updatePostLikeAction,
-  
+
 } from './actions';
 import PostReducer from './reducer';
 
@@ -10,5 +10,5 @@ export {
   getPostsAction as getPosts,
   publishPostAction as publishPost,
   updatePostLikeAction as updatePostLike,
-  getSinglePostAction as getSinglePost
+  getSinglePostAction as getSinglePost,
 };

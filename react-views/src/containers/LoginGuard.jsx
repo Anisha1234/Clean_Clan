@@ -13,9 +13,10 @@ const LoginGuard = ({ children }) => {
     case LOGGED_OUT:
       return (
         <Redirect to={{
-          pathname: "/",
-          state: { from: location }
-        }} />
+          pathname: '/',
+          state: { from: location },
+        }}
+        />
       );
     case PENDING:
       return <Loader />;

@@ -23,14 +23,13 @@ const createPostsSubReducer = (subDomain) => (state = initialState[subDomain], a
   switch (actionType) {
     case UPDATE:
       return payload;
-    case ADD_POSTS:{
+    case ADD_POSTS: {
       return [
-        ...state, 
-        ...payload.filter((post)=>{
+        ...state,
+        ...payload.filter((post) => {
           const pIndex = state.findIndex((currentPost) => currentPost.id === post.id);
-          if(pIndex === -1) return true;
-          return false;
-        })
+          return pIndex === -1;
+        }),
       ];
     }
     case UPDATE_POST_LIKE: {

@@ -14,8 +14,8 @@ const getPosts = async (userID = '') => axios.get(
 const getSinglePost = async (postID) => axios.get(
   `${SERVER_ROOT}/posts/show/${postID}`,
   {
-    withCredentials: true
-  }
+    withCredentials: true,
+  },
 );
 
 const publishPost = async (postType, responsePostID, data) => {
@@ -44,5 +44,5 @@ const updatePostLike = async (postID, likeStatus) => {
 };
 
 export {
-  getPosts, getSinglePost, publishPost, updatePostLike
+  getPosts, getSinglePost, publishPost, updatePostLike,
 };

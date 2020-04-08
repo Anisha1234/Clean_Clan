@@ -8,14 +8,14 @@ import './style.css';
 
 const AuthorBar = ({ authorName, authorImage }) => (
   <Media>
-    <Image 
-      className='post-author-img'
+    <Image
+      className="post-author-img"
       roundedCircle
       fluid
       src={createImageURL(authorImage) || profileImg}
     />
-    <Media.Body className='post-author-body'>
-      <h6 className='post-author-name'>{authorName}</h6>
+    <Media.Body className="post-author-body">
+      <h6 className="post-author-name">{authorName}</h6>
     </Media.Body>
   </Media>
 );
@@ -24,6 +24,5 @@ export default AuthorBar;
 
 AuthorBar.propTypes = {
   authorName: PropTypes.string.isRequired,
-  authorImage: PropTypes.string.isRequired
+  authorImage: PropTypes.string.isRequired,
 };
-

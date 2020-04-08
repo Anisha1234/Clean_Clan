@@ -15,7 +15,7 @@ const ProfilePage = () => (
         <UserProfile />
       </Col>
       <Col lg={6}>
-        <Feed isMine/>
+        <Feed isMine />
       </Col>
     </Row>
   </>

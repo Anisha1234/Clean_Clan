@@ -1,8 +1,10 @@
 import {
-  POSTS_DOMAIN, ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN, 
+  POSTS_DOMAIN, ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN,
   UPDATE_POST_LIKE, ADD_POSTS, UPDATE,
 } from '../../constants';
-import { getPosts, publishPost, updatePostLike, getSinglePost } from './services';
+import {
+  getPosts, publishPost, updatePostLike, getSinglePost,
+} from './services';
 import { updateStoreDataAction } from '../util';
 
 function updatePostsDataAction(subDomain, data) {
@@ -11,7 +13,7 @@ function updatePostsDataAction(subDomain, data) {
 /**
  * @function addPostsDataAction : add array of posts in subDomain
  * @param {string} subDomain: either ALL_POSTS_DOMAIN / MY_POSTS_DOMAIN
- * @param {any[]} data 
+ * @param {any[]} data
  */
 function addPostsDataAction(subDomain, data) {
   return updateStoreDataAction(ADD_POSTS, data, POSTS_DOMAIN, subDomain);
@@ -36,7 +38,7 @@ const getPostsAction = (isMine) => async (dispatch, getState) => {
     dispatch(updatePostsDataAction(subDomain, posts));
     return;
   } catch (error) {
-    if(error && error.response){
+    if (error && error.response) {
       throw error.response.data;
     }
     throw error;
@@ -44,31 +46,31 @@ const getPostsAction = (isMine) => async (dispatch, getState) => {
 };
 /**
  * @function getSinglePostAction : request a single post
- * @param {string} postID 
+ * @param {string} postID
  */
 const getSinglePostAction = (postID) => async (dispatch, getState) => {
-  try{
+  try {
     const postsState = getState().posts;
     let postsArray;
     let postIndex = -1;
-    [MY_POSTS_DOMAIN, ALL_POSTS_DOMAIN].forEach((subDomain)=>{
-      if(postIndex !== -1) return;
+    [MY_POSTS_DOMAIN, ALL_POSTS_DOMAIN].forEach((subDomain) => {
+      if (postIndex !== -1) return;
       postsArray = postsState[subDomain];
       postIndex = postsArray.findIndex((post) => post.id === postID);
     });
-    if(postIndex === -1){
+    if (postIndex === -1) {
       const { data } = await getSinglePost(postID);
       dispatch(addPostsDataAction(ALL_POSTS_DOMAIN, [data]));
       return data;
     }
     return postsArray[postIndex];
-  } catch(error){
-    if(error && error.response){
+  } catch (error) {
+    if (error && error.response) {
       throw error.response.data;
     }
     throw error;
   }
-}
+};
 
 /**
  * @function publishPostAction : publish post
@@ -116,5 +118,5 @@ const updatePostLikeAction = (postID, likeStatus) => (dispatch, getState) => {
 };
 
 export {
-  getPostsAction, publishPostAction, updatePostLikeAction, getSinglePostAction
+  getPostsAction, publishPostAction, updatePostLikeAction, getSinglePostAction,
 };

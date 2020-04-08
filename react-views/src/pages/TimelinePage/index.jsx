@@ -9,7 +9,7 @@ const TimelinePage = () => (
   <>
     <NavBar />
     <Row className="timeline-page-container">
-      <Col lg={3}/>
+      <Col lg={3} />
       <Col lg={6} className="timeline-page-feed">
         <Feed />
       </Col>
