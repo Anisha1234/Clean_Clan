@@ -49,7 +49,6 @@ const getPostsAction = (isMine) => async (dispatch, getState) => {
 const getSinglePostAction = (postID) => async (dispatch, getState) => {
   try{
     const postsState = getState().posts;
-    let postData;
     let postsArray;
     let postIndex = -1;
     [MY_POSTS_DOMAIN, ALL_POSTS_DOMAIN].forEach((subDomain)=>{
@@ -59,11 +58,10 @@ const getSinglePostAction = (postID) => async (dispatch, getState) => {
     });
     if(postIndex === -1){
       const { data } = await getSinglePost(postID);
-      dispatch(addPostsDataAction(subDomain, [data]));
-      postData = data;
+      dispatch(addPostsDataAction(ALL_POSTS_DOMAIN, [data]));
+      return data;
     }
-    postData = postsArray[postIndex];
-    return postData;
+    return postsArray[postIndex];
   } catch(error){
     if(error && error.response){
       throw error.response.data;

@@ -18,7 +18,7 @@
 }
 .header-content .header-content-inner .homepage-navigation{
   width: 100%;
-  max-width: 300px;
+  max-width: 320px;
   margin: auto;
 }
 
@@ -26,5 +26,5 @@
   width: 24px;
   height: 100%;
   float: left;
-  margin: auto;
+  margin: 0;
 }

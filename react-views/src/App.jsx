@@ -14,6 +14,7 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const SignupPage = lazy(() => import('./pages/SignupPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
+const TimelinePage = lazy(()=>import('./pages/TimelinePage'));
 
 
 const App = () => {
@@ -50,6 +51,15 @@ const App = () => {
               <LogoutGuard>
                 <SignupPage />
               </LogoutGuard>
+            )}
+          />
+          <Route 
+            exact
+            path="/timeline"
+            render={() => (
+              <LoginGuard>
+                <TimelinePage />
+              </LoginGuard>
             )}
           />
           <Route exact path="/" component={HomePage} />

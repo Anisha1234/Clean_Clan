@@ -1,1 +1,16 @@
+.my-nav-container{
+  margin: 0;
+  padding: 5px 0;
+  width: 100vw;
+}
+.my-nav-container .nav-title{
+  padding: 0 10px;
+}
+.my-nav-container .nav-link{
+  margin-left: 10px;
+}
+.my-nav-container .nav-link .user-pic{
+  max-height:25px;
+  max-width: 25px;
+}
 
