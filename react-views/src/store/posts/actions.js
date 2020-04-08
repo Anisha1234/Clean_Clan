@@ -1,64 +1,79 @@
 import {
-  POSTS_DOMAIN, ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN, POSTS_STATUS,
-  UPDATE_POST_LIKE, UPDATE_POST_DATA, UPDATE,
-  PENDING, DONE, FAIL,
+  POSTS_DOMAIN, ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN, 
+  UPDATE_POST_LIKE, ADD_POSTS, UPDATE,
 } from '../../constants';
-import { getPosts, publishPost, updatePostLike } from './services';
+import { getPosts, publishPost, updatePostLike, getSinglePost } from './services';
 import { updateStoreDataAction } from '../util';
 
-/**
- * @function- shorthand action creator to update posts array (either my_posts or all_posts)
- * @param {string} subDomain either ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN or PUBLISH_DOMAIN
- * @param {Object[]} data the posts array get from the server
- */
 function updatePostsDataAction(subDomain, data) {
-  return updateStoreDataAction(UPDATE_POST_DATA, data, POSTS_DOMAIN, subDomain);
+  return updateStoreDataAction(UPDATE, data, POSTS_DOMAIN, subDomain);
+}
+/**
+ * @function addPostsDataAction : add array of posts in subDomain
+ * @param {string} subDomain: either ALL_POSTS_DOMAIN / MY_POSTS_DOMAIN
+ * @param {any[]} data 
+ */
+function addPostsDataAction(subDomain, data) {
+  return updateStoreDataAction(ADD_POSTS, data, POSTS_DOMAIN, subDomain);
 }
 
-/**
- * @function- shorthand action creator to update user like in either my_posts or all_posts
- * @param {string} subDomain either ALL_POSTS_DOMAIN or MY_POSTS_DOMAIN
- * @param {string} postID - post id that user like that post
- * @param {string} userID - user id
- */
 function updatePostLikeLocallyAction(subDomain, postID, userID) {
   return updateStoreDataAction(UPDATE_POST_LIKE, {
     postID, userID,
   }, POSTS_DOMAIN, subDomain);
 }
 /**
- * @function: short hand action creator to update status in getting posts data
- * @param {string} subDomain - either ALL_POSTS_DOMAIN or MY_POSTS_DOMAIN
- * @param {string} status - PENDING/DONE/FAIL
- */
-function updatePostStatusAction(subDomain, status) {
-  return updateStoreDataAction(UPDATE, {
-    [subDomain]: status,
-  }, POSTS_DOMAIN, POSTS_STATUS);
-}
-
-/**
- * @func- action that that get posts data
+ * @function- action that that get posts data
  * @param {boolean} isMine - flag to indicate whether data belongs to my_posts or all_posts
  */
 const getPostsAction = (isMine) => async (dispatch, getState) => {
   const subDomain = isMine ? MY_POSTS_DOMAIN : ALL_POSTS_DOMAIN;
   try {
     const userID = (isMine ? getState().user.data.userid : '');
-    dispatch(updatePostStatusAction(subDomain, PENDING));
     const { data: posts } = await getPosts(userID);
     // reverse the posts that newest go first
     posts.reverse();
-    dispatch(updatePostStatusAction(subDomain, DONE));
     dispatch(updatePostsDataAction(subDomain, posts));
     return;
   } catch (error) {
-    dispatch(updatePostStatusAction(subDomain, FAIL));
+    if(error && error.response){
+      throw error.response.data;
+    }
+    throw error;
   }
 };
+/**
+ * @function getSinglePostAction : request a single post
+ * @param {string} postID 
+ */
+const getSinglePostAction = (postID) => async (dispatch, getState) => {
+  try{
+    const postsState = getState().posts;
+    let postData;
+    let postsArray;
+    let postIndex = -1;
+    [MY_POSTS_DOMAIN, ALL_POSTS_DOMAIN].forEach((subDomain)=>{
+      if(postIndex !== -1) return;
+      postsArray = postsState[subDomain];
+      postIndex = postsArray.findIndex((post) => post.id === postID);
+    });
+    if(postIndex === -1){
+      const { data } = await getSinglePost(postID);
+      dispatch(addPostsDataAction(subDomain, [data]));
+      postData = data;
+    }
+    postData = postsArray[postIndex];
+    return postData;
+  } catch(error){
+    if(error && error.response){
+      throw error.response.data;
+    }
+    throw error;
+  }
+}
 
 /**
- *
+ * @function publishPostAction : publish post
  * @param {object} postData - post data
  * @param {string} postType - either 'Challenge' or 'Solution'
  * @param {string} responsePostID - the post ID this uploaded post responds to.
@@ -103,5 +118,5 @@ const updatePostLikeAction = (postID, likeStatus) => (dispatch, getState) => {
 };
 
 export {
-  getPostsAction, publishPostAction, updatePostLikeAction,
+  getPostsAction, publishPostAction, updatePostLikeAction, getSinglePostAction
 };

@@ -50,6 +50,8 @@ const Feed = ({ isMine }) => {
               postType={post.post_type}
               postID={post.id}
               author={post.author}
+              authorName={post.author_name}
+              authorImage={post.author_image}
               date={post.date}
               heading={post.heading}
               location={post.location}
@@ -58,6 +60,8 @@ const Feed = ({ isMine }) => {
               likeCount={post.like_count}
               imageBefore={post.image_before}
               imageAfter={post.image_after}
+              solution={post.solution}
+              challenge={post.challenge}
             />
           </Row>
         ))

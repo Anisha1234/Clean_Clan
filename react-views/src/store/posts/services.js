@@ -11,6 +11,13 @@ const getPosts = async (userID = '') => axios.get(
   },
 );
 
+const getSinglePost = async (postID) => axios.get(
+  `${SERVER_ROOT}/posts/show/${postID}`,
+  {
+    withCredentials: true
+  }
+);
+
 const publishPost = async (postType, responsePostID, data) => {
   const endPoint = postType === 'Solution' && responsePostID
     ? `/posts/${responsePostID}/solution` : '/posts/challenge';
@@ -37,5 +44,5 @@ const updatePostLike = async (postID, likeStatus) => {
 };
 
 export {
-  getPosts, publishPost, updatePostLike,
+  getPosts, getSinglePost, publishPost, updatePostLike
 };

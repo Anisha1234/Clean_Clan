@@ -6,7 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import { MdCameraAlt } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import ProfileImgForm from '../ProfileImgForm';
-import { createFileURL } from '../../../util';
+import { createImageURL } from '../../../util';
 import profileImg from '../../../assets/media/profile.png';
 import './style.css';
 
@@ -21,7 +21,7 @@ const ProfileImage = ({ currentImage, allImages }) => {
           bg="light"
         >
           <Image
-            src={currentImage ? createFileURL(currentImage) : profileImg}
+            src={currentImage ? createImageURL(currentImage) : profileImg}
             roundedCircle
             fluid
             alt="profile-pic"

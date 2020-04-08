@@ -1,0 +1,12 @@
+.post-preview-link{
+  text-decoration: none;
+}
+.post-preview-container{
+  position: relative;
+  margin: 20px;
+  cursor: pointer;
+}
+.post-preview-img{
+  max-width: 70px;
+  max-height: 70px;
+}

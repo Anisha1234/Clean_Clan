@@ -13,7 +13,7 @@ import Card from 'react-bootstrap/Card';
 import { MdCloudUpload } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import { updateUserPic } from '../../../store/user';
-import { createFileURL } from '../../../util';
+import { createImageURL } from '../../../util';
 import './style.css';
 
 const OLD_IMAGE_TAB = 'old';
@@ -146,7 +146,7 @@ const ProfileImgForm = ({ allImages }) => {
                     value={formHandler.values.oldImageName === imageName}
                     onChange={(e) => onChooseOldImage(imageName, e.target.value)}
                   />
-                  <Image fluid src={createFileURL(imageName)} />
+                  <Image fluid src={createImageURL(imageName)} />
                 </Card>
               ))
             }

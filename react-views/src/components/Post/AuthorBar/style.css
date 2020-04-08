@@ -1,0 +1,11 @@
+.post-author-img{
+  max-width: 40px;
+  max-height: 40px;
+}
+.post-author-body{
+  margin-left: 20px;
+  height: 40px;
+}
+.post-author-name{
+  padding: 7px 0;
+}

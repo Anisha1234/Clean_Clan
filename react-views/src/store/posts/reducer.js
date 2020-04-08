@@ -1,22 +1,16 @@
 import { combineReducers } from 'redux';
 import {
-  POSTS_DOMAIN, MY_POSTS_DOMAIN, ALL_POSTS_DOMAIN, POSTS_STATUS,
-  UPDATE_POST_LIKE, UPDATE_POST_DATA,
-  DONE,
+  POSTS_DOMAIN, MY_POSTS_DOMAIN, ALL_POSTS_DOMAIN,
+  UPDATE, UPDATE_POST_LIKE, ADD_POSTS,
 } from '../../constants';
 import {
   isActionTypeEqual,
   getDomainsAndActionType,
-  createCommonSubreducer,
 } from '../util';
 
 const initialState = {
   [MY_POSTS_DOMAIN]: [],
   [ALL_POSTS_DOMAIN]: [],
-  [POSTS_STATUS]: {
-    [MY_POSTS_DOMAIN]: DONE,
-    [ALL_POSTS_DOMAIN]: DONE,
-  },
 };
 /**
  * @function - to creat sub-reducers for posts reducer
@@ -27,8 +21,18 @@ const createPostsSubReducer = (subDomain) => (state = initialState[subDomain], a
   const { domains, actionType } = getDomainsAndActionType(type);
   if (!isActionTypeEqual([POSTS_DOMAIN, subDomain], domains)) return state;
   switch (actionType) {
-    case UPDATE_POST_DATA:
-      return [...state, ...payload];
+    case UPDATE:
+      return payload;
+    case ADD_POSTS:{
+      return [
+        ...state, 
+        ...payload.filter((post)=>{
+          const pIndex = state.findIndex((currentPost) => currentPost.id === post.id);
+          if(pIndex === -1) return true;
+          return false;
+        })
+      ];
+    }
     case UPDATE_POST_LIKE: {
       const { postID, userID } = payload;
       return state.map((post) => {
@@ -51,7 +55,6 @@ const createPostsSubReducer = (subDomain) => (state = initialState[subDomain], a
 const PostReducer = combineReducers({
   [MY_POSTS_DOMAIN]: createPostsSubReducer(MY_POSTS_DOMAIN),
   [ALL_POSTS_DOMAIN]: createPostsSubReducer(ALL_POSTS_DOMAIN),
-  [POSTS_STATUS]: createCommonSubreducer(POSTS_DOMAIN, POSTS_STATUS),
 });
 
 export default PostReducer;
