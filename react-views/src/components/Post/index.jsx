@@ -2,19 +2,16 @@ import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
-import CardGroup from 'react-bootstrap/CardGroup';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import { MdLocationOn } from 'react-icons/md';
-import { AiOutlineSolution, AiFillCheckCircle } from 'react-icons/ai';
 import { FaHeart, FaRegHeart, FaTwitter } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import PostContent from './PostContent';
+import PostSubtitle from './PostSubtitle';
 import PostForm from '../PostForm';
 import PostPreview from '../PostPreview';
 import AuthorBar from './AuthorBar';
 import { updatePostLike } from '../../store/posts';
-import { createImageURL } from '../../util';
 import './style.css';
 
 const Post = ({
@@ -48,70 +45,32 @@ const Post = ({
           <AuthorBar authorName={authorName} authorImage={authorImage} />
         </Card.Header>
         <Card.Body>
-          <Card.Title><a href={`/post/${postID}`}>{heading}</a></Card.Title>
+          <Card.Title>
+            <a href={`/post/${postID}`} className="post-link">
+              {heading}
+            </a>
+          </Card.Title>
           <Card.Subtitle>
             <Badge variant={postType === 'Challenge' ? 'danger' : 'success'}>
               {postType}
             </Badge>
-            {
-              (() => {
-                if (postType === 'Solution') return null;
-                const alreadySolved = (
-                  <>
-                    <AiFillCheckCircle />
-                    Already solved!
-                  </>
-                );
-                const notSolved = (
-                  <>
-                    <AiOutlineSolution />
-                    Solve now!
-                  </>
-                );
-                if (solution) {
-                  return (
-                    <Button variant="link">
-                      {alreadySolved}
-                    </Button>
-                  );
-                }
-                if (author !== currentUserID) {
-                  return (
-                    <Button variant="link" onClick={() => setSolFormOpen(true)}>
-                      {notSolved}
-                    </Button>
-                  );
-                }
-                return null;
-              })()
-            }
+            <PostSubtitle
+              postType={postType}
+              solution={solution}
+              author={author}
+              openSolForm={() => setSolFormOpen(true)}
+              currentUserID={currentUserID}
+            />
           </Card.Subtitle>
-          <small className="text-muted">
-            {new Date(date).toLocaleString()}
-            <MdLocationOn />
-            {` ${location}`}
-          </small>
-          {solution && <PostPreview postID={solution} />}
-          {challenge && <PostPreview postID={challenge} />}
-          <Card.Text>
-            {description}
-          </Card.Text>
-          <CardGroup>
-            {
-              imageBefore ? (
-                <Card border="light">
-                  <Card.Img src={createImageURL(imageBefore)} />
-                </Card>
-              ) : null
-            }
-            {
-              imageAfter ? (
-                <Card border="light">
-                  <Card.Img src={createImageURL(imageAfter)} />
-                </Card>
-              ) : null
-            }
-          </CardGroup>
+          <PostContent
+            date={date}
+            location={location}
+            description={description}
+            imageBefore={imageBefore}
+            imageAfter={imageAfter}
+            challenge={challenge}
+            solution={solution}
+          />
           <Row className="justify-content-around post-interaction-bar">
             <button type="button" className="hidden-btn" onClick={togglePostLike}>
               {haveUserLiked ? <FaHeart style={{ color: 'red' }} /> : <FaRegHeart />}
