@@ -6,8 +6,8 @@ const MongoStore = require('connect-mongo')(session);
  * @param {object} configOption - session config option
  * @param {mongooseConnection} dbConnection - existing mongoose connection
  */
-module.exports = (app, configOption, dbConnection)=>{
-  const {secret, cookieMaxAge} = configOption;
+module.exports = (app, configOption, dbConnection) => {
+  const { secret, cookieMaxAge } = configOption;
   app.use(session({
     secret,
     store: new MongoStore({
@@ -16,8 +16,8 @@ module.exports = (app, configOption, dbConnection)=>{
     }),
     resave: false,
     saveUninitialized: false,
-    cookie:{
-      maxAge: parseInt(cookieMaxAge)*1000 //in miliseconds
+    cookie: {
+      maxAge: parseInt(cookieMaxAge) * 1000 // in miliseconds
     }
   }));
 };

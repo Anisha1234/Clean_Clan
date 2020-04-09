@@ -1,4 +1,4 @@
-const PostShowServicesInit = require("./PostShow");
+const PostShowServicesInit = require('./PostShow');
 const PostLikeServiceInit = require('./PostLike');
 const PublishServiceInit = require('./Publish');
 /**
@@ -16,8 +16,10 @@ module.exports = (PostDB) => {
     createNewChallenge, createNewSolution
   } = PublishServiceInit(PostDB);
   return {
-    getSinglePost, getMultiplePosts, 
-    updatePostLike, 
-    createNewChallenge, createNewSolution
+    getSinglePost,
+    getMultiplePosts,
+    updatePostLike,
+    createNewChallenge,
+    createNewSolution
   };
-}
+};

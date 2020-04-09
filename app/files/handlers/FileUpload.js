@@ -6,16 +6,16 @@ const multer = require('multer');
  * @param {object} dbConfig: config object for mongodb connection
  * @param {string} bucketName: mongodb collection where we save file
  */
-module.exports = (dbConfig, bucketName) =>{
-  let {url, options} = dbConfig;
+module.exports = (dbConfig, bucketName) => {
+  const { url, options } = dbConfig;
   const fileStorage = new GridFsStorage({
     url,
     options,
-    file: ()=>{
+    file: () => {
       return {
         bucketName
-      }
+      };
     }
   });
-  return multer({storage: fileStorage});
-};  
+  return multer({ storage: fileStorage });
+};

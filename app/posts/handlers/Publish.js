@@ -4,8 +4,8 @@ const NEW_CHALLENGE_PRIZE = 5;
 const NEW_SOLUTION_PRIZE = 15;
 /**
  * @function refinePostData : add user data to post data
- * @param {object} postData 
- * @param {object} userData 
+ * @param {object} postData
+ * @param {object} userData
  * @param {Array} images
  */
 const refinePostData = (postData, userData, images) => {
@@ -14,27 +14,26 @@ const refinePostData = (postData, userData, images) => {
     ...postData,
     author: userID,
     image_before: images[0].filename,
-    image_after: (images.length >= 2 ? images[1].filename: '')
-  }
-}
+    image_after: (images.length >= 2 ? images[1].filename : '')
+  };
+};
 /**
  * @function updateUserBonusPoint : increase user like_count with bonus point
  * @param {{
  *  getUserProfile: (userID: string, fields?: string[]) => Promise<{like_count: number}>
- *  updateUserProfile: (userID: string, data: { like_count: number }) => Promise<any> 
- * }} UserService 
- * @param {string} userID 
- * @param {number} bonusPoint 
+ *  updateUserProfile: (userID: string, data: { like_count: number }) => Promise<any>
+ * }} UserService
+ * @param {string} userID
+ * @param {number} bonusPoint
  */
 const updateUserBonusPoint = async (UserService, userID, bonusPoint) => {
-  const { 
-    like_count: currentUserLikeCount 
-  } = await UserService.getUserProfile(userID, ["like_count"]);
+  const {
+    like_count: currentUserLikeCount
+  } = await UserService.getUserProfile(userID, ['like_count']);
   await UserService.updateUserProfile(userID, {
     like_count: currentUserLikeCount + bonusPoint
   });
-  return;
-}
+};
 /**
  * @function: create handlers for post creation and update
  * @param {{
@@ -43,8 +42,8 @@ const updateUserBonusPoint = async (UserService, userID, bonusPoint) => {
  * }} PostService
  * @param {{
  *  getUserProfile: (userID: string, fields?: string[]) => Promise<{like_count: number}>
- *  updateUserProfile: (userID: string, data: { like_count: number }) => Promise<any> 
- * }} UserService 
+ *  updateUserProfile: (userID: string, data: { like_count: number }) => Promise<any>
+ * }} UserService
  */
 module.exports = (PostService, UserService) => ({
   /**
@@ -52,15 +51,15 @@ module.exports = (PostService, UserService) => ({
    * @param {Express.Request} req
    * @param {Express.Response} res
    */
-  ChallengeHandler : async (req, res) => {
-    try{
+  ChallengeHandler: async (req, res) => {
+    try {
       const postData = refinePostData(req.body, req.session, req.files);
       const challengePost = await PostService.createNewChallenge(postData);
       const authorObject = await getAuthors(UserService, [challengePost]);
       challengePost.author = authorObject[challengePost.author];
       await updateUserBonusPoint(UserService, req.session.userid, NEW_CHALLENGE_PRIZE);
       res.status(200).send({ challengePost });
-    } catch(error){
+    } catch (error) {
       console.log(error);
       res.status(500).send(error);
     }
@@ -71,11 +70,11 @@ module.exports = (PostService, UserService) => ({
    * @param {Express.Response} res
    */
   SolutionHandler: async (req, res) => {
-    try{
+    try {
       const postData = refinePostData(req.body, req.session, req.files);
-      const { 
-        challengePost, 
-        solutionPost 
+      const {
+        challengePost,
+        solutionPost
       } = await PostService.createNewSolution(postData, req.params.challengeID);
       const authorObject = await getAuthors(
         UserService, [challengePost, solutionPost]
@@ -86,7 +85,7 @@ module.exports = (PostService, UserService) => ({
       res.status(200).send({
         challengePost, solutionPost
       });
-    } catch(error){
+    } catch (error) {
       console.log(error);
       res.status(500).send(error);
     }

@@ -14,5 +14,5 @@ module.exports = (PostDB) => ({
    * @function: get multiple posts based on a filter query
    * @param {object} filter: filter query
    */
-  getMultiplePosts: async (options={}) => PostDB.getPosts(options),
-})
+  getMultiplePosts: async (options = {}) => PostDB.getPosts(options)
+});
