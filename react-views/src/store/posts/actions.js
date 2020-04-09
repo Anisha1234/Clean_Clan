@@ -1,42 +1,35 @@
 import {
-  POSTS_DOMAIN, ALL_POSTS_DOMAIN, MY_POSTS_DOMAIN,
-  UPDATE_POST_LIKE, ADD_POSTS, UPDATE,
+  POSTS_DOMAIN, MINE_DOMAIN, ALL_DOMAIN, POOL_DOMAIN,
+  UPDATE, ADD,
 } from '../../constants';
 import {
   getPosts, publishPost, updatePostLike, getSinglePost,
 } from './services';
-import { updateStoreDataAction } from '../util';
-
-function updatePostsDataAction(subDomain, data) {
-  return updateStoreDataAction(UPDATE, data, POSTS_DOMAIN, subDomain);
-}
+import { updateStoreData } from '../util';
+import { normalizePost, normalizePosts } from './schema';
 /**
- * @function addPostsDataAction : add array of posts in subDomain
- * @param {string} subDomain: either ALL_POSTS_DOMAIN / MY_POSTS_DOMAIN
- * @param {any[]} data
+ * @function updatePostFeedDomain : update post in MINE_DOMAIN / ALL_DOMAIN
+ * @param {string} type : action type (UPDATE/ADD)
+ * @param {string} subDomain : MINE_DOMAIN / ALL_DOMAIN
+ * @param {string[]} postIDs : array of post ids
  */
-function addPostsDataAction(subDomain, data) {
-  return updateStoreDataAction(ADD_POSTS, data, POSTS_DOMAIN, subDomain);
+function updatePostFeedDomain(type, feedDomain, postIDs) {
+  return updateStoreData(type, postIDs, POSTS_DOMAIN, feedDomain);
 }
-
-function updatePostLikeLocallyAction(subDomain, postID, userID) {
-  return updateStoreDataAction(UPDATE_POST_LIKE, {
-    postID, userID,
-  }, POSTS_DOMAIN, subDomain);
+function updatePostPoolDomain(postEntries) {
+  return updateStoreData(UPDATE, postEntries, POSTS_DOMAIN, POOL_DOMAIN);
 }
 /**
  * @function- action that that get posts data
- * @param {boolean} isMine - flag to indicate whether data belongs to my_posts or all_posts
+ * @param {string} author - author
  */
-const getPostsAction = (isMine) => async (dispatch, getState) => {
-  const subDomain = isMine ? MY_POSTS_DOMAIN : ALL_POSTS_DOMAIN;
+const getPostsAction = (author = '') => async (dispatch) => {
   try {
-    const userID = (isMine ? getState().user.data.userid : '');
-    const { data: posts } = await getPosts(userID);
-    // reverse the posts that newest go first
-    posts.reverse();
-    dispatch(updatePostsDataAction(subDomain, posts));
-    return;
+    const feedDomain = author ? MINE_DOMAIN : ALL_DOMAIN;
+    const { data: posts } = await getPosts(author);
+    const { postIDs, postEntries } = normalizePosts(posts);
+    dispatch(updatePostFeedDomain(UPDATE, feedDomain, postIDs));
+    dispatch(updatePostPoolDomain(postEntries));
   } catch (error) {
     if (error && error.response) {
       throw error.response.data;
@@ -50,20 +43,15 @@ const getPostsAction = (isMine) => async (dispatch, getState) => {
  */
 const getSinglePostAction = (postID) => async (dispatch, getState) => {
   try {
-    const postsState = getState().posts;
-    let postsArray;
-    let postIndex = -1;
-    [MY_POSTS_DOMAIN, ALL_POSTS_DOMAIN].forEach((subDomain) => {
-      if (postIndex !== -1) return;
-      postsArray = postsState[subDomain];
-      postIndex = postsArray.findIndex((post) => post.id === postID);
-    });
-    if (postIndex === -1) {
-      const { data } = await getSinglePost(postID);
-      dispatch(addPostsDataAction(ALL_POSTS_DOMAIN, [data]));
-      return data;
+    const postPool = getState().posts[POOL_DOMAIN];
+    const postData = postPool[postID];
+    if (postData) {
+      return postData;
     }
-    return postsArray[postIndex];
+    const { data: post } = await getSinglePost(postID);
+    const { postEntries } = normalizePost(post);
+    dispatch(updatePostPoolDomain(postEntries));
+    return post;
   } catch (error) {
     if (error && error.response) {
       throw error.response.data;
@@ -71,14 +59,13 @@ const getSinglePostAction = (postID) => async (dispatch, getState) => {
     throw error;
   }
 };
-
 /**
  * @function publishPostAction : publish post
- * @param {object} postData - post data
  * @param {string} postType - either 'Challenge' or 'Solution'
  * @param {string} responsePostID - the post ID this uploaded post responds to.
+ * @param {object} postData - post data
  */
-const publishPostAction = (postType, responsePostID, postData) => async () => {
+const publishPostAction = (postType, responsePostID, postData) => async (dispatch) => {
   try {
     const data = new FormData();
     Object.entries(postData).forEach(([key, value]) => {
@@ -90,7 +77,21 @@ const publishPostAction = (postType, responsePostID, postData) => async () => {
       }
       data.append(key, value);
     });
-    await publishPost(postType, responsePostID, data);
+    const {
+      data: { challengePost, solutionPost },
+    } = await publishPost(postType, responsePostID, data);
+    [
+      { post: challengePost, type: 'Challenge' },
+      { post: solutionPost, type: 'Solution' },
+    ].forEach(({ post, type }) => {
+      if (!post) return;
+      const { postID, postEntries } = normalizePost(post);
+      dispatch(updatePostPoolDomain(postEntries));
+      dispatch(updatePostFeedDomain(ADD, ALL_DOMAIN, [postID]));
+      if (type === postType) {
+        dispatch(updatePostFeedDomain(ADD, MINE_DOMAIN, [postID]));
+      }
+    });
   } catch (error) {
     if (error && error.response) {
       throw error.response.data.toString();
@@ -99,22 +100,20 @@ const publishPostAction = (postType, responsePostID, postData) => async () => {
   }
 };
 /**
- *
+ * @function: toggle post like (like => unlike and vice versa)
  * @param {string} postID - post id for like update
- * @param {bool} likeStatus - true for "like", false for "unlike"
  */
-const updatePostLikeAction = (postID, likeStatus) => (dispatch, getState) => {
-  // first update locally
-  const currentUserID = getState().user.data.userid;
-  if (!currentUserID) {
-    return;
+const updatePostLikeAction = (postID) => async (dispatch) => {
+  try {
+    const { data: post } = await updatePostLike(postID);
+    const { postEntries } = normalizePost(post);
+    dispatch(updatePostPoolDomain(postEntries));
+  } catch (error) {
+    if (error && error.response) {
+      throw error.response.data.toString();
+    }
+    throw error.toString();
   }
-  dispatch(updatePostLikeLocallyAction(MY_POSTS_DOMAIN, postID, currentUserID));
-  dispatch(updatePostLikeLocallyAction(ALL_POSTS_DOMAIN, postID, currentUserID));
-  // then update on database
-  updatePostLike(postID, likeStatus)
-    .then()
-    .catch();
 };
 
 export {

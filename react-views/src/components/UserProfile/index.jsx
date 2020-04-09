@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import {
@@ -7,23 +7,24 @@ import {
   FaCity, FaMailBulk,
   FaAward,
 } from 'react-icons/fa';
+import PropTypes from 'prop-types';
 import ProfileImage from './ProfileImage';
-import { getUserProfile } from '../../store/user';
+import { getUserData } from '../../util';
 import './style.css';
 
 
-const UserProfile = () => {
-  const currentUser = useSelector((state) => state.user.data);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getUserProfile());
-  }, [dispatch]);
-
+const UserProfile = ({ userID }) => {
+  const userName = useSelector(getUserData(userID, 'name'));
+  const userDetails = useSelector(getUserData(userID, 'user_details'));
+  const userCity = useSelector(getUserData(userID, 'city'));
+  const userEmail = useSelector(getUserData(userID, 'email'));
+  const likeCount = useSelector(getUserData(userID, 'like_count'));
+  const userImage = useSelector(getUserData(userID, 'image', 'current'));
   return (
     <>
       <ProfileImage
-        currentImage={currentUser.image.current}
-        allImages={currentUser.image.all}
+        currentImage={userImage}
+        userID={userID}
       />
       <Row
         className="justify-content-center"
@@ -39,26 +40,26 @@ const UserProfile = () => {
         >
           <Card.Title>
             <FaAddressCard className="user-profile-icon" />
-            {currentUser.name}
+            {userName || 'Oops'}
           </Card.Title>
           <Card.Subtitle className="text-muted">
-            {currentUser.user_details}
+            {userDetails || 'Oops'}
           </Card.Subtitle>
           <Card.Body className="text-left">
             <Card.Text>
               <FaCity className="user-profile-icon" />
-              { currentUser.city }
+              {userCity || 'Oops'}
             </Card.Text>
             <Card.Text>
               <FaMailBulk className="user-profile-icon" />
-              { currentUser.email }
+              {userEmail || 'Oops'}
             </Card.Text>
             <Card.Text>
               <FaAward className="user-profile-icon" />
               Reputation:
               <strong>
                 {' '}
-                { parseInt(currentUser.like_count, 10) * 10 }
+                { parseInt(likeCount, 10) * 10 }
               </strong>
             </Card.Text>
           </Card.Body>
@@ -69,3 +70,7 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+
+UserProfile.propTypes = {
+  userID: PropTypes.string.isRequired,
+};

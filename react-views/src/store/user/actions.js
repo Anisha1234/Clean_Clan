@@ -1,47 +1,41 @@
 import {
-  UPDATE, RESET,
+  UPDATE, RESET, CHANGE_IMAGE, LOAD_IMAGES,
   LOGGED_IN, LOGGED_OUT,
-  USER_DOMAIN, USER_DATA_DOMAIN, AUTH_DOMAIN,
+  USER_DOMAIN, DATA_DOMAIN, AUTH_DOMAIN, POOL_DOMAIN,
 } from '../../constants';
 import {
   login, logout, checkLoginState,
-  getUserProfile, updateUserProfilePic,
+  getUserProfile, getUserDataAsPostAuthor,
+  updateUserProfilePic, getAllUserPics,
 } from './services';
-import { updateStoreDataAction } from '../util';
+import { updateStoreData } from '../util';
+import { normalizeUser } from './schema';
 
-/**
- * @function  - action creator to update user state in auth domain
- * @param {string} status - status of the auth (logged in, logged out, pending...)
- * @param {string} message - message to show in the UI
- */
-function updateUserAuthAction(status) {
-  return updateStoreDataAction(UPDATE, { status }, USER_DOMAIN, AUTH_DOMAIN);
+function updateUserAuthDomain(status) {
+  return updateStoreData(UPDATE, { status }, USER_DOMAIN, AUTH_DOMAIN);
+}
+function updateUserDataDomain(type, data = null) {
+  return updateStoreData(type, data, USER_DOMAIN, DATA_DOMAIN);
 }
 
-/**
- * @function - action creator update user state in data domain
- * @param {string} type - either UPDATE or RESET
- * @param {string} status - either FAIL, PENDING, DONE
- * @param {string} message - error/success message from actions
- * @param {object} data - user data
- */
-function updateUserDataAction(type, data) {
-  return updateStoreDataAction(type, data, USER_DOMAIN, USER_DATA_DOMAIN);
+function updateUserPoolDomain(type, userEntries) {
+  return updateStoreData(type, userEntries, USER_DOMAIN, POOL_DOMAIN);
 }
 
-/**
- * @function - check user auth state
- */
+const updateAuthLocalAction = (status, userID = '', userEntries = {}) => (dispatch) => {
+  dispatch(updateUserPoolDomain(UPDATE, userEntries));
+  dispatch(updateUserDataDomain(status === LOGGED_IN ? UPDATE : RESET, { userID }));
+  dispatch(updateUserAuthDomain(status));
+};
+
 const checkUserAuthStateAction = () => async (dispatch) => {
   try {
-    const { data } = await checkLoginState();
-    const { user_data: userData } = data;
-    dispatch(updateUserAuthAction(LOGGED_IN));
-    dispatch(updateUserDataAction(UPDATE, userData));
+    const { data: { user_data: userData } } = await checkLoginState();
+    const { userID, userEntries } = normalizeUser(userData);
+    dispatch(updateAuthLocalAction(LOGGED_IN, userID, userEntries));
     return;
   } catch (error) {
-    dispatch(updateUserDataAction(RESET, null));
-    dispatch(updateUserAuthAction(LOGGED_OUT));
+    dispatch(updateAuthLocalAction(LOGGED_OUT));
   }
 };
 
@@ -55,12 +49,11 @@ const loginAction = (email, password) => async (dispatch) => {
     const { data } = await login(email, password);
     const { error, user_data: userData } = data;
     if (error) throw error;
-    dispatch(updateUserDataAction(UPDATE, userData));
-    dispatch(updateUserAuthAction(LOGGED_IN));
+    const { userID, userEntries } = normalizeUser(userData);
+    dispatch(updateAuthLocalAction(LOGGED_IN, userID, userEntries));
     return;
   } catch (error) {
-    dispatch(updateUserDataAction(RESET, null));
-    dispatch(updateUserAuthAction(LOGGED_OUT));
+    dispatch(updateAuthLocalAction(LOGGED_OUT));
     if (error && error.response) {
       throw error.response.data.toString();
     }
@@ -68,30 +61,26 @@ const loginAction = (email, password) => async (dispatch) => {
   }
 };
 
-/**
- * @function - action to log out user
- */
 const logoutAction = () => async (dispatch) => {
   try {
     await logout();
     throw new Error('log out');
   } catch (error) {
-    dispatch(updateUserDataAction(RESET, null));
-    dispatch(updateUserAuthAction(LOGGED_OUT));
+    dispatch(updateAuthLocalAction(LOGGED_OUT));
   }
 };
 
 /**
  * @function - action to get user data
+ * @param {string} userID
  */
-
-const getUserProfileAction = () => async (dispatch) => {
-  try {
-    const { data: { user_data: userData } } = await getUserProfile();
-    dispatch(updateUserDataAction(UPDATE, userData));
-  } catch (error) {
-    dispatch(updateUserDataAction(RESET, null));
+const getUserProfileAction = (userID = '') => async (dispatch) => {
+  const { data } = await getUserProfile(userID);
+  if (!data) {
+    throw new Error('Could not find the user');
   }
+  const { userEntries } = normalizeUser(data);
+  dispatch(updateUserPoolDomain(UPDATE, userEntries));
 };
 /**
  * @function: update user profile pic
@@ -100,11 +89,12 @@ const getUserProfileAction = () => async (dispatch) => {
  */
 const updateUserPicAction = (oldImageName, newImageFile) => async (dispatch) => {
   try {
-    const data = new FormData();
-    data.append('oldImageName', oldImageName);
-    data.append('image', newImageFile);
-    const { data: { user_data: userData } } = await updateUserProfilePic(data);
-    dispatch(updateUserDataAction(UPDATE, userData));
+    const formData = new FormData();
+    formData.append('oldImageName', oldImageName);
+    formData.append('image', newImageFile);
+    const { data } = await updateUserProfilePic(formData);
+    const { userEntries } = normalizeUser(data);
+    dispatch(updateUserPoolDomain(CHANGE_IMAGE, userEntries));
     return;
   } catch (error) {
     if (error && error.response) {
@@ -113,8 +103,38 @@ const updateUserPicAction = (oldImageName, newImageFile) => async (dispatch) => 
     throw error.toString();
   }
 };
+/**
+ * @function: get all user pictures
+ * @param {string} userID
+ */
+const getAllUserPicsAction = (userID) => async (dispatch) => {
+  try {
+    const { data } = await getAllUserPics(userID);
+    const { userEntries } = normalizeUser(data);
+    dispatch(updateUserPoolDomain(LOAD_IMAGES, userEntries));
+  } catch (error) {
+    if (error && error.response) {
+      throw error.response.data.toString();
+    }
+    throw error.toString();
+  }
+};
+/**
+ * @function: get user as author data (only name and image)
+ * @param {string} userID
+ */
+const getUserAsPostAuthorAction = (userID) => async (dispatch, getState) => {
+  const currentData = getState().user.pool[userID];
+  if (currentData && currentData.name && currentData.image && currentData.image.current) {
+    return;
+  }
+  const { data } = await getUserDataAsPostAuthor(userID);
+  const { userEntries } = normalizeUser(data);
+  dispatch(updateUserPoolDomain(UPDATE, userEntries));
+};
 
 export {
   checkUserAuthStateAction, loginAction, logoutAction,
-  getUserProfileAction, updateUserPicAction,
+  getUserProfileAction, updateUserPicAction, getAllUserPicsAction,
+  getUserAsPostAuthorAction,
 };

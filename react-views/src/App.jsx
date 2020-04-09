@@ -38,10 +38,10 @@ const App = () => {
           />
           <Route
             exact
-            path="/profile"
-            render={() => (
+            path="/profile/:userID"
+            render={({ match }) => (
               <LoginGuard>
-                <ProfilePage />
+                <ProfilePage userID={match.params.userID} />
               </LoginGuard>
             )}
           />

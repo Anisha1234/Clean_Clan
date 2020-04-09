@@ -7,7 +7,7 @@ const PublishHandlersInit = require('./Publish');
  * @param {object} UserService
  */
 module.exports = (PostService, UserService) => {
-  const PostShowHandlers = PostShowHandlersInit(PostService);
+  const PostShowHandlers = PostShowHandlersInit(PostService, UserService);
   const PostLikeHandler = PostLikeHandlerInit(PostService, UserService);
   const PublishHandlers = PublishHandlersInit(PostService, UserService);
   return {
@@ -15,4 +15,4 @@ module.exports = (PostService, UserService) => {
     PostLikeHandler,
     PublishHandlers
   };
-}
+};

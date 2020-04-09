@@ -1,4 +1,3 @@
-import { UPDATE, RESET } from '../constants';
 /**
  * @function - compare types of action in the form of string array
  * @param {string[]} type1 - first type to compare - [...domains, "action_type"]
@@ -24,7 +23,7 @@ const getDomainsAndActionType = (type) => {
  * @param {string} actionType - action type
  * @param {object} payload - action data
  */
-const updateStoreDataAction = (actionType, payload, ...domains) => ({
+const updateStoreData = (actionType, payload, ...domains) => ({
   type: [...domains, actionType].join('/'),
   payload,
 });
@@ -34,23 +33,7 @@ const updateStoreDataAction = (actionType, payload, ...domains) => ({
  * @param {string[]} givenDomains - array of domains from high-to-low levels
  * @return {function} - a reducer
  */
-function createCommonSubreducer(initialState, ...givenDomains) {
-  return (state = initialState, action) => {
-    const { type, payload } = action;
-    const { domains, actionType } = getDomainsAndActionType(type);
-    if (!isActionTypeEqual(givenDomains, domains)) return state;
-    switch (actionType) {
-      case UPDATE:
-        return { ...state, ...payload };
-      case RESET:
-        return { ...state, ...initialState };
-      default:
-        return state;
-    }
-  };
-}
-
 export {
-  isActionTypeEqual, getDomainsAndActionType, createCommonSubreducer,
-  updateStoreDataAction,
+  isActionTypeEqual, getDomainsAndActionType,
+  updateStoreData,
 };

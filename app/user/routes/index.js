@@ -11,39 +11,44 @@ const express = require('express');
  * @param {{
  *  GetHandler: (req: Express.Request, res: Express.Response) => Promise<void>
  *  ImageUpdateHandler: (req: Express.Request, res: Express.Response) => Promise<void>
+ *  GetAllUserPicsHandler: (req: Express.Request, res: Express.Request) => Promise<void>
+ *  GetAuthorDataHandler: (req: Express.Request, res: Express.Request) => Promise<void>
  * }} UserProfileHandlers - handlers for user-profile services
  */
 module.exports = (
-  ImageUploadHandler, AuthHandlers, 
+  ImageUploadHandler, AuthHandlers,
   RegistrationHandler, UserProfileHandlers
-)=>{
+) => {
   const router = express.Router();
   const { AuthCheck, LoginHandler, LogoutHandler } = AuthHandlers;
-  const { 
-    GetHandler: GetProfileHandler, 
-    ImageUpdateHandler: UserPicUpdateHandler
+  const {
+    GetHandler: GetProfileHandler,
+    ImageUpdateHandler: UserPicUpdateHandler,
+    GetAllUserPicsHandler, GetAuthorDataHandler
   } = UserProfileHandlers;
   router
-    //check user auth status
-    .get('/', AuthCheck, (req, res)=>{
+    // check user auth status
+    .get('/', AuthCheck, (req, res) => {
       res.status(200).send({
-        message: "User is logged in",
+        message: 'User is logged in',
         user_data: {
-          userid: req.session.userid,
+          _id: req.session['_id'],
           name: req.session.name,
           image: req.session.image
         }
       });
     })
-    //login
+    // login
     .post('/login', LoginHandler)
     // logout
     .get('/logout', LogoutHandler)
     // register
     .post('/signup', RegistrationHandler)
-    //get user profile
-    .get('/profile', AuthCheck, GetProfileHandler)
-    //update user profile image
-    .post('/profile/image', AuthCheck, ImageUploadHandler.single('image'), UserPicUpdateHandler);
+    // get user profile
+    .get('/profile/:userID', AuthCheck, GetProfileHandler)
+    .get('/author/:userID', AuthCheck, GetAuthorDataHandler)
+    // update user profile image
+    .post('/profile/image', AuthCheck, ImageUploadHandler.single('image'), UserPicUpdateHandler)
+    .get('/profile/image/all/:userID', AuthCheck, GetAllUserPicsHandler);
   return router;
 };

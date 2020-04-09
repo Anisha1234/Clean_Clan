@@ -1,0 +1,12 @@
+.post-interaction-bar{
+  padding-top: 20px;
+  cursor: pointer;
+  line-height: 20px;
+}
+.post-interaction-bar button{
+  padding: 0;
+  margin: 0;
+}
+.post-interaction-bar .like-count-badge{
+  vertical-align: super; 
+}

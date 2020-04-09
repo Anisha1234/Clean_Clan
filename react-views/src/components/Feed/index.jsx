@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
@@ -8,18 +8,19 @@ import PropTypes from 'prop-types';
 import Post from '../Post';
 import PostForm from '../PostForm';
 import { getPosts } from '../../store/posts';
+import { MINE_DOMAIN, ALL_DOMAIN } from '../../constants';
 import './style.css';
 
-const Feed = ({ isMine }) => {
+const Feed = ({ author }) => {
   const [postFormShow, setPostFormShow] = useState(false);
+  const handleClosePostForm = useCallback(() => {
+    setPostFormShow(false);
+  }, []);
   const dispatch = useDispatch();
-  const posts = useSelector((state) => (
-    isMine ? state.posts.my_posts
-      : state.posts.all_posts
-  ));
+  const postIDs = useSelector((state) => state.posts[author ? MINE_DOMAIN : ALL_DOMAIN]);
   useEffect(() => {
-    dispatch(getPosts(isMine));
-  }, [dispatch, isMine]);
+    dispatch(getPosts(author));
+  }, [dispatch, author]);
 
   return (
     <>
@@ -32,37 +33,21 @@ const Feed = ({ isMine }) => {
           Create a challenge
         </Button>
       </Row>
-      <Modal show={postFormShow} onHide={() => setPostFormShow(false)} size="lg">
+      <Modal show={postFormShow} onHide={handleClosePostForm} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Create a challenge</Modal.Title>
         </Modal.Header>
         <Modal.Body className="post-form-modal">
-          <PostForm type="Challenge" />
+          <PostForm type="Challenge" closeForm={handleClosePostForm} />
         </Modal.Body>
       </Modal>
       {
-        posts.map((post) => (
+        postIDs.map((postID) => (
           <Row
-            key={post.id}
+            key={postID}
             className="justify-content-center feed-row"
           >
-            <Post
-              postType={post.post_type}
-              postID={post.id}
-              author={post.author}
-              authorName={post.author_name}
-              authorImage={post.author_image}
-              date={post.date}
-              heading={post.heading}
-              location={post.location}
-              likes={post.likes}
-              description={post.description}
-              likeCount={post.like_count}
-              imageBefore={post.image_before}
-              imageAfter={post.image_after}
-              solution={post.solution}
-              challenge={post.challenge}
-            />
+            <Post postID={postID} />
           </Row>
         ))
       }
@@ -73,9 +58,9 @@ const Feed = ({ isMine }) => {
 export default Feed;
 
 Feed.propTypes = {
-  isMine: PropTypes.bool,
+  author: PropTypes.string,
 };
 
 Feed.defaultProps = {
-  isMine: false,
+  author: '',
 };

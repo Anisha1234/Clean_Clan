@@ -1,0 +1,35 @@
+.photo-show-container{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background: rgba(36, 35, 35, 0.8);
+
+}
+.photo-container{
+  position: absolute;
+  top: 90px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 150px);
+}
+.photo-container .photo{
+  max-width: calc(100% - 20px);
+  max-height: 100%;
+  margin: auto;
+}
+.photo-show-container .close-btn{
+  position: fixed;
+  top: 50px;
+  right: 4%;
+}
+.photo-show-container .close-btn > .close-icon{
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+}
+.photo-show-container .close-btn > .close-icon:hover{
+  color: rgba(158, 158, 158, 0.7);
+}

@@ -14,12 +14,20 @@
   width: 300px;
   margin-left: calc(50% - 84px);
 }
-.user-old-pic-checkbox{
-  opacity: 0;
-  width: 100%;
-  height: 100%;
+.user-old-pics-select{
+  margin-top: 20px;
+  position: relative;
+} 
+.user-old-pics-select .loading-overlay{
   position: absolute;
-}
-.user-old-pic-chosen{
-  border: 3px solid blue;
-}
+  top: 0;
+  left: 0;
+  background: rgba(68, 67, 67, 0.8);
+  z-index: 1;
+} 
+.user-old-pics-select .option{
+  width: 100px;
+  height: 100px;
+  position: relative;
+  display: inline-block;
+} 

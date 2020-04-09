@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { AiOutlineSolution, AiFillCheckCircle } from 'react-icons/ai';
 import PropTypes from 'prop-types';
@@ -21,9 +22,9 @@ const PostSubtitle = ({
   );
   if (solution) {
     return (
-      <Button variant="link" href={`/post/${solution}`}>
+      <Link to={`/post/${solution}`} style={{ paddingLeft: '10px' }}>
         {alreadySolved}
-      </Button>
+      </Link>
     );
   }
   if (author !== currentUserID) {

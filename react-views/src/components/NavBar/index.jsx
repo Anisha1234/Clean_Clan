@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import Image from 'react-bootstrap/Image';
 import Nav from 'react-bootstrap/Nav';
 import LogoutButton from '../LogoutButton';
-import { createImageURL } from '../../util';
+import { createImageURL, getUserData } from '../../util';
 import profileImg from '../../assets/media/profile.png';
 import './style.css';
 
@@ -12,29 +13,19 @@ const givenPaths = ['/timeline', '/issue', '/ranking'];
 const givenLinkName = ['Timeline', 'Issue', 'Ranking'];
 
 const NavBar = () => {
-  const [activePath, setActivePath] = useState('');
-  const userPic = useSelector((state) => state.user.data.image.current);
-  const userName = useSelector((state) => state.user.data.name);
-  useEffect(() => {
-    setActivePath(window.location.pathname);
-  }, []);
+  const currentUserID = useSelector((state) => state.user.data.userID);
+  const userPic = useSelector(getUserData(currentUserID, 'image', 'current'));
+  const userName = useSelector(getUserData(currentUserID, 'name'));
   return (
     <Navbar expand="md" bg="dark" variant="dark" fixed="top" className="my-nav-container">
-      <Navbar.Brand href="#" className="nav-title">
+      <Navbar.Brand href="/timeline" className="nav-title">
         Clean India App
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="my-nav" />
-      <Navbar.Collapse
-        id="my-nav"
-        className="justify-content-center"
-      >
+      <Navbar.Collapse id="my-nav" className="justify-content-center">
         <Nav variant="pills">
-          <Nav.Item key="Profile">
-            <Nav.Link
-              href="/profile"
-              active={activePath === '/profile'}
-              className="nav-link"
-            >
+          <Nav.Item className="nav-item-content">
+            <NavLink to={`/profile/${currentUserID}`} activeClassName="active" className="nav-link">
               <Image
                 roundedCircle
                 fluid
@@ -43,22 +34,22 @@ const NavBar = () => {
               />
               {' '}
               {userName}
-            </Nav.Link>
+            </NavLink>
           </Nav.Item>
           {
             givenLinkName.map((linkName, index) => (
-              <Nav.Item key={linkName}>
-                <Nav.Link
-                  href={givenPaths[index]}
-                  active={givenPaths[index] === activePath}
+              <Nav.Item key={linkName} className="nav-item-content">
+                <NavLink
+                  to={givenPaths[index]}
+                  activeClassName="active"
                   className="nav-link"
                 >
                   {linkName}
-                </Nav.Link>
+                </NavLink>
               </Nav.Item>
             ))
           }
-          <Nav.Item style={{ width: '100px', marginLeft: '8px' }}>
+          <Nav.Item style={{ width: '100px' }} className="nav-item-content">
             <LogoutButton variant="outline-light" />
           </Nav.Item>
         </Nav>

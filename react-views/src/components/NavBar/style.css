@@ -6,10 +6,10 @@
 .my-nav-container .nav-title{
   padding: 0 10px;
 }
-.my-nav-container .nav-link{
+.my-nav-container .nav-item-content{
   margin-left: 10px;
 }
-.my-nav-container .nav-link .user-pic{
+.my-nav-container .nav-item-content .user-pic{
   max-height:25px;
   max-width: 25px;
 }

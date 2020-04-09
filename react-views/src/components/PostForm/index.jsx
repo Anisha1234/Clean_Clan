@@ -28,26 +28,27 @@ const imageTitles = ['Before', 'After'];
  */
 const uploadImageURLsInit = (size) => [...Array(size)].map(() => '');
 
-const PostForm = ({ type, responsePostID }) => {
+const PostForm = ({ type, responsePostID, closeForm }) => {
   const isMounted = useRef(true);
   useEffect(() => () => { isMounted.current = false; }, []);
 
   const [publishStatus, setPublishStatus] = useState(false);
   useEffect(() => {
     if (publishStatus) {
-      window.location.reload();
+      closeForm();
     }
-  }, [publishStatus]);
+  }, [closeForm, publishStatus]);
 
   const [publishError, setPublishError] = useState('');
   const [imageURLs, setImageURLs] = useState(
     uploadImageURLsInit(imageCount[type]),
   );
   useEffect(() => () => {
-    imageURLs.forEach((url) => {
-      if (url) URL.revokeObjectURL(url);
+    setImageURLs((URLs) => {
+      URLs.forEach((url) => { URL.revokeObjectURL(url); });
+      return [];
     });
-  }, [imageURLs]);
+  }, []);
 
   const dispatch = useDispatch();
   const formHandler = useFormik({
@@ -123,30 +124,42 @@ const PostForm = ({ type, responsePostID }) => {
         <Form.Control
           type="text"
           name="location"
+          value={formHandler.values.location}
           onChange={formHandler.handleChange}
           placeholder="Mumbai"
           isInvalid={formHandler.errors.location}
         />
+        <Form.Control.Feedback type="invalid">
+          {formHandler.errors.location}
+        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group controlId="heading">
         <Form.Label>Title</Form.Label>
         <Form.Control
           type="text"
           name="heading"
+          value={formHandler.values.heading}
           onChange={formHandler.handleChange}
           placeholder="Enter the heading..."
           isInvalid={formHandler.errors.heading}
         />
+        <Form.Control.Feedback type="invalid">
+          {formHandler.errors.heading}
+        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group controlId="stakeholders">
         <Form.Label>Stakeholders</Form.Label>
         <Form.Control
           type="text"
           name="stakeholders"
+          value={formHandler.values.stakeholders}
           onChange={formHandler.handleChange}
           placeholder="Stakeholders..."
           isInvalid={formHandler.errors.stakeholders}
         />
+        <Form.Control.Feedback type="invalid">
+          {formHandler.errors.stakeholders}
+        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group controlId="description">
         <Form.Label>
@@ -158,11 +171,15 @@ const PostForm = ({ type, responsePostID }) => {
           as="textarea"
           name="description"
           className="post-description"
+          value={formHandler.values.description}
           onChange={handlePostDescriptionText}
           placeholder="Enter the description here..."
           ref={postDescriptionTextRef}
           isInvalid={formHandler.errors.description}
         />
+        <Form.Control.Feedback type="invalid">
+          {formHandler.errors.description}
+        </Form.Control.Feedback>
       </Form.Group>
       <CardDeck className="justify-content-around text-center">
         {
@@ -221,6 +238,7 @@ export default PostForm;
 PostForm.propTypes = {
   type: PropTypes.oneOf(Object.keys(imageCount)).isRequired,
   responsePostID: PropTypes.string,
+  closeForm: PropTypes.func.isRequired,
 };
 
 PostForm.defaultProps = {

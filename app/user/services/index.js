@@ -11,12 +11,23 @@ module.exports = (UserDB) => {
     login, logout, createSession
   } = AuthServiceInit(UserDB);
   const { register } = RegistrationServiceInit(UserDB);
-  const { 
-    getUserProfile, updateUserImage, updateUserProfile
+  const {
+    getUserProfile, getUserDataAsPostAuthor,
+    getAllUserPics, updateUserProfile, updateUserImage,
+    changeUserLikeCount,
+    updateSessionData
   } = UserProfileServiceInit(UserDB);
   return {
-    login, logout, createSession, 
+    login,
+    logout,
+    createSession,
     register,
-    getUserProfile, updateUserImage, updateUserProfile
-  }
-}
+    getUserProfile,
+    getAllUserPics,
+    getUserDataAsPostAuthor,
+    updateUserProfile,
+    updateSessionData,
+    updateUserImage,
+    changeUserLikeCount
+  };
+};
