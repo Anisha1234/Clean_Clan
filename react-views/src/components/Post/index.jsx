@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Badge from 'react-bootstrap/Badge';
@@ -46,9 +47,9 @@ const Post = ({
         </Card.Header>
         <Card.Body>
           <Card.Title>
-            <a href={`/post/${postID}`} className="post-link">
+            <Link href={`/post/${postID}`} className="post-link">
               {heading}
-            </a>
+            </Link>
           </Card.Title>
           <Card.Subtitle>
             <Badge variant={postType === 'Challenge' ? 'danger' : 'success'}>

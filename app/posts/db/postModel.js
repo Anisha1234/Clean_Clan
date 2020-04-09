@@ -15,12 +15,10 @@ const postSchema = new Schema({
   like_count: { type: Number, default: 0 },
   stakeholders: String,
   likes: [String],
-  author_name: String,
   description: String,
   author: String,
   location: String,
   post_type: { type: String, default: 'Solution' },
-  author_image: String,
   image_before: String,
   image_after: { type: String, default: '' },
   // this stores post id of challenge of this solution

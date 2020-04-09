@@ -3,9 +3,10 @@ const UserModel = require("./userModel");
 /**
  * @function findSingleUser find an user that match the options
  * @param {object} options - mongodb query filter
+ * @param {string[]} fields - fields for projection
  */
-const findSingleUser = (options)=> new Promise((resolve, reject)=>{
-  UserModel.findOne(options, null, { lean: true }, (error, user)=>{
+const findSingleUser = (options, fields=[])=> new Promise((resolve, reject)=>{
+  UserModel.findOne(options, fields.join(' '), { lean: true }, (error, user)=>{
     if(error){
       reject(error);
       return;

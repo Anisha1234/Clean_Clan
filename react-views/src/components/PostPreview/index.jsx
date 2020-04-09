@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Media from 'react-bootstrap/Media';
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
@@ -14,7 +15,7 @@ import './style.css';
 const PostReview = ({ postID }) => {
   const { post, requestStatus, requestError } = useSinglePost(postID);
   return (
-    <a href={`/post/${postID}`} className="post-preview-link">
+    <Link to={`/post/${postID}`} className="post-preview-link">
       <Card border="light">
         <Media className="post-preview-container text-muted">
           {
@@ -58,7 +59,7 @@ const PostReview = ({ postID }) => {
         }
         </Media>
       </Card>
-    </a>
+    </Link>
   );
 };
 

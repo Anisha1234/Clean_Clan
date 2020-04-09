@@ -49,9 +49,9 @@ const Feed = ({ isMine }) => {
             <Post
               postType={post.post_type}
               postID={post.id}
-              author={post.author}
-              authorName={post.author_name}
-              authorImage={post.author_image}
+              author={post.author.id}
+              authorName={post.author.name}
+              authorImage={post.author.image}
               date={post.date}
               heading={post.heading}
               location={post.location}

@@ -1,7 +1,7 @@
 /**
  * @function: create registration service
  * @param {{
- *  findSingleUser: (options: any) => Promise<any>
+ *  findSingleUser: (options: any, fields?: string[]) => Promise<any>
  *  updateUserData: (userID, data: any) => Promise<any>
  * }} UserDB - user database object
 */
@@ -9,8 +9,9 @@ module.exports = (UserDB) => ({
   /**
    * @function getUserProfile - get user profile
    * @param {string} userID - user id to update
+   * @param {string[]} fields - fields to filter user profile data
    */
-  getUserProfile: async (userID) => UserDB.findSingleUser({userid: userID}),
+  getUserProfile: async (userID, fields=[]) => UserDB.findSingleUser({userid: userID}, fields),
   /**
    * @function: update user profile image
    * @param {string} userID 

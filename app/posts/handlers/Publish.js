@@ -7,16 +7,10 @@ const NEW_SOLUTION_PRIZE = 15;
  * @param {Array} images
  */
 const refinePostData = (postData, userData, images) => {
-  const { 
-    name: userName, 
-    userid: userID, 
-    image: {current: currentUserPic} 
-  } = userData;
+  const { userid: userID } = userData;
   return {
     ...postData,
     author: userID,
-    author_name: userName,
-    author_image: currentUserPic,
     image_before: images[0].filename,
     image_after: (images.length >= 2 ? images[1].filename: '')
   }
@@ -24,7 +18,7 @@ const refinePostData = (postData, userData, images) => {
 /**
  * @function updateUserBonusPoint : increase user like_count with bonus point
  * @param {{
- *  getUserProfile: (userID: string) => Promise<{like_count: number}>
+ *  getUserProfile: (userID: string, fields?: string[]) => Promise<{like_count: number}>
  *  updateUserProfile: (userID: string, data: { like_count: number }) => Promise<any> 
  * }} UserService 
  * @param {string} userID 
@@ -33,7 +27,7 @@ const refinePostData = (postData, userData, images) => {
 const updateUserBonusPoint = async (UserService, userID, bonusPoint) => {
   const { 
     like_count: currentUserLikeCount 
-  } = await UserService.getUserProfile(userID);
+  } = await UserService.getUserProfile(userID, ["like_count"]);
   await UserService.updateUserProfile(userID, {
     like_count: currentUserLikeCount + bonusPoint
   });
@@ -46,9 +40,9 @@ const updateUserBonusPoint = async (UserService, userID, bonusPoint) => {
  *  createNewSolution: (data: any, challengeID: string) => Promise<any>
  * }} PostService
  * @param {{
- *  getUserProfile: (userID: string) => Promise<{like_count: number}>
+ *  getUserProfile: (userID: string, fields?: string[]) => Promise<{like_count: number}>
  *  updateUserProfile: (userID: string, data: { like_count: number }) => Promise<any> 
- * }} UserService
+ * }} UserService 
  */
 module.exports = (PostService, UserService) => ({
   /**

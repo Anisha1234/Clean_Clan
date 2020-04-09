@@ -1,7 +1,7 @@
 /**
  * @function: create user-profile handlers: get-profile, update-image, update-profile
  * @param {{
- *  getUserProfile: (userID: string) => Promise<any>
+ *  getUserProfile: (userID: string, fields?: string[]) => Promise<any>
  *  updateUserImage: 
  *    (userID: string, oldImageName: string, fileName: string) => Promise<any>
  *  updateUserProfile: (userID: string, newData: any) => Promise<any>
