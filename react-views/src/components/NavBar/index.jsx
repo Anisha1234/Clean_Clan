@@ -29,7 +29,7 @@ const NavBar = () => {
           <Nav.Item className="nav-item-content">
             <NavLink
               to="/profile"
-              activeClass = "active"
+              activeClassname = "active"
               className="nav-link"
             >
               <Image
