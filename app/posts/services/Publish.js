@@ -24,9 +24,11 @@ module.exports = (PostDB) => ({
       post_type: "Solution",
       challenge: challengeID
     });
-    await PostDB.updatePostData(challengeID, {
+    const challengePost = await PostDB.updatePostData(challengeID, {
       solution: solutionPost.id
     });
-    return solutionPost;
+    return {
+      solutionPost, challengePost
+    }
   }
 });

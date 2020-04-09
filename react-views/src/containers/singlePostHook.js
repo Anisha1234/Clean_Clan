@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getSinglePost } from '../store/posts';
 import { PENDING, DONE, FAIL } from '../constants';
 /**
@@ -14,15 +14,19 @@ import { PENDING, DONE, FAIL } from '../constants';
 const useSinglePost = (postID) => {
   const [requestError, setRequestError] = useState('');
   const [requestStatus, setRequestStatus] = useState(PENDING);
-  const [post, setPost] = useState(null);
+  const resultPost = useSelector(
+    (state) => (
+      state.posts.all_posts.find((currentPost) => currentPost.id === postID)
+      || state.posts.my_posts.find((currentPost) => currentPost.id === postID)
+    )
+  );
   const dispatch = useDispatch();
   useEffect(() => {
     let isMounted = true;
     setRequestStatus(PENDING);
     dispatch(getSinglePost(postID))
-      .then((data) => {
-        if (!isMounted) return;
-        setPost(data);
+      .then(()=>{
+        if(!isMounted) return;
         setRequestStatus(DONE);
       })
       .catch((error) => {
@@ -37,7 +41,7 @@ const useSinglePost = (postID) => {
   return {
     requestStatus,
     requestError,
-    post,
+    post: resultPost,
   };
 };
 

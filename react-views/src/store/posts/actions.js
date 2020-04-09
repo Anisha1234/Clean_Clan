@@ -59,9 +59,8 @@ const getSinglePostAction = (postID) => async (dispatch, getState) => {
     if (postIndex === -1) {
       const { data } = await getSinglePost(postID);
       dispatch(addPostsDataAction(ALL_POSTS_DOMAIN, [data]));
-      return data;
     }
-    return postsArray[postIndex];
+    return;
   } catch (error) {
     if (error && error.response) {
       throw error.response.data;
@@ -89,10 +88,21 @@ function publishPostAction(postType, responsePostID, postData) {
         }
         data.append(key, value);
       });
-      const { data: post } = await publishPost(postType, responsePostID, data);
+      const { 
+        data: { challengePost, solutionPost } 
+      } = await publishPost(postType, responsePostID, data);
+      console.log(challengePost);
+      console.log(solutionPost);
       [MY_POSTS_DOMAIN, ALL_POSTS_DOMAIN].forEach((subDomain) => {
-        dispatch(addPostsDataAction(subDomain, [post]));
+        dispatch(addPostsDataAction(
+          subDomain, 
+          [challengePost, solutionPost].filter((post) => {
+            if(post && post.id) return true;
+            return false;
+          })
+        ));
       });
+
     } catch (error) {
       if (error && error.response) {
         throw error.response.data.toString();
