@@ -1,0 +1,36 @@
+.photo-show-container{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  background: rgba(36, 35, 35, 0.8);
+}
+.photo-show-container .photo{
+  max-width: 100%;
+  max-height: calc(100% - 200px);
+  margin: 90px auto;
+}
+.photo-show-container .photo-title{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  color: white;
+  line-height: 100px;
+}
+.photo-show-container .close-btn{
+  position: fixed;
+  top: 50px;
+  right: 4%;
+}
+.photo-show-container .close-btn > .close-icon{
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+}
+.photo-show-container .close-btn > .close-icon:hover{
+  color: rgba(158, 158, 158, 0.7);
+}

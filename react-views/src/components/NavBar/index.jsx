@@ -46,7 +46,7 @@ const NavBar = () => {
             givenLinkName.map((linkName, index) => (
               <Nav.Item key={linkName} className="nav-item-content">
                 <NavLink
-                  to={`/${givenPaths[index]}`}
+                  to={givenPaths[index]}
                   activeClassName="active"
                   className="nav-link"
                 >
