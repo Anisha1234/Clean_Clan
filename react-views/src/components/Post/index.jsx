@@ -47,7 +47,7 @@ const Post = ({
         </Card.Header>
         <Card.Body>
           <Card.Title>
-            <Link href={`/post/${postID}`} className="post-link">
+            <Link to={`/post/${postID}`} className="post-link">
               {heading}
             </Link>
           </Card.Title>
