@@ -83,7 +83,7 @@ const saveNewPost = (data) => new Promise((resolve, reject)=>{
       reject(error);
       return;
     }
-    resolve(post);
+    resolve(post.toObject());
   });
 });
 

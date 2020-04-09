@@ -1,7 +1,7 @@
 /**
  * @param {{
  *  saveNewPost: (data: any) => Promise<any>
- *  updatePostData: (postID: string, data: any) => Promise<{id: string}>
+ *  updatePostData: (postID: string, data: any) => Promise<any>
  * }} PostDB - post db object
  */
 module.exports = (PostDB) => ({
@@ -27,6 +27,6 @@ module.exports = (PostDB) => ({
     await PostDB.updatePostData(challengeID, {
       solution: solutionPost.id
     });
-    return;
+    return solutionPost;
   }
 });

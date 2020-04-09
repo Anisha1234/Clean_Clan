@@ -89,7 +89,11 @@ const Post = ({
         </Modal.Header>
         <Modal.Body>
           <PostPreview postID={postID} />
-          <PostForm type="Solution" responsePostID={postID} />
+          <PostForm 
+            type="Solution" 
+            responsePostID={postID}
+            closeForm={() => setSolFormOpen(false)}
+          />
         </Modal.Body>
       </Modal>
     </>

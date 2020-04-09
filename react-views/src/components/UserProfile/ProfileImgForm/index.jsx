@@ -19,7 +19,7 @@ import './style.css';
 const OLD_IMAGE_TAB = 'old';
 const NEW_IMAGE_TAB = 'new';
 
-const ProfileImgForm = ({ allImages }) => {
+const ProfileImgForm = ({ allImages, closeForm }) => {
   const isMounted = useRef(true);
   useEffect(() => () => { isMounted.current = false; }, []);
 
@@ -33,7 +33,7 @@ const ProfileImgForm = ({ allImages }) => {
   const [updateStatus, setUpdateStatus] = useState(false);
   useEffect(() => {
     if (updateStatus) {
-      window.location.reload();
+      closeForm();
     }
   }, [updateStatus]);
   const [updateError, setUpdateError] = useState('');
@@ -175,6 +175,7 @@ export default ProfileImgForm;
 
 ProfileImgForm.propTypes = {
   allImages: PropTypes.arrayOf(PropTypes.string),
+  closeForm: PropTypes.func.isRequired,
 };
 
 ProfileImgForm.defaultProps = {

@@ -1,3 +1,5 @@
+const { getAuthors } = require('./util');
+
 const NEW_CHALLENGE_PRIZE = 5;
 const NEW_SOLUTION_PRIZE = 15;
 /**
@@ -53,9 +55,11 @@ module.exports = (PostService, UserService) => ({
   ChallengeHandler : async (req, res) => {
     try{
       const postData = refinePostData(req.body, req.session, req.files);
-      await PostService.createNewChallenge(postData);
+      const savedPost = await PostService.createNewChallenge(postData);
+      const authorObject = await getAuthors(UserService, [savedPost]);
+      savedPost.author = authorObject[savedPost.author];
       await updateUserBonusPoint(UserService, req.session.userid, NEW_CHALLENGE_PRIZE);
-      res.status(200).send("ok");
+      res.status(200).send(savedPost);
     } catch(error){
       console.log(error);
       res.status(500).send(error);
@@ -69,9 +73,11 @@ module.exports = (PostService, UserService) => ({
   SolutionHandler: async (req, res) => {
     try{
       const postData = refinePostData(req.body, req.session, req.files);
-      await PostService.createNewSolution(postData, req.params.challengeID);
+      const savedPost = await PostService.createNewSolution(postData, req.params.challengeID);
+      const authorObject = await getAuthors(UserService, [savedPost]);
+      savedPost.author = authorObject[savedPost.author];
       await updateUserBonusPoint(UserService, req.session.userid, NEW_SOLUTION_PRIZE);
-      res.status(200).send("ok");
+      res.status(200).send(savedPost);
     } catch(error){
       console.log(error);
       res.status(500).send(error);

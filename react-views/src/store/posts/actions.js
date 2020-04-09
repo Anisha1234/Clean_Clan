@@ -33,8 +33,6 @@ const getPostsAction = (isMine) => async (dispatch, getState) => {
   try {
     const userID = (isMine ? getState().user.data.userid : '');
     const { data: posts } = await getPosts(userID);
-    // reverse the posts that newest go first
-    posts.reverse();
     dispatch(updatePostsDataAction(subDomain, posts));
     return;
   } catch (error) {
@@ -78,24 +76,29 @@ const getSinglePostAction = (postID) => async (dispatch, getState) => {
  * @param {string} postType - either 'Challenge' or 'Solution'
  * @param {string} responsePostID - the post ID this uploaded post responds to.
  */
-const publishPostAction = (postType, responsePostID, postData) => async () => {
-  try {
-    const data = new FormData();
-    Object.entries(postData).forEach(([key, value]) => {
-      if (key === 'images') {
-        value.forEach((file) => {
-          data.append('images', file);
-        });
-        return;
+function publishPostAction(postType, responsePostID, postData){
+  return async (dispatch) => {
+    try {
+      const data = new FormData();
+      Object.entries(postData).forEach(([key, value]) => {
+        if (key === 'images') {
+          value.forEach((file) => {
+            data.append('images', file);
+          });
+          return;
+        }
+        data.append(key, value);
+      });
+      const { data: post } = await publishPost(postType, responsePostID, data);
+      [MY_POSTS_DOMAIN, ALL_POSTS_DOMAIN].forEach((subDomain) => {
+        dispatch(addPostsDataAction(subDomain, [post]));
+      });
+    } catch (error) {
+      if (error && error.response) {
+        throw error.response.data.toString();
       }
-      data.append(key, value);
-    });
-    await publishPost(postType, responsePostID, data);
-  } catch (error) {
-    if (error && error.response) {
-      throw error.response.data.toString();
+      throw error.toString();
     }
-    throw error.toString();
   }
 };
 /**

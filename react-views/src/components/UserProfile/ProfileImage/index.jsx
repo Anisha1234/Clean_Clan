@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
@@ -12,6 +12,9 @@ import './style.css';
 
 const ProfileImage = ({ currentImage, allImages }) => {
   const [imageFormShow, setImageFormShow] = useState(false);
+  const handleCloseImageForm = useCallback(()=>{
+    setImageFormShow(false);
+  },[]);
   return (
     <>
       <Row className="justify-content-center">
@@ -35,12 +38,12 @@ const ProfileImage = ({ currentImage, allImages }) => {
           </button>
         </Card>
       </Row>
-      <Modal show={imageFormShow} onHide={() => setImageFormShow(false)}>
+      <Modal show={imageFormShow} onHide={handleCloseImageForm}>
         <Modal.Header closeButton>
           <Modal.Title>Change your profile pic</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ProfileImgForm allImages={allImages} />
+          <ProfileImgForm allImages={allImages} closeForm={handleCloseImageForm}/>
         </Modal.Body>
       </Modal>
     </>

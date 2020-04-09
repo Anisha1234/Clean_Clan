@@ -28,14 +28,14 @@ const imageTitles = ['Before', 'After'];
  */
 const uploadImageURLsInit = (size) => [...Array(size)].map(() => '');
 
-const PostForm = ({ type, responsePostID }) => {
+const PostForm = ({ type, responsePostID, closeForm }) => {
   const isMounted = useRef(true);
   useEffect(() => () => { isMounted.current = false; }, []);
 
   const [publishStatus, setPublishStatus] = useState(false);
   useEffect(() => {
     if (publishStatus) {
-      window.location.reload();
+      closeForm();
     }
   }, [publishStatus]);
 
@@ -44,10 +44,11 @@ const PostForm = ({ type, responsePostID }) => {
     uploadImageURLsInit(imageCount[type]),
   );
   useEffect(() => () => {
-    imageURLs.forEach((url) => {
-      if (url) URL.revokeObjectURL(url);
+    setImageURLs((URLs)=>{
+      URLs.forEach(url => { URL.revokeObjectURL(url); });
+      return [];
     });
-  }, [imageURLs]);
+  }, []);
 
   const dispatch = useDispatch();
   const formHandler = useFormik({
@@ -127,6 +128,9 @@ const PostForm = ({ type, responsePostID }) => {
           placeholder="Mumbai"
           isInvalid={formHandler.errors.location}
         />
+        <Form.Control.Feedback type="invalid">
+          {formHandler.errors.location}
+        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group controlId="heading">
         <Form.Label>Title</Form.Label>
@@ -137,6 +141,9 @@ const PostForm = ({ type, responsePostID }) => {
           placeholder="Enter the heading..."
           isInvalid={formHandler.errors.heading}
         />
+        <Form.Control.Feedback type="invalid">
+          {formHandler.errors.heading}
+        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group controlId="stakeholders">
         <Form.Label>Stakeholders</Form.Label>
@@ -147,6 +154,9 @@ const PostForm = ({ type, responsePostID }) => {
           placeholder="Stakeholders..."
           isInvalid={formHandler.errors.stakeholders}
         />
+        <Form.Control.Feedback type="invalid">
+          {formHandler.errors.stakeholders}
+        </Form.Control.Feedback>
       </Form.Group>
       <Form.Group controlId="description">
         <Form.Label>
@@ -163,6 +173,9 @@ const PostForm = ({ type, responsePostID }) => {
           ref={postDescriptionTextRef}
           isInvalid={formHandler.errors.description}
         />
+        <Form.Control.Feedback type="invalid">
+          {formHandler.errors.description}
+        </Form.Control.Feedback>
       </Form.Group>
       <CardDeck className="justify-content-around text-center">
         {
@@ -221,6 +234,7 @@ export default PostForm;
 PostForm.propTypes = {
   type: PropTypes.oneOf(Object.keys(imageCount)).isRequired,
   responsePostID: PropTypes.string,
+  closeForm: PropTypes.func.isRequired
 };
 
 PostForm.defaultProps = {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
@@ -12,6 +12,9 @@ import './style.css';
 
 const Feed = ({ isMine }) => {
   const [postFormShow, setPostFormShow] = useState(false);
+  const handleClosePostForm = useCallback(()=>{
+    setPostFormShow(false);
+  },[]);
   const dispatch = useDispatch();
   const posts = useSelector((state) => (
     isMine ? state.posts.my_posts
@@ -32,12 +35,12 @@ const Feed = ({ isMine }) => {
           Create a challenge
         </Button>
       </Row>
-      <Modal show={postFormShow} onHide={() => setPostFormShow(false)} size="lg">
+      <Modal show={postFormShow} onHide={handleClosePostForm} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Create a challenge</Modal.Title>
         </Modal.Header>
         <Modal.Body className="post-form-modal">
-          <PostForm type="Challenge" />
+          <PostForm type="Challenge" closeForm={handleClosePostForm}/>
         </Modal.Body>
       </Modal>
       {
