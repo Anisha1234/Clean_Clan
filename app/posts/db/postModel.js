@@ -22,14 +22,14 @@ const postSchema = new Schema({
   image_before: String,
   image_after: { type: String, default: '' },
   // this stores post id of challenge of this solution
-  challenge : { type: String, default: '' },
+  challenge: { type: String, default: '' },
   // this stores post id of solutions to this challenge
   solution: { type: String, default: '' },
   comments: [commentSchema]
 }, { collection: 'post' });
 
-postSchema.pre('save', function(next){
-  const post=this;
+postSchema.pre('save', function (next) {
+  const post = this;
   post.id = post._id.toString();
   next();
 });

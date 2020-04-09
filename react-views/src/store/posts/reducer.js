@@ -27,13 +27,13 @@ const createPostsSubReducer = (subDomain) => (state = initialState[subDomain], a
     case ADD_POSTS: {
       // add to the front
       return [
-        ...payload.reverse().filter((post)=>{
+        ...payload.reverse().filter((post) => {
           const pIndex = state.findIndex((currentPost) => currentPost.id === post.id);
           return pIndex === -1;
         }),
-        ...state.map((post)=>{
+        ...state.map((post) => {
           const pIndex = payload.findIndex((currentPost) => currentPost.id === post.id);
-          if(pIndex === -1) return post;
+          if (pIndex === -1) return post;
           return payload[pIndex];
         }),
       ];

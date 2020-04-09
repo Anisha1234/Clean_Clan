@@ -16,22 +16,22 @@ module.exports = (PostService, UserService) => ({
    * @param {Express.Request} res
    */
   FeedHandler: async (req, res) => {
-    try{
+    try {
       const { author } = req.query;
       const queryOptions = {};
-      if(author) queryOptions.author = author;
+      if (author) queryOptions.author = author;
       const posts = await PostService.getMultiplePosts(queryOptions);
-      if(!posts || !posts.length){
-        res.status(404).send("Not found!");
+      if (!posts || !posts.length) {
+        res.status(404).send('Not found!');
         return;
       }
-      const authorObject =  await getAuthors(UserService, posts);
-      for(let i = 0; i < posts.length; i += 1){
-        const userID = posts[i].author
+      const authorObject = await getAuthors(UserService, posts);
+      for (let i = 0; i < posts.length; i += 1) {
+        const userID = posts[i].author;
         posts[i].author = authorObject[userID];
       }
       res.status(200).send(posts);
-    } catch(error){
+    } catch (error) {
       console.log(error);
       res.status(500).send(error);
     }
@@ -42,21 +42,21 @@ module.exports = (PostService, UserService) => ({
    * @param {Express.Request} res
    */
   SinglePostHandler: async (req, res) => {
-    try{
+    try {
       const postID = req.params.postID;
-      if(!postID){
-        res.status(404).send("Cannot find the post");
+      if (!postID) {
+        res.status(404).send('Cannot find the post');
         return;
       }
       const post = await PostService.getSinglePost(postID);
-      if(!post){
-        res.status(404).send("Cannot find the post");
+      if (!post) {
+        res.status(404).send('Cannot find the post');
         return;
       }
-      const authorObject =  await getAuthors(UserService, [post]);
+      const authorObject = await getAuthors(UserService, [post]);
       post.author = authorObject[post.author];
       res.status(200).send(post);
-    } catch(error){
+    } catch (error) {
       console.log(error);
       res.status(500).send(error);
     }

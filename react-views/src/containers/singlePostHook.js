@@ -18,15 +18,15 @@ const useSinglePost = (postID) => {
     (state) => (
       state.posts.all_posts.find((currentPost) => currentPost.id === postID)
       || state.posts.my_posts.find((currentPost) => currentPost.id === postID)
-    )
+    ),
   );
   const dispatch = useDispatch();
   useEffect(() => {
     let isMounted = true;
     setRequestStatus(PENDING);
     dispatch(getSinglePost(postID))
-      .then(()=>{
-        if(!isMounted) return;
+      .then(() => {
+        if (!isMounted) return;
         setRequestStatus(DONE);
       })
       .catch((error) => {

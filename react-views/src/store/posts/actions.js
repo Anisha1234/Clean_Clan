@@ -88,21 +88,18 @@ function publishPostAction(postType, responsePostID, postData) {
         }
         data.append(key, value);
       });
-      const { 
-        data: { challengePost, solutionPost } 
+      const {
+        data: { challengePost, solutionPost },
       } = await publishPost(postType, responsePostID, data);
-      console.log(challengePost);
-      console.log(solutionPost);
       [MY_POSTS_DOMAIN, ALL_POSTS_DOMAIN].forEach((subDomain) => {
         dispatch(addPostsDataAction(
-          subDomain, 
+          subDomain,
           [challengePost, solutionPost].filter((post) => {
-            if(post && post.id) return true;
+            if (post && post.id) return true;
             return false;
-          })
+          }),
         ));
       });
-
     } catch (error) {
       if (error && error.response) {
         throw error.response.data.toString();
