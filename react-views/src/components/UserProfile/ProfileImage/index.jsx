@@ -5,7 +5,7 @@ import Image from 'react-bootstrap/Image';
 import Modal from 'react-bootstrap/Modal';
 import { MdCameraAlt } from 'react-icons/md';
 import PropTypes from 'prop-types';
-import ProfileImgForm from '../ProfileImgForm';
+import ProfileImgForm from '../../ProfileImgForm';
 import { createImageURL } from '../../../util';
 import profileImg from '../../../assets/media/profile.png';
 import './style.css';
