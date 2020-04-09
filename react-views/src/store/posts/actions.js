@@ -76,7 +76,7 @@ const getSinglePostAction = (postID) => async (dispatch, getState) => {
  * @param {string} postType - either 'Challenge' or 'Solution'
  * @param {string} responsePostID - the post ID this uploaded post responds to.
  */
-function publishPostAction(postType, responsePostID, postData){
+function publishPostAction(postType, responsePostID, postData) {
   return async (dispatch) => {
     try {
       const data = new FormData();
@@ -99,8 +99,8 @@ function publishPostAction(postType, responsePostID, postData){
       }
       throw error.toString();
     }
-  }
-};
+  };
+}
 /**
  *
  * @param {string} postID - post id for like update

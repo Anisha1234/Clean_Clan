@@ -29,7 +29,7 @@ const NavBar = () => {
           <Nav.Item className="nav-item-content">
             <NavLink
               to="/profile"
-              activeClassname = "active"
+              activeClassName="active"
               className="nav-link"
             >
               <Image
@@ -43,11 +43,11 @@ const NavBar = () => {
             </NavLink>
           </Nav.Item>
           {
-            givenLinkName.map((linkName) => (
-              <Nav.Item key={linkName}  className="nav-item-content">
+            givenLinkName.map((linkName, index) => (
+              <Nav.Item key={linkName} className="nav-item-content">
                 <NavLink
-                  to={`/${linkName}`}
-                  activeClass = "active"
+                  to={`/${givenPaths[index]}`}
+                  activeClassName="active"
                   className="nav-link"
                 >
                   {linkName}
@@ -55,7 +55,7 @@ const NavBar = () => {
               </Nav.Item>
             ))
           }
-          <Nav.Item style={{ width: '100px', marginLeft: '8px' }}>
+          <Nav.Item style={{ width: '100px' }} className="nav-item-content">
             <LogoutButton variant="outline-light" />
           </Nav.Item>
         </Nav>

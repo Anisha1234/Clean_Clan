@@ -1,18 +1,16 @@
-import React, { useCallback, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
-import { FaHeart, FaRegHeart, FaTwitter } from 'react-icons/fa';
 import PropTypes from 'prop-types';
-import PostContent from './PostContent';
-import PostSubtitle from './PostSubtitle';
 import PostForm from '../PostForm';
 import PostPreview from '../PostPreview';
+import PostContent from './PostContent';
+import PostSubtitle from './PostSubtitle';
 import AuthorBar from './AuthorBar';
-import { updatePostLike } from '../../store/posts';
+import InteractionBar from './InteractionBar';
 import './style.css';
 
 const Post = ({
@@ -25,23 +23,10 @@ const Post = ({
 }) => {
   const [solFormOpen, setSolFormOpen] = useState(false);
   const currentUserID = useSelector((state) => state.user.data.userid);
-  const dispatch = useDispatch();
-  const [haveUserLiked, setHaveUserLiked] = useState(likes.indexOf(currentUserID) !== -1);
-  const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
-  const togglePostLike = useCallback(() => {
-    setHaveUserLiked((currentLikeStatus) => {
-      dispatch(updatePostLike(postID, !currentLikeStatus));
-      setCurrentLikeCount((c) => c + (currentLikeStatus ? -1 : 1));
-      return !currentLikeStatus;
-    });
-  }, [dispatch, postID]);
 
   return (
     <>
-      <Card
-        style={{ width: '90%' }}
-        border="light"
-      >
+      <Card style={{ width: '90%' }} border="light">
         <Card.Header>
           <AuthorBar authorName={authorName} authorImage={authorImage} />
         </Card.Header>
@@ -72,15 +57,13 @@ const Post = ({
             challenge={challenge}
             solution={solution}
           />
-          <Row className="justify-content-around post-interaction-bar">
-            <button type="button" className="hidden-btn" onClick={togglePostLike}>
-              {haveUserLiked ? <FaHeart style={{ color: 'red' }} /> : <FaRegHeart />}
-              <Badge variant="info" pill>{currentLikeCount}</Badge>
-            </button>
-            <a href={`https://twitter.com/intent/tweet?text=${description}`}>
-              <FaTwitter style={{ fontSize: '20px', color: ' #38A1F3' }} />
-            </a>
-          </Row>
+          <InteractionBar
+            postID={postID}
+            description={description}
+            likeCount={likeCount}
+            likes={likes}
+            currentUserID={currentUserID}
+          />
         </Card.Body>
       </Card>
       <Modal show={solFormOpen} onHide={() => setSolFormOpen(false)} size="lg">
@@ -89,8 +72,8 @@ const Post = ({
         </Modal.Header>
         <Modal.Body>
           <PostPreview postID={postID} />
-          <PostForm 
-            type="Solution" 
+          <PostForm
+            type="Solution"
             responsePostID={postID}
             closeForm={() => setSolFormOpen(false)}
           />

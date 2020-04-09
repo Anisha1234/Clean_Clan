@@ -37,15 +37,15 @@ const PostForm = ({ type, responsePostID, closeForm }) => {
     if (publishStatus) {
       closeForm();
     }
-  }, [publishStatus]);
+  }, [closeForm, publishStatus]);
 
   const [publishError, setPublishError] = useState('');
   const [imageURLs, setImageURLs] = useState(
     uploadImageURLsInit(imageCount[type]),
   );
   useEffect(() => () => {
-    setImageURLs((URLs)=>{
-      URLs.forEach(url => { URL.revokeObjectURL(url); });
+    setImageURLs((URLs) => {
+      URLs.forEach((url) => { URL.revokeObjectURL(url); });
       return [];
     });
   }, []);
@@ -234,7 +234,7 @@ export default PostForm;
 PostForm.propTypes = {
   type: PropTypes.oneOf(Object.keys(imageCount)).isRequired,
   responsePostID: PropTypes.string,
-  closeForm: PropTypes.func.isRequired
+  closeForm: PropTypes.func.isRequired,
 };
 
 PostForm.defaultProps = {

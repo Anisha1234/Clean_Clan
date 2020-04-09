@@ -12,9 +12,9 @@ import './style.css';
 
 const Feed = ({ isMine }) => {
   const [postFormShow, setPostFormShow] = useState(false);
-  const handleClosePostForm = useCallback(()=>{
+  const handleClosePostForm = useCallback(() => {
     setPostFormShow(false);
-  },[]);
+  }, []);
   const dispatch = useDispatch();
   const posts = useSelector((state) => (
     isMine ? state.posts.my_posts
@@ -40,7 +40,7 @@ const Feed = ({ isMine }) => {
           <Modal.Title>Create a challenge</Modal.Title>
         </Modal.Header>
         <Modal.Body className="post-form-modal">
-          <PostForm type="Challenge" closeForm={handleClosePostForm}/>
+          <PostForm type="Challenge" closeForm={handleClosePostForm} />
         </Modal.Body>
       </Modal>
       {

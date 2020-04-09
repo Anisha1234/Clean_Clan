@@ -35,7 +35,7 @@ const ProfileImgForm = ({ allImages, closeForm }) => {
     if (updateStatus) {
       closeForm();
     }
-  }, [updateStatus]);
+  }, [closeForm, updateStatus]);
   const [updateError, setUpdateError] = useState('');
   const dispatch = useDispatch();
   const imageFileRef = useRef();

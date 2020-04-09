@@ -22,16 +22,16 @@ const createPostsSubReducer = (subDomain) => (state = initialState[subDomain], a
   if (!isActionTypeEqual([POSTS_DOMAIN, subDomain], domains)) return state;
   switch (actionType) {
     case UPDATE:
-      //reverse so latest go first
+      // reverse so latest go first
       return payload.reverse();
     case ADD_POSTS: {
-      //add to the front
+      // add to the front
       return [
         ...payload.reverse().filter((post) => {
           const pIndex = state.findIndex((currentPost) => currentPost.id === post.id);
           return pIndex === -1;
         }),
-        ...state
+        ...state,
       ];
     }
     case UPDATE_POST_LIKE: {

@@ -12,9 +12,9 @@ import './style.css';
 
 const ProfileImage = ({ currentImage, allImages }) => {
   const [imageFormShow, setImageFormShow] = useState(false);
-  const handleCloseImageForm = useCallback(()=>{
+  const handleCloseImageForm = useCallback(() => {
     setImageFormShow(false);
-  },[]);
+  }, []);
   return (
     <>
       <Row className="justify-content-center">
@@ -43,7 +43,7 @@ const ProfileImage = ({ currentImage, allImages }) => {
           <Modal.Title>Change your profile pic</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ProfileImgForm allImages={allImages} closeForm={handleCloseImageForm}/>
+          <ProfileImgForm allImages={allImages} closeForm={handleCloseImageForm} />
         </Modal.Body>
       </Modal>
     </>
