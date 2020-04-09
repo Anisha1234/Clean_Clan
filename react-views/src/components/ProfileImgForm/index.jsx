@@ -12,8 +12,8 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { MdCloudUpload } from 'react-icons/md';
 import PropTypes from 'prop-types';
-import { updateUserPic } from '../../../store/user';
-import { createImageURL } from '../../../util';
+import { updateUserPic } from '../../store/user';
+import { createImageURL } from '../../util';
 import './style.css';
 
 const OLD_IMAGE_TAB = 'old';
