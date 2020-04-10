@@ -58,7 +58,7 @@ const Feed = ({ isMine }) => {
               date={post.date}
               heading={post.heading}
               location={post.location}
-              likes={post.likes}
+              likeStatus={post.like_status}
               description={post.description}
               likeCount={post.like_count}
               imageBefore={post.image_before}

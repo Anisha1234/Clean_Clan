@@ -18,7 +18,7 @@ const Post = ({
   author, authorName, authorImage,
   date, heading, location, description,
   imageBefore, imageAfter,
-  likeCount, likes,
+  likeCount, likeStatus,
   solution, challenge,
 }) => {
   const [solFormOpen, setSolFormOpen] = useState(false);
@@ -61,8 +61,7 @@ const Post = ({
             postID={postID}
             description={description}
             likeCount={likeCount}
-            likes={likes}
-            currentUserID={currentUserID}
+            likeStatus={likeStatus}
           />
         </Card.Body>
       </Card>
@@ -96,7 +95,7 @@ Post.propTypes = {
   location: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   likeCount: PropTypes.number.isRequired,
-  likes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  likeStatus: PropTypes.bool.isRequired,
   imageBefore: PropTypes.string.isRequired,
   imageAfter: PropTypes.string,
   solution: PropTypes.string,

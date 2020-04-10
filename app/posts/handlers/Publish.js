@@ -82,9 +82,7 @@ module.exports = (PostService, UserService) => ({
       challengePost.author = authorObject[challengePost.author];
       solutionPost.author = authorObject[solutionPost.author];
       await updateUserBonusPoint(UserService, req.session.userid, NEW_SOLUTION_PRIZE);
-      res.status(200).send({
-        challengePost, solutionPost
-      });
+      res.status(200).send({ solutionPost, challengePost });
     } catch (error) {
       console.log(error);
       res.status(500).send(error);

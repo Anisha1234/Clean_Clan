@@ -9,7 +9,7 @@ const getAuthors = async (UserService, posts) => {
   const authors = {};
   await Promise.all(
     posts.map(async ({ author }) => {
-      if (authors[author]) return;
+      if (!author || authors[author]) return;
       const {
         name,
         image: { current: image }

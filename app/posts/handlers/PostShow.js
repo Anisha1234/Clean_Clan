@@ -1,4 +1,20 @@
 const { getAuthors } = require('./util');
+
+/**
+ * @function addLikeStatus : delete 'likes' property and 'like_status' property
+ * @param {string} userID - current user id in the session
+ * @param {{
+ *  likes: string[],
+ * }} post 
+ */
+const addLikeStatus = (userID, post) => {
+  const nPost = post;
+  const likeStatus = nPost.likes.indexOf(userID) !== -1;
+  delete nPost.likes;
+  nPost.like_status = likeStatus;
+  return nPost;
+}
+
 /**
  * @function: create a post show handler (get post(s))
  * @param {{
@@ -26,9 +42,11 @@ module.exports = (PostService, UserService) => ({
         return;
       }
       const authorObject = await getAuthors(UserService, posts);
+      const currentUserID = req.session.userid;
       for (let i = 0; i < posts.length; i += 1) {
+        posts[i] = addLikeStatus(currentUserID, posts[i]);
         const userID = posts[i].author;
-        posts[i].author = authorObject[userID];
+        posts[i].author = userID && authorObject[userID];
       }
       res.status(200).send(posts);
     } catch (error) {
@@ -48,13 +66,14 @@ module.exports = (PostService, UserService) => ({
         res.status(404).send('Cannot find the post');
         return;
       }
-      const post = await PostService.getSinglePost(postID);
+      let post = await PostService.getSinglePost(postID);
       if (!post) {
         res.status(404).send('Cannot find the post');
         return;
       }
       const authorObject = await getAuthors(UserService, [post]);
-      post.author = authorObject[post.author];
+      post = addLikeStatus(req.session.userid, post);
+      post.author = post.author && authorObject[post.author];
       res.status(200).send(post);
     } catch (error) {
       console.log(error);

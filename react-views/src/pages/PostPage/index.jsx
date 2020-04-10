@@ -41,7 +41,7 @@ const PostPage = ({ postID }) => {
                   location={post.heading}
                   description={post.description}
                   likeCount={post.like_count}
-                  likes={post.likes}
+                  likeStatus={post.like_status}
                   imageBefore={post.image_before}
                   imageAfter={post.image_after}
                   solution={post.solution}

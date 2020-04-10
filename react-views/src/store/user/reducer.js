@@ -6,10 +6,10 @@ import {
 import { createCommonSubreducer } from '../util';
 
 const initialState = {
-  [AUTH_DOMAIN]: {
+  auth : {
     status: PENDING,
   },
-  [USER_DATA_DOMAIN]: {
+  data: {
     user_id: '',
     name: '',
     like_count: 0,

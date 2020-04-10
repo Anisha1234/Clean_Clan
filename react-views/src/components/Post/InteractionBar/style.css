@@ -1,6 +1,7 @@
 .post-interaction-bar{
   padding-top: 20px;
   cursor: pointer;
+  line-height: 20px;
 }
 .post-interaction-bar button{
   padding: 0;

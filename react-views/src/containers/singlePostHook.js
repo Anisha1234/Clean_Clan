@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSinglePost } from '../store/posts';
 import { PENDING, DONE, FAIL } from '../constants';
+
 /**
  * @function useSinglePost: hook for request a post with post id
  * @param {string} postID
@@ -14,12 +15,7 @@ import { PENDING, DONE, FAIL } from '../constants';
 const useSinglePost = (postID) => {
   const [requestError, setRequestError] = useState('');
   const [requestStatus, setRequestStatus] = useState(PENDING);
-  const resultPost = useSelector(
-    (state) => (
-      state.posts.all_posts.find((currentPost) => currentPost.id === postID)
-      || state.posts.my_posts.find((currentPost) => currentPost.id === postID)
-    ),
-  );
+  const resultPost = useSelector((state) => state.posts.pool[postID]);
   const dispatch = useDispatch();
   useEffect(() => {
     let isMounted = true;

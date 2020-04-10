@@ -25,14 +25,21 @@ module.exports = function (PostService, UserService) {
         return;
       }
       // update post like
-      const post = await PostService.updatePostLike(postID, userID, likeAction);
+      const {
+        like_count, id, author
+      } = await PostService.updatePostLike(postID, userID, likeAction);
       // for the author of this post => like_count +/-= 1
-      const userData = await UserService.getUserProfile(post.author);
+      const userData = await UserService.getUserProfile(author);
       const { like_count: currentAuthorLikeCount } = userData;
-      await UserService.updateUserProfile(post.author, {
+      await UserService.updateUserProfile(author, {
         like_count: currentAuthorLikeCount + (likeAction ? 1 : -1)
       });
-      res.status(200).send('ok');
+      //return the updated post
+      res.status(200).send({
+        id,
+        like_count,
+        like_status: likeAction,
+      });
     } catch (error) {
       console.log(error);
       res.status(500).send(error);

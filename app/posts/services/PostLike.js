@@ -10,5 +10,10 @@ module.exports = (PostDB) => ({
    * @param {string} userID - id of user who interacts
    * @param {boolean} likeStatus: true for like, false for unlike
    */
-  updatePostLike: async (postID, userID, likeStatus) => PostDB.updatePostLike(postID, userID, likeStatus)
+  updatePostLike: async (postID, userID, likeStatus) => {
+    const { like_count, id, author } = await PostDB.updatePostLike(postID, userID, likeStatus);
+    return {
+      like_count, id, author,
+    }
+  }
 });
