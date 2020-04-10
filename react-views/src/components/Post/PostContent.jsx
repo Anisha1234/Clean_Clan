@@ -5,7 +5,7 @@ import { MdLocationOn } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import { createImageURL } from '../../util';
 import PostPreview from '../PostPreview';
-import PhotoShow from './PhotoShow';
+import PhotoShow from '../PhotoShow';
 
 
 const PostContent = ({
@@ -15,14 +15,12 @@ const PostContent = ({
 }) => {
   const [photoShowOpen, setPhotoShowOpen] = useState(false);
   const [activePhoto, setActivePhoto] = useState('');
-  const [activePhotoTitle, setActivePhotoTitle] = useState('');
-  const handleOpenPhotoShow = useCallback((imageName, imageTitle) => {
+  const handleOpenPhotoShow = useCallback((imageName) => {
     if (!imageName) {
       return;
     }
     setActivePhoto(imageName);
     setPhotoShowOpen(true);
-    setActivePhotoTitle(imageTitle);
   }, []);
   return (
     <>
@@ -43,7 +41,7 @@ const PostContent = ({
               <button
                 className="hidden-btn"
                 type="button"
-                onClick={() => handleOpenPhotoShow(imageBefore, 'BEFORE')}
+                onClick={() => handleOpenPhotoShow(imageBefore)}
               >
                 <Card.Img src={createImageURL(imageBefore)} />
               </button>
@@ -56,7 +54,7 @@ const PostContent = ({
               <button
                 className="hidden-btn"
                 type="button"
-                onClick={() => handleOpenPhotoShow(imageAfter, 'AFTER')}
+                onClick={() => handleOpenPhotoShow(imageAfter)}
               >
                 <Card.Img src={createImageURL(imageAfter)} />
               </button>
@@ -68,7 +66,6 @@ const PostContent = ({
         isOpen={activePhoto ? photoShowOpen : false}
         onClose={() => setPhotoShowOpen(false)}
         image={activePhoto}
-        title={activePhotoTitle}
       />
     </>
   );

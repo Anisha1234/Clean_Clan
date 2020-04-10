@@ -6,12 +6,14 @@ import Modal from 'react-bootstrap/Modal';
 import { MdCameraAlt } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import ProfileImgForm from '../../ProfileImgForm';
+import PhotoShow from '../../PhotoShow';
 import { createImageURL } from '../../../util';
 import profileImg from '../../../assets/media/profile.png';
 import './style.css';
 
 const ProfileImage = ({ currentImage, allImages }) => {
   const [imageFormShow, setImageFormShow] = useState(false);
+  const [imageDisplay, setImageDisplay] = useState(false);
   const handleCloseImageForm = useCallback(() => {
     setImageFormShow(false);
   }, []);
@@ -23,12 +25,24 @@ const ProfileImage = ({ currentImage, allImages }) => {
           border="light"
           bg="light"
         >
-          <Image
-            src={currentImage ? createImageURL(currentImage) : profileImg}
-            roundedCircle
-            fluid
-            alt="profile-pic"
-          />
+          <PhotoShow
+            isOpen={imageDisplay && currentImage ? true : false}
+            image={currentImage}
+            onClose={() => setImageDisplay(false)}
+          >
+            <button
+              className="hidden-btn" 
+              type="button"
+              onClick={() => setImageDisplay(true)}
+            >
+              <Image
+                src={currentImage ? createImageURL(currentImage) : profileImg}
+                roundedCircle
+                fluid
+                alt="profile-pic"
+              />
+            </button>
+          </PhotoShow>
           <button
             className="user-img-update"
             type="button"
