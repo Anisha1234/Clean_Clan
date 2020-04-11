@@ -1,10 +1,7 @@
 /**
  * @function  - sign-up handler
  * @param {{
- *  register: (data: {
- *    email: string, password: string, name: string,
- *    user_details: string, city: string
- *  }) => Promise<boolean>
+ *  register: (data: any) => Promise<boolean>
  * }} UserService
  */
 module.exports = (UserService) => async (req, res) => {

@@ -1,7 +1,7 @@
 /**
  * @function: create registration service
  * @param {{
- *  findSingleUser: (options: any) => Promise<any>
+ *  findSingleUser: (option: any) => Promise<any>
  *  saveNewUser: (data: any) => Promise<any>
  * }} UserDB - user database object
  */

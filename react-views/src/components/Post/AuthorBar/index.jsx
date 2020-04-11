@@ -23,6 +23,11 @@ const AuthorBar = ({ authorName, authorImage }) => (
 export default AuthorBar;
 
 AuthorBar.propTypes = {
-  authorName: PropTypes.string.isRequired,
-  authorImage: PropTypes.string.isRequired,
+  authorName: PropTypes.string,
+  authorImage: PropTypes.string,
+};
+
+AuthorBar.defaultProps = {
+  authorName: '',
+  authorImage: '',
 };

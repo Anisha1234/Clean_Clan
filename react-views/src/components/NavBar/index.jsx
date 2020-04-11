@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Image from 'react-bootstrap/Image';
 import Nav from 'react-bootstrap/Nav';
 import LogoutButton from '../LogoutButton';
-import { createImageURL } from '../../util';
+import { createImageURL, getUserData } from '../../util';
 import profileImg from '../../assets/media/profile.png';
 import './style.css';
 
@@ -13,25 +13,19 @@ const givenPaths = ['/timeline', '/issue', '/ranking'];
 const givenLinkName = ['Timeline', 'Issue', 'Ranking'];
 
 const NavBar = () => {
-  const userPic = useSelector((state) => state.user.data.image.current);
-  const userName = useSelector((state) => state.user.data.name);
+  const currentUserID = useSelector((state) => state.user.data.userID);
+  const userPic = useSelector(getUserData(currentUserID, 'image', 'current'));
+  const userName = useSelector(getUserData(currentUserID, 'name'));
   return (
     <Navbar expand="md" bg="dark" variant="dark" fixed="top" className="my-nav-container">
       <Navbar.Brand href="/timeline" className="nav-title">
         Clean India App
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="my-nav" />
-      <Navbar.Collapse
-        id="my-nav"
-        className="justify-content-center"
-      >
+      <Navbar.Collapse id="my-nav" className="justify-content-center">
         <Nav variant="pills">
           <Nav.Item className="nav-item-content">
-            <NavLink
-              to="/profile"
-              activeClassName="active"
-              className="nav-link"
-            >
+            <NavLink to={`/profile/${currentUserID}`} activeClassName="active" className="nav-link">
               <Image
                 roundedCircle
                 fluid

@@ -9,7 +9,6 @@ const commentSchema = new Schema({
 });
 
 const postSchema = new Schema({
-  id: String,
   date: { type: Date, default: Date.now },
   heading: String,
   like_count: { type: Number, default: 0 },
@@ -27,12 +26,6 @@ const postSchema = new Schema({
   solution: { type: String, default: '' },
   comments: [commentSchema]
 }, { collection: 'post' });
-
-postSchema.pre('save', function (next) {
-  const post = this;
-  post.id = post._id.toString();
-  next();
-});
 
 const Post = mongoose.model('Post', postSchema);
 

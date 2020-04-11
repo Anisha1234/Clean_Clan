@@ -7,11 +7,10 @@ import './style.css';
 
 const PhotoShow = ({
   isOpen, onClose, image, children,
-}) => {
-  return (
-    <>
-      {children}
-      {
+}) => (
+  <>
+    {children}
+    {
         isOpen ? (
           <div className="photo-show-container text-center">
             <button className="hidden-btn close-btn" type="button" onClick={onClose}>
@@ -23,9 +22,8 @@ const PhotoShow = ({
           </div>
         ) : null
       }
-    </>
-  );
-};
+  </>
+);
 
 export default PhotoShow;
 

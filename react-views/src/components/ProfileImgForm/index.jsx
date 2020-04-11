@@ -1,7 +1,7 @@
 import React, {
   useState, useCallback, useEffect, useRef,
 } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import Alert from 'react-bootstrap/Alert';
 import Tabs from 'react-bootstrap/Tabs';
@@ -12,16 +12,22 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { MdCloudUpload } from 'react-icons/md';
 import PropTypes from 'prop-types';
-import { updateUserPic } from '../../store/user';
-import { createImageURL } from '../../util';
+import { updateUserPic, getAllUserPics } from '../../store/user';
+import { createImageURL, getUserData } from '../../util';
 import './style.css';
 
 const OLD_IMAGE_TAB = 'old';
 const NEW_IMAGE_TAB = 'new';
 
-const ProfileImgForm = ({ allImages, closeForm }) => {
+const ProfileImgForm = ({ userID, closeForm }) => {
   const isMounted = useRef(true);
   useEffect(() => () => { isMounted.current = false; }, []);
+
+  const dispatch = useDispatch();
+  const allImages = useSelector(getUserData(userID, 'image', 'all'));
+  useEffect(() => {
+    dispatch(getAllUserPics(userID));
+  }, [dispatch, userID]);
 
   const [activeTab, setActiveTab] = useState(NEW_IMAGE_TAB);
   const [newImageURL, setNewImageURL] = useState('');
@@ -37,7 +43,6 @@ const ProfileImgForm = ({ allImages, closeForm }) => {
     }
   }, [closeForm, updateStatus]);
   const [updateError, setUpdateError] = useState('');
-  const dispatch = useDispatch();
   const imageFileRef = useRef();
   const formHandler = useFormik({
     initialValues: {
@@ -128,11 +133,11 @@ const ProfileImgForm = ({ allImages, closeForm }) => {
         <Tab
           eventKey={OLD_IMAGE_TAB}
           title="Choose old pic"
-          disabled={allImages.length === 0}
+          disabled={!allImages || allImages.length === 0}
         >
           <Form.Group style={{ marginTop: '20px' }}>
             {
-              allImages.map((imageName) => (
+              allImages && allImages.map((imageName) => (
                 <Card
                   key={imageName}
                   style={{ maxWidth: '100px', display: 'inline-block' }}
@@ -174,10 +179,6 @@ const ProfileImgForm = ({ allImages, closeForm }) => {
 export default ProfileImgForm;
 
 ProfileImgForm.propTypes = {
-  allImages: PropTypes.arrayOf(PropTypes.string),
   closeForm: PropTypes.func.isRequired,
-};
-
-ProfileImgForm.defaultProps = {
-  allImages: [],
+  userID: PropTypes.string.isRequired,
 };

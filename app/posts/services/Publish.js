@@ -1,7 +1,11 @@
 /**
  * @param {{
  *  saveNewPost: (data: any) => Promise<any>
- *  updatePostData: (postID: string, data: any) => Promise<any>
+ *  updatePostData: (
+ *    postID: string, data: any, userID: string,
+ *    includedProjection?: any,
+ *    excludedProjection?: any
+ * ) => Promise<any>
  * }} PostDB - post db object
  */
 module.exports = (PostDB) => ({
@@ -17,8 +21,9 @@ module.exports = (PostDB) => ({
    * @function: create a new solution
    * @param {object} data
    * @param {string} challengeID - challenge post id that this solution responds to
+   * @param {string} userID - id of the current user
    */
-  createNewSolution: async (data, challengeID) => {
+  createNewSolution: async (data, challengeID, userID) => {
     const solutionPost = await PostDB.saveNewPost({
       ...data,
       post_type: 'Solution',
@@ -26,7 +31,7 @@ module.exports = (PostDB) => ({
     });
     const challengePost = await PostDB.updatePostData(challengeID, {
       solution: solutionPost.id
-    });
+    }, userID);
     return {
       solutionPost, challengePost
     };

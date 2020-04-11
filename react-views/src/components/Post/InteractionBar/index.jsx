@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import Row from 'react-bootstrap/Row';
 import Badge from 'react-bootstrap/Badge';
@@ -8,15 +8,16 @@ import { updatePostLike } from '../../../store/posts';
 import './style.css';
 
 const InteractionBar = ({
-  postID,
-  description,
-  likeCount, likeStatus,
+  postID, description, likeCount, likes, currentUserID,
 }) => {
   const dispatch = useDispatch();
+  const likeStatus = useMemo(
+    () => likes.indexOf(currentUserID) !== -1,
+    [likes, currentUserID],
+  );
   const togglePostLike = useCallback(() => {
-    dispatch(updatePostLike(postID, !likeStatus));
-  }, [dispatch, postID, likeStatus]);
-
+    dispatch(updatePostLike(postID));
+  }, [dispatch, postID]);
   return (
     <Row className="justify-content-around post-interaction-bar">
       <button type="button" className="hidden-btn" onClick={togglePostLike}>
@@ -42,5 +43,9 @@ InteractionBar.propTypes = {
   postID: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   likeCount: PropTypes.number.isRequired,
-  likeStatus: PropTypes.bool.isRequired,
+  likes: PropTypes.arrayOf(PropTypes.string),
+  currentUserID: PropTypes.string.isRequired,
+};
+InteractionBar.defaultProps = {
+  likes: [],
 };

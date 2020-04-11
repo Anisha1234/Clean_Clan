@@ -17,8 +17,7 @@ module.exports = (ImageUploadHandler, UserService) => {
     PublishHandlers
   } = PostHandlersInit(PostService, UserService);
   const PostRoute = PostRouteInit(
-    ImageUploadHandler,
-    PostShowHandlers, PostLikeHandler, PublishHandlers
+    ImageUploadHandler, PostShowHandlers, PostLikeHandler, PublishHandlers
   );
   return {
     PostRoute

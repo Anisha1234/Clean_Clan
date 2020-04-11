@@ -4,13 +4,14 @@ import Image from 'react-bootstrap/Image';
 import { useSelector } from 'react-redux';
 import LogoutButton from '../../components/LogoutButton';
 import { LOGGED_IN } from '../../constants';
-import { createImageURL } from '../../util';
+import { createImageURL, getUserData } from '../../util';
 import './style.css';
 
 const HomePage = () => {
   const authState = useSelector((state) => state.user.auth.status);
-  const userName = useSelector((state) => state.user.data.name);
-  const userPic = useSelector((state) => state.user.data.image.current);
+  const currentUserID = useSelector((state) => state.user.data.userID);
+  const userName = useSelector(getUserData(currentUserID, 'name'));
+  const userPic = useSelector(getUserData(currentUserID, 'image', 'current'));
   const userPicURL = useMemo(() => createImageURL(userPic), [userPic]);
   return (
     <div className="header-content cover-all have-background-img">
@@ -25,7 +26,7 @@ const HomePage = () => {
         <div className="homepage-navigation">
           {authState === LOGGED_IN && userName ? (
             <>
-              <Button variant="primary" href="/profile" block>
+              <Button variant="primary" href="/timeline" block>
                 { userPic ? <Image className="user-pic" src={userPicURL} alt="user-pic" /> : null}
                 Continue as
                 {' '}

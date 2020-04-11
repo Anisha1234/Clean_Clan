@@ -5,25 +5,30 @@ import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 import PropTypes from 'prop-types';
+import Loader from '../Loader';
 import PostForm from '../PostForm';
 import PostPreview from '../PostPreview';
 import PostContent from './PostContent';
 import PostSubtitle from './PostSubtitle';
 import AuthorBar from './AuthorBar';
 import InteractionBar from './InteractionBar';
+import useSinglePost from '../../containers/singlePostHook';
+import { PENDING, FAIL } from '../../constants';
 import './style.css';
 
-const Post = ({
-  postType, postID,
-  author, authorName, authorImage,
-  date, heading, location, description,
-  imageBefore, imageAfter,
-  likeCount, likeStatus,
-  solution, challenge,
-}) => {
+const Post = ({ postID }) => {
   const [solFormOpen, setSolFormOpen] = useState(false);
-  const currentUserID = useSelector((state) => state.user.data.userid);
-
+  const currentUserID = useSelector((state) => state.user.data.userID);
+  const {
+    requestStatus, requestError,
+    post, authorName, authorImage,
+  } = useSinglePost(postID);
+  if (requestStatus === PENDING) {
+    return <Loader />;
+  }
+  if (requestStatus === FAIL || !post) {
+    return (<p><strong>{requestError || 'Cannot find such post'}</strong></p>);
+  }
   return (
     <>
       <Card style={{ width: '90%' }} border="light">
@@ -33,35 +38,36 @@ const Post = ({
         <Card.Body>
           <Card.Title>
             <Link to={`/post/${postID}`} className="post-link">
-              {heading}
+              {post.heading}
             </Link>
           </Card.Title>
           <Card.Subtitle>
-            <Badge variant={postType === 'Challenge' ? 'danger' : 'success'}>
-              {postType}
+            <Badge variant={post.post_type === 'Challenge' ? 'danger' : 'success'}>
+              {post.post_type}
             </Badge>
             <PostSubtitle
-              postType={postType}
-              solution={solution}
-              author={author}
+              postType={post.post_type}
+              solution={post.solution}
+              author={post.author}
               openSolForm={() => setSolFormOpen(true)}
               currentUserID={currentUserID}
             />
           </Card.Subtitle>
           <PostContent
-            date={date}
-            location={location}
-            description={description}
-            imageBefore={imageBefore}
-            imageAfter={imageAfter}
-            challenge={challenge}
-            solution={solution}
+            date={post.date}
+            location={post.location}
+            description={post.description}
+            imageBefore={post.image_before}
+            imageAfter={post.image_after}
+            challenge={post.challenge}
+            solution={post.solution}
           />
           <InteractionBar
             postID={postID}
-            description={description}
-            likeCount={likeCount}
-            likeStatus={likeStatus}
+            description={post.description}
+            likeCount={post.like_count}
+            likes={post.likes}
+            currentUserID={currentUserID}
           />
         </Card.Body>
       </Card>
@@ -85,25 +91,5 @@ const Post = ({
 export default Post;
 
 Post.propTypes = {
-  postType: PropTypes.string.isRequired,
   postID: PropTypes.string.isRequired,
-  author: PropTypes.string.isRequired,
-  authorName: PropTypes.string.isRequired,
-  authorImage: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
-  heading: PropTypes.string.isRequired,
-  location: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  likeCount: PropTypes.number.isRequired,
-  likeStatus: PropTypes.bool.isRequired,
-  imageBefore: PropTypes.string.isRequired,
-  imageAfter: PropTypes.string,
-  solution: PropTypes.string,
-  challenge: PropTypes.string,
-};
-
-Post.defaultProps = {
-  imageAfter: '',
-  solution: '',
-  challenge: '',
 };

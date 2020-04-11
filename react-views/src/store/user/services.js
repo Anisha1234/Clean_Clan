@@ -6,7 +6,7 @@ const userServiceURL = `${SERVER_ROOT}/user`;
 const checkLoginState = async () => axios.get(
   `${userServiceURL}/`,
   {
-    timeout: 4500,
+    timeout: 2000,
     withCredentials: true,
   },
 );
@@ -25,22 +25,21 @@ const logout = async () => axios.get(
     withCredentials: true,
   },
 );
-/**
- * @param {{
- *  email: string,
- *  password:string,
- *  name: string,
- *  user_details: string,
- *  city: string
- * }} registrationData - registration form data
- */
+
 const signup = async (registrationData) => axios.post(
   `${userServiceURL}/signup`,
   registrationData,
 );
 
-const getUserProfile = async () => axios.get(
-  `${userServiceURL}/profile/`,
+const getUserProfile = async (userID) => axios.get(
+  `${userServiceURL}/profile/${userID}`,
+  {
+    withCredentials: true,
+  },
+);
+
+const getUserDataAsPostAuthor = async (userID) => axios.get(
+  `${userServiceURL}/author/${userID}`,
   {
     withCredentials: true,
   },
@@ -54,7 +53,15 @@ const updateUserProfilePic = async (data) => axios.post(
   },
 );
 
+const getAllUserPics = async (userID) => axios.get(
+  `${userServiceURL}/profile/image/all/${userID}`,
+  {
+    withCredentials: true,
+  },
+);
+
 export {
   checkLoginState, login, logout, signup,
-  getUserProfile, updateUserProfilePic,
+  getUserProfile, getUserDataAsPostAuthor,
+  updateUserProfilePic, getAllUserPics,
 };

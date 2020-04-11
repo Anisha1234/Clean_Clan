@@ -8,21 +8,19 @@ import PropTypes from 'prop-types';
 import Post from '../Post';
 import PostForm from '../PostForm';
 import { getPosts } from '../../store/posts';
+import { MINE_DOMAIN, ALL_DOMAIN } from '../../constants';
 import './style.css';
 
-const Feed = ({ isMine }) => {
+const Feed = ({ author }) => {
   const [postFormShow, setPostFormShow] = useState(false);
   const handleClosePostForm = useCallback(() => {
     setPostFormShow(false);
   }, []);
   const dispatch = useDispatch();
-  const posts = useSelector((state) => (
-    isMine ? state.posts.my_posts
-      : state.posts.all_posts
-  ));
+  const postIDs = useSelector((state) => state.posts[author ? MINE_DOMAIN : ALL_DOMAIN]);
   useEffect(() => {
-    dispatch(getPosts(isMine));
-  }, [dispatch, isMine]);
+    dispatch(getPosts(author));
+  }, [dispatch, author]);
 
   return (
     <>
@@ -44,28 +42,12 @@ const Feed = ({ isMine }) => {
         </Modal.Body>
       </Modal>
       {
-        posts.map((post) => (
+        postIDs.map((postID) => (
           <Row
-            key={post.id}
+            key={postID}
             className="justify-content-center feed-row"
           >
-            <Post
-              postType={post.post_type}
-              postID={post.id}
-              author={post.author.id}
-              authorName={post.author.name}
-              authorImage={post.author.image}
-              date={post.date}
-              heading={post.heading}
-              location={post.location}
-              likeStatus={post.like_status}
-              description={post.description}
-              likeCount={post.like_count}
-              imageBefore={post.image_before}
-              imageAfter={post.image_after}
-              solution={post.solution}
-              challenge={post.challenge}
-            />
+            <Post postID={postID} />
           </Row>
         ))
       }
@@ -76,9 +58,9 @@ const Feed = ({ isMine }) => {
 export default Feed;
 
 Feed.propTypes = {
-  isMine: PropTypes.bool,
+  author: PropTypes.string,
 };
 
 Feed.defaultProps = {
-  isMine: false,
+  author: '',
 };

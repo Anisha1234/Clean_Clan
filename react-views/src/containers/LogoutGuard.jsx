@@ -9,7 +9,7 @@ import { PENDING, LOGGED_IN } from '../constants';
 const LogoutGuard = ({ children }) => {
   const authState = useSelector((state) => state.user.auth.status);
   const location = useLocation();
-  const { from } = location.state || { from: { pathname: '/profile' } };
+  const { from } = location.state || { from: { pathname: '/timeline' } };
   switch (authState) {
     case LOGGED_IN:
       return (

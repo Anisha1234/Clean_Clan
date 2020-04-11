@@ -1,5 +1,3 @@
-const { getAuthors } = require('./util');
-
 const NEW_CHALLENGE_PRIZE = 5;
 const NEW_SOLUTION_PRIZE = 15;
 /**
@@ -18,31 +16,15 @@ const refinePostData = (postData, userData, images) => {
   };
 };
 /**
- * @function updateUserBonusPoint : increase user like_count with bonus point
- * @param {{
- *  getUserProfile: (userID: string, fields?: string[]) => Promise<{like_count: number}>
- *  updateUserProfile: (userID: string, data: { like_count: number }) => Promise<any>
- * }} UserService
- * @param {string} userID
- * @param {number} bonusPoint
- */
-const updateUserBonusPoint = async (UserService, userID, bonusPoint) => {
-  const {
-    like_count: currentUserLikeCount
-  } = await UserService.getUserProfile(userID, ['like_count']);
-  await UserService.updateUserProfile(userID, {
-    like_count: currentUserLikeCount + bonusPoint
-  });
-};
-/**
  * @function: create handlers for post creation and update
  * @param {{
  *  createNewChallenge: (data: any) => Promise<any>
- *  createNewSolution: (data: any, challengeID: string) => Promise<any>
+ *  createNewSolution: (data: any, challengeID: string, userID: string) => Promise<any>
  * }} PostService
  * @param {{
- *  getUserProfile: (userID: string, fields?: string[]) => Promise<{like_count: number}>
- *  updateUserProfile: (userID: string, data: { like_count: number }) => Promise<any>
+ *  changeUserLikeCount: (userID: any, amount: any) => Promise<{
+ *    like_count: number;
+ *  }>
  * }} UserService
  */
 module.exports = (PostService, UserService) => ({
@@ -55,9 +37,7 @@ module.exports = (PostService, UserService) => ({
     try {
       const postData = refinePostData(req.body, req.session, req.files);
       const challengePost = await PostService.createNewChallenge(postData);
-      const authorObject = await getAuthors(UserService, [challengePost]);
-      challengePost.author = authorObject[challengePost.author];
-      await updateUserBonusPoint(UserService, req.session.userid, NEW_CHALLENGE_PRIZE);
+      await UserService.changeUserLikeCount(req.session.userid, NEW_CHALLENGE_PRIZE);
       res.status(200).send({ challengePost });
     } catch (error) {
       console.log(error);
@@ -75,13 +55,10 @@ module.exports = (PostService, UserService) => ({
       const {
         challengePost,
         solutionPost
-      } = await PostService.createNewSolution(postData, req.params.challengeID);
-      const authorObject = await getAuthors(
-        UserService, [challengePost, solutionPost]
+      } = await PostService.createNewSolution(
+        postData, req.params.challengeID, req.session.userid
       );
-      challengePost.author = authorObject[challengePost.author];
-      solutionPost.author = authorObject[solutionPost.author];
-      await updateUserBonusPoint(UserService, req.session.userid, NEW_SOLUTION_PRIZE);
+      await UserService.changeUserLikeCount(req.session.userid, NEW_SOLUTION_PRIZE);
       res.status(200).send({ solutionPost, challengePost });
     } catch (error) {
       console.log(error);

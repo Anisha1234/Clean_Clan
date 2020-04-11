@@ -8,10 +8,7 @@ const MAX_SOLUTION_IMAGES_COUNT = 2;
  *  FeedHandler: (req: Express.Request, res: Express.Response) => Promise<void>
  *  SinglePostHandler: (req: Express.Request, res: Express.Response) => Promise<void>
  * }} PostShowHandlers
- * @param { (likeAction: boolean)
- *  => (req: Express.Request, res: Express.Response)
- *  => Promise<void>
- * } PostLikeHandler
+ * @param {(req: Express.Request, res: Express.Response) => Promise<void>} PostLikeHandler
  * @param {{
  *  ChallengeHandler: (req: Express.Request, res: Express.Response) => Promise<void>
  *  SolutionHandler: (req: Express.Request, res: Express.Response) => Promise<void>
@@ -29,8 +26,7 @@ module.exports = (
   router
     .get('/feed', FeedHandler)
     .get('/show/:postID', SinglePostHandler)
-    .put('/:postID/like', PostLikeHandler(true))
-    .put('/:postID/unlike', PostLikeHandler(false))
+    .put('/:postID/like', PostLikeHandler)
     .post(
       '/challenge',
       ImageUploadHandler.array('images', MAX_CHALLENGE_IMAGES_COUNT),

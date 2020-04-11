@@ -16,8 +16,7 @@ function comparePassword (inputPassword, userPassword) {
 /**
  * @function: create auth services
  * @param {{
- *  findSingleUser: (options: any) => Promise<any>
- *  saveNewUser: (data: any) => Promise<any>
+ *  getUserWithPassword: (option: any) => Promise<any>
  * }} UserDB - user database object
  */
 module.exports = (UserDB) => ({
@@ -27,7 +26,7 @@ module.exports = (UserDB) => ({
    * @param {string} password
    */
   login: async (email, password) => {
-    const user = await UserDB.findSingleUser({ email });
+    const user = await UserDB.getUserWithPassword({ email });
     if (!user) {
       // user === null => User hasn't registerd
       return user;
