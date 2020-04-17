@@ -1,5 +1,4 @@
 const defaultProjection = {
-  id: 1,
   date: 1,
   like_count: 1,
   heading: 1,

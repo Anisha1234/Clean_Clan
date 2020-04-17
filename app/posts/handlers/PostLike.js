@@ -17,7 +17,7 @@
 module.exports = (PostService, UserService) => async (req, res) => {
   try {
     const postID = req.params && req.params.postID;
-    const userID = req.session.userid;
+    const userID = req.session['_id'];
     if (!postID || !userID) {
       res.status(404).send('Fail to interact with post');
       return;

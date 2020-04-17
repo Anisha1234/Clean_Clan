@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import {
   POSTS_DOMAIN, MINE_DOMAIN, ALL_DOMAIN, POOL_DOMAIN,
-  UPDATE,
+  UPDATE, ADD,
 } from '../../constants';
 import {
   isActionTypeEqual,
@@ -23,7 +23,12 @@ const createPostArrayReducer = (subDomain) => (state = initialState[subDomain], 
   if (!isActionTypeEqual([POSTS_DOMAIN, subDomain], domains)) return state;
   postIDs.reverse();
   switch (actionType) {
-    case UPDATE: return [...postIDs, ...state];
+    case UPDATE: return [...postIDs];
+    case ADD:
+      return [
+        ...postIDs.filter((postID) => state.indexOf(postID) === -1),
+        ...state,
+      ];
     default: return state;
   }
 };

@@ -23,7 +23,7 @@ module.exports = (UserService) => ({
    */
   GetHandler: async (req, res) => {
     try {
-      const userID = req.params.userID || req.session.userID;
+      const userID = req.params.userID || req.session['_id'];
       const userData = await UserService.getUserProfile(userID);
       res.status(200).send(userData);
     } catch (error) {
@@ -57,7 +57,7 @@ module.exports = (UserService) => ({
    */
   GetAllUserPicsHandler: async (req, res) => {
     try {
-      const userID = req.params.userID || req.session.userid;
+      const userID = req.params.userID || req.session['_id'];
       if (!userID) {
         res.status(404).send('Cannot find those images');
         return;
@@ -78,7 +78,7 @@ module.exports = (UserService) => ({
     try {
       const oldImageName = req.body && req.body.oldImageName;
       const fileName = req.file && req.file.filename;
-      const userID = req.session.userid;
+      const userID = req.session['_id'];
       const user = await UserService.updateUserImage(userID, oldImageName, fileName);
       await UserService.updateSessionData(req.session, user);
       res.status(200).send(user);

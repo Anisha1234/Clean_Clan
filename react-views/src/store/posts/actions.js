@@ -1,6 +1,6 @@
 import {
   POSTS_DOMAIN, MINE_DOMAIN, ALL_DOMAIN, POOL_DOMAIN,
-  UPDATE,
+  UPDATE, ADD,
 } from '../../constants';
 import {
   getPosts, publishPost, updatePostLike, getSinglePost,
@@ -9,11 +9,12 @@ import { updateStoreData } from '../util';
 import { normalizePost, normalizePosts } from './schema';
 /**
  * @function updatePostFeedDomain : update post in MINE_DOMAIN / ALL_DOMAIN
+ * @param {string} type : action type (UPDATE/ADD)
  * @param {string} subDomain : MINE_DOMAIN / ALL_DOMAIN
  * @param {string[]} postIDs : array of post ids
  */
-function updatePostFeedDomain(feedDomain, postIDs) {
-  return updateStoreData(UPDATE, postIDs, POSTS_DOMAIN, feedDomain);
+function updatePostFeedDomain(type, feedDomain, postIDs) {
+  return updateStoreData(type, postIDs, POSTS_DOMAIN, feedDomain);
 }
 function updatePostPoolDomain(postEntries) {
   return updateStoreData(UPDATE, postEntries, POSTS_DOMAIN, POOL_DOMAIN);
@@ -27,7 +28,7 @@ const getPostsAction = (author = '') => async (dispatch) => {
     const feedDomain = author ? MINE_DOMAIN : ALL_DOMAIN;
     const { data: posts } = await getPosts(author);
     const { postIDs, postEntries } = normalizePosts(posts);
-    dispatch(updatePostFeedDomain(feedDomain, postIDs));
+    dispatch(updatePostFeedDomain(UPDATE, feedDomain, postIDs));
     dispatch(updatePostPoolDomain(postEntries));
   } catch (error) {
     if (error && error.response) {
@@ -79,8 +80,18 @@ const publishPostAction = (postType, responsePostID, postData) => async (dispatc
     const {
       data: { challengePost, solutionPost },
     } = await publishPost(postType, responsePostID, data);
-    const { postEntries } = normalizePosts([challengePost, solutionPost]);
-    dispatch(updatePostPoolDomain(postEntries));
+    [
+      { post: challengePost, type: 'Challenge' },
+      { post: solutionPost, type: 'Solution' },
+    ].forEach(({ post, type }) => {
+      if (!post) return;
+      const { postID, postEntries } = normalizePost(post);
+      dispatch(updatePostPoolDomain(postEntries));
+      dispatch(updatePostFeedDomain(ADD, ALL_DOMAIN, [postID]));
+      if (type === postType) {
+        dispatch(updatePostFeedDomain(ADD, MINE_DOMAIN, [postID]));
+      }
+    });
   } catch (error) {
     if (error && error.response) {
       throw error.response.data.toString();

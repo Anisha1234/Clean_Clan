@@ -60,7 +60,7 @@ const updatePostLike = async (postID, userID, likeAction) => {
  * @param {object} excludedProjection
  */
 const updatePostData = async (
-  postID, newData, userID,
+  postID, newData,
   includedProjection = defaultProjection,
   excludedProjection = {}
 ) => updatePost(
@@ -68,7 +68,7 @@ const updatePostData = async (
   { $set: newData },
   {
     ...includedProjection,
-    ...createLikeArrayProjection(userID)
+    ...excludedProjection
   },
   excludedProjection
 );

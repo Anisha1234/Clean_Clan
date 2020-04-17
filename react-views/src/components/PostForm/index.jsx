@@ -124,6 +124,7 @@ const PostForm = ({ type, responsePostID, closeForm }) => {
         <Form.Control
           type="text"
           name="location"
+          value={formHandler.values.location}
           onChange={formHandler.handleChange}
           placeholder="Mumbai"
           isInvalid={formHandler.errors.location}
@@ -137,6 +138,7 @@ const PostForm = ({ type, responsePostID, closeForm }) => {
         <Form.Control
           type="text"
           name="heading"
+          value={formHandler.values.heading}
           onChange={formHandler.handleChange}
           placeholder="Enter the heading..."
           isInvalid={formHandler.errors.heading}
@@ -150,6 +152,7 @@ const PostForm = ({ type, responsePostID, closeForm }) => {
         <Form.Control
           type="text"
           name="stakeholders"
+          value={formHandler.values.stakeholders}
           onChange={formHandler.handleChange}
           placeholder="Stakeholders..."
           isInvalid={formHandler.errors.stakeholders}
@@ -168,6 +171,7 @@ const PostForm = ({ type, responsePostID, closeForm }) => {
           as="textarea"
           name="description"
           className="post-description"
+          value={formHandler.values.description}
           onChange={handlePostDescriptionText}
           placeholder="Enter the description here..."
           ref={postDescriptionTextRef}

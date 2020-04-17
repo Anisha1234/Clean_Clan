@@ -7,7 +7,7 @@ const NEW_SOLUTION_PRIZE = 15;
  * @param {Array} images
  */
 const refinePostData = (postData, userData, images) => {
-  const { userid: userID } = userData;
+  const { _id: userID } = userData;
   return {
     ...postData,
     author: userID,
@@ -19,7 +19,10 @@ const refinePostData = (postData, userData, images) => {
  * @function: create handlers for post creation and update
  * @param {{
  *  createNewChallenge: (data: any) => Promise<any>
- *  createNewSolution: (data: any, challengeID: string, userID: string) => Promise<any>
+ *  createNewSolution: (data: any, challengeID: string) => Promise<{
+ *    challengePost: any,
+ *    solutionPost: any
+ *  }>
  * }} PostService
  * @param {{
  *  changeUserLikeCount: (userID: any, amount: any) => Promise<{
@@ -37,7 +40,7 @@ module.exports = (PostService, UserService) => ({
     try {
       const postData = refinePostData(req.body, req.session, req.files);
       const challengePost = await PostService.createNewChallenge(postData);
-      await UserService.changeUserLikeCount(req.session.userid, NEW_CHALLENGE_PRIZE);
+      await UserService.changeUserLikeCount(req.session['_id'], NEW_CHALLENGE_PRIZE);
       res.status(200).send({ challengePost });
     } catch (error) {
       console.log(error);
@@ -55,10 +58,8 @@ module.exports = (PostService, UserService) => ({
       const {
         challengePost,
         solutionPost
-      } = await PostService.createNewSolution(
-        postData, req.params.challengeID, req.session.userid
-      );
-      await UserService.changeUserLikeCount(req.session.userid, NEW_SOLUTION_PRIZE);
+      } = await PostService.createNewSolution(postData, req.params.challengeID);
+      await UserService.changeUserLikeCount(req.session['_id'], NEW_SOLUTION_PRIZE);
       res.status(200).send({ solutionPost, challengePost });
     } catch (error) {
       console.log(error);

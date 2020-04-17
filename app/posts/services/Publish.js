@@ -2,7 +2,7 @@
  * @param {{
  *  saveNewPost: (data: any) => Promise<any>
  *  updatePostData: (
- *    postID: string, data: any, userID: string,
+ *    postID: string, data: any,
  *    includedProjection?: any,
  *    excludedProjection?: any
  * ) => Promise<any>
@@ -30,8 +30,8 @@ module.exports = (PostDB) => ({
       challenge: challengeID
     });
     const challengePost = await PostDB.updatePostData(challengeID, {
-      solution: solutionPost.id
-    }, userID);
+      solution: solutionPost['_id']
+    }, { solution: 1 });
     return {
       solutionPost, challengePost
     };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import PropTypes from 'prop-types';
@@ -20,6 +20,7 @@ const ProfilePage = ({ userID }) => {
     (async () => {
       try {
         await dispatch(getUserProfile(userID));
+        if (!isMounted) return;
         setRequestStatus(DONE);
       } catch (error) {
         if (!isMounted) return;

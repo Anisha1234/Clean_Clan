@@ -38,7 +38,7 @@ const updateUserImage = async (userID, imageName, isNew) => new Promise((resolve
   }
   UserModel.findByIdAndUpdate(userID, updateQuery,
     { lean: true, new: true, projection: { 'image.current': 1 } }, (error, user) => {
-      if (error || user) {
+      if (error || !user) {
         reject(error || new Error('Cannot find such user'));
       }
       resolve(user);
@@ -61,7 +61,7 @@ const updateUserData = async (userID, data) => new Promise((resolve, reject) => 
   }
   UserModel.findByIdAndUpdate(userID, updateQuery,
     { lean: true, new: true, projection: includedFields }, (error, user) => {
-      if (error || user) {
+      if (error || !user) {
         reject(error || new Error('Cannot find such user'));
       }
       resolve(user);

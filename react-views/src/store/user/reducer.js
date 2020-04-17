@@ -81,7 +81,7 @@ const UserReducer = combineReducers({
             ...currentData,
             image: {
               ...currentData.image,
-              all: [...currentData.image.all || [], ...userData.image.all || []],
+              all: [...userData.image.all || []],
             },
           };
           newState[userID] = combinedData;
