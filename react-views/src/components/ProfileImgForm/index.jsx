@@ -9,11 +9,12 @@ import Tab from 'react-bootstrap/Tab';
 import Form from 'react-bootstrap/Form';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import { MdCloudUpload } from 'react-icons/md';
 import PropTypes from 'prop-types';
+import Loader from '../Loader';
 import { updateUserPic, getAllUserPics } from '../../store/user';
 import { createImageURL, getUserData } from '../../util';
+import { PENDING, DONE, FAIL } from '../../constants';
 import './style.css';
 
 const OLD_IMAGE_TAB = 'old';
@@ -36,24 +37,38 @@ const ProfileImgForm = ({ userID, closeForm }) => {
       URL.revokeObjectURL(newImageURL);
     }
   }, [newImageURL]);
-  const [updateStatus, setUpdateStatus] = useState(false);
+
+  const [updateStatus, setUpdateStatus] = useState('');
   useEffect(() => {
-    if (updateStatus) {
+    if (updateStatus == DONE) {
       closeForm();
     }
   }, [closeForm, updateStatus]);
+
   const [updateError, setUpdateError] = useState('');
-  const imageFileRef = useRef();
+
+  const changeUserImage = useCallback(async (oldImageName, newImageFile)=>{
+    try {
+      setUpdateStatus(PENDING);
+      await dispatch(updateUserPic(oldImageName, newImageFile));
+      if (!isMounted.current) return;
+      setUpdateStatus(DONE);
+    } catch (error) {
+      if (!isMounted.current) return;
+      setUpdateStatus(FAIL);
+      setUpdateError(error.toString());
+    }
+  }, []);
+
   const formHandler = useFormik({
     initialValues: {
       newImageFile: null,
-      oldImageName: '',
     },
     validate: (values) => {
-      const { newImageFile, oldImageName } = values;
-      if (!newImageFile && !oldImageName) {
-        setUpdateStatus(false);
-        setUpdateError("You haven't pick an profile picture yet!");
+      const { newImageFile } = values;
+      if (!newImageFile) {
+        setUpdateStatus(FAIL);
+        setUpdateError("You haven't upload an image file yet!");
         return 'error';
       }
       return null;
@@ -61,16 +76,8 @@ const ProfileImgForm = ({ userID, closeForm }) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      try {
-        const { newImageFile, oldImageName } = values;
-        await dispatch(updateUserPic(oldImageName, newImageFile));
-        if (!isMounted.current) return;
-        setUpdateStatus(true);
-      } catch (error) {
-        if (!isMounted.current) return;
-        setUpdateStatus(false);
-        setUpdateError(error.toString());
-      }
+      const { newImageFile } = values;
+      await changeUserImage("", newImageFile)
     },
   });
 
@@ -83,6 +90,7 @@ const ProfileImgForm = ({ userID, closeForm }) => {
     formHandler.setFieldValue('newImageFile', file);
   }, [formHandler]);
 
+  const imageFileRef = useRef();
   const handleChangeTab = useCallback((chosenTab) => {
     if (chosenTab === OLD_IMAGE_TAB) {
       setNewImageURL((currentURL) => {
@@ -95,20 +103,7 @@ const ProfileImgForm = ({ userID, closeForm }) => {
     setActiveTab(chosenTab);
   }, [formHandler, imageFileRef]);
 
-  const onChooseOldImage = useCallback((imageName, isChosen) => {
-    if (isChosen) {
-      formHandler.setFieldValue('oldImageName', imageName);
-      return;
-    }
-    formHandler.setFieldValue('oldImageName', '');
-  }, [formHandler]);
-
   return (
-    <Form
-      className="cover-all"
-      encType="multipart/form-data"
-      onSubmit={formHandler.handleSubmit}
-    >
       <Tabs
         activeKey={activeTab}
         onSelect={handleChangeTab}
@@ -119,6 +114,11 @@ const ProfileImgForm = ({ userID, closeForm }) => {
             <h2 className="center-vert-hor text-muted">Preview</h2>
             <Image fluid src={newImageURL} />
           </div>
+          <Form
+            className="cover-all"
+            encType="multipart/form-data"
+            onSubmit={formHandler.handleSubmit}
+          >
           <Form.Group controlId="newImageFile" className="text-center">
             <Form.Control
               name="newImageFile"
@@ -129,50 +129,47 @@ const ProfileImgForm = ({ userID, closeForm }) => {
               className="user-pic-upload"
             />
           </Form.Group>
+          <Form.Group>
+            {
+              updateStatus === FAIL && updateError
+                ? <Alert variant="danger">{updateError}</Alert> : null
+            }
+          </Form.Group>
+          <Form.Group className="text-center">
+            <Button variant="outline-primary" type="submit" disabled={formHandler.isSubmitting}>
+              <MdCloudUpload />
+              {' '}
+              {' '}
+              Submit
+            </Button>
+          </Form.Group>
+        </Form>
         </Tab>
         <Tab
           eventKey={OLD_IMAGE_TAB}
           title="Choose old pic"
           disabled={!allImages || allImages.length === 0}
         >
-          <Form.Group style={{ marginTop: '20px' }}>
+          <div className='user-old-pics-select'>
+            {
+              updateStatus === PENDING ? (
+                <div className='cover-all loading-overlay'><Loader /></div>
+              ) : null
+            }
             {
               allImages && allImages.map((imageName) => (
-                <Card
-                  key={imageName}
-                  style={{ maxWidth: '100px', display: 'inline-block' }}
-                  className={
-                    formHandler.values.oldImageName === imageName ? 'user-old-pic-chosen' : ''
-                  }
+                <button 
+                  type="button" 
+                  className='hidden-btn option'
+                  onClick={() => changeUserImage(imageName, null)}
                 >
-                  <input
-                    type="checkbox"
-                    className="user-old-pic-checkbox"
-                    value={formHandler.values.oldImageName === imageName}
-                    onChange={(e) => onChooseOldImage(imageName, e.target.value)}
-                  />
                   <Image fluid src={createImageURL(imageName)} />
-                </Card>
+                </button>
               ))
             }
-          </Form.Group>
+          </div>
         </Tab>
       </Tabs>
-      <Form.Group>
-        {
-          !updateStatus && updateError
-            ? <Alert variant="danger">{updateError}</Alert> : null
-        }
-      </Form.Group>
-      <Form.Group className="text-center">
-        <Button variant="outline-primary" type="submit" disabled={formHandler.isSubmitting}>
-          <MdCloudUpload />
-          {' '}
-          {' '}
-          Submit
-        </Button>
-      </Form.Group>
-    </Form>
   );
 };
 

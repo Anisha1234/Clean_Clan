@@ -69,9 +69,14 @@ const PostForm = ({ type, responsePostID, closeForm }) => {
       if (!location) error.location = 'Location cannot be empty';
       if (!heading) error.heading = 'Title cannot be empty';
       if (!description) error.description = 'Description cannot be empty';
+      if(description.length > 8888){
+        error.description = 'Description too long. Please reduce it to around 8888 characters'
+      }
       if (!stakeholders) error.stakeholders = 'Stakeholers cannot be empty';
       if (images.length < imageCount[type]) error.images = 'Invalid images';
-      if (images.filter((imageFile) => (!imageFile)).length > 0) { error.images = `Should have ${imageCount[type]} images`; }
+      if (images.filter((imageFile) => (!imageFile)).length > 0) { 
+        error.images = `Should have ${imageCount[type]} images`; 
+      }
       return error;
     },
     onSubmit: async (values) => {
@@ -177,6 +182,7 @@ const PostForm = ({ type, responsePostID, closeForm }) => {
           ref={postDescriptionTextRef}
           isInvalid={formHandler.errors.description}
         />
+        <small>{`${formHandler.values.description.length}/8888`}</small>
         <Form.Control.Feedback type="invalid">
           {formHandler.errors.description}
         </Form.Control.Feedback>

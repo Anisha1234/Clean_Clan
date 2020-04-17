@@ -1,0 +1,7 @@
+.popups-container{
+  position: fixed;
+  right: 20px;
+  bottom: 10px;
+  font-size: 20px;
+  min-width: 300px;
+}

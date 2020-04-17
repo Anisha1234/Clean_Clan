@@ -7,6 +7,7 @@ import {
 } from './services';
 import { updateStoreData } from '../util';
 import { normalizePost, normalizePosts } from './schema';
+import { addPopup } from '../ui/popups';
 /**
  * @function updatePostFeedDomain : update post in MINE_DOMAIN / ALL_DOMAIN
  * @param {string} type : action type (UPDATE/ADD)
@@ -31,10 +32,11 @@ const getPostsAction = (author = '') => async (dispatch) => {
     dispatch(updatePostFeedDomain(UPDATE, feedDomain, postIDs));
     dispatch(updatePostPoolDomain(postEntries));
   } catch (error) {
+    let errorMessage = error;
     if (error && error.response) {
-      throw error.response.data;
+      errorMessage = error.response.data.toString();
     }
-    throw error;
+    dispatch(addPopup('Error in getting post', errorMessage));
   }
 };
 /**
@@ -109,10 +111,11 @@ const updatePostLikeAction = (postID) => async (dispatch) => {
     const { postEntries } = normalizePost(post);
     dispatch(updatePostPoolDomain(postEntries));
   } catch (error) {
+    let errorMessage = error;
     if (error && error.response) {
-      throw error.response.data.toString();
+      errorMessage = error.response.data.toString();
     }
-    throw error.toString();
+    dispatch(addPopup('Cannot like the post', errorMessage));
   }
 };
 

@@ -10,6 +10,7 @@ import {
 } from './services';
 import { updateStoreData } from '../util';
 import { normalizeUser } from './schema';
+import { addPopup } from '../ui/popups';
 
 function updateUserAuthDomain(status) {
   return updateStoreData(UPDATE, { status }, USER_DOMAIN, AUTH_DOMAIN);
@@ -113,10 +114,12 @@ const getAllUserPicsAction = (userID) => async (dispatch) => {
     const { userEntries } = normalizeUser(data);
     dispatch(updateUserPoolDomain(LOAD_IMAGES, userEntries));
   } catch (error) {
+    let errorMessage = error;
     if (error && error.response) {
-      throw error.response.data.toString();
+      const { status, data } = error.response;
+      errorMessage = status === 500 ? 'Internal Server Error' : data;
     }
-    throw error.toString();
+    dispatch(addPopup('Error in getting images', errorMessage));
   }
 };
 /**
