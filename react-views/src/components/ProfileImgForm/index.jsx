@@ -40,14 +40,14 @@ const ProfileImgForm = ({ userID, closeForm }) => {
 
   const [updateStatus, setUpdateStatus] = useState('');
   useEffect(() => {
-    if (updateStatus == DONE) {
+    if (updateStatus === DONE) {
       closeForm();
     }
   }, [closeForm, updateStatus]);
 
   const [updateError, setUpdateError] = useState('');
 
-  const changeUserImage = useCallback(async (oldImageName, newImageFile)=>{
+  const changeUserImage = useCallback(async (oldImageName, newImageFile) => {
     try {
       setUpdateStatus(PENDING);
       await dispatch(updateUserPic(oldImageName, newImageFile));
@@ -58,7 +58,7 @@ const ProfileImgForm = ({ userID, closeForm }) => {
       setUpdateStatus(FAIL);
       setUpdateError(error.toString());
     }
-  }, []);
+  }, [dispatch]);
 
   const formHandler = useFormik({
     initialValues: {
@@ -77,7 +77,7 @@ const ProfileImgForm = ({ userID, closeForm }) => {
     validateOnChange: false,
     onSubmit: async (values) => {
       const { newImageFile } = values;
-      await changeUserImage("", newImageFile)
+      await changeUserImage('', newImageFile);
     },
   });
 
@@ -104,21 +104,21 @@ const ProfileImgForm = ({ userID, closeForm }) => {
   }, [formHandler, imageFileRef]);
 
   return (
-      <Tabs
-        activeKey={activeTab}
-        onSelect={handleChangeTab}
-        className="justify-content-center"
-      >
-        <Tab eventKey={NEW_IMAGE_TAB} title="Upload new pic">
-          <div className="user-pic-preview text-center">
-            <h2 className="center-vert-hor text-muted">Preview</h2>
-            <Image fluid src={newImageURL} />
-          </div>
-          <Form
-            className="cover-all"
-            encType="multipart/form-data"
-            onSubmit={formHandler.handleSubmit}
-          >
+    <Tabs
+      activeKey={activeTab}
+      onSelect={handleChangeTab}
+      className="justify-content-center"
+    >
+      <Tab eventKey={NEW_IMAGE_TAB} title="Upload new pic">
+        <div className="user-pic-preview text-center">
+          <h2 className="center-vert-hor text-muted">Preview</h2>
+          <Image fluid src={newImageURL} />
+        </div>
+        <Form
+          className="cover-all"
+          encType="multipart/form-data"
+          onSubmit={formHandler.handleSubmit}
+        >
           <Form.Group controlId="newImageFile" className="text-center">
             <Form.Control
               name="newImageFile"
@@ -144,32 +144,32 @@ const ProfileImgForm = ({ userID, closeForm }) => {
             </Button>
           </Form.Group>
         </Form>
-        </Tab>
-        <Tab
-          eventKey={OLD_IMAGE_TAB}
-          title="Choose old pic"
-          disabled={!allImages || allImages.length === 0}
-        >
-          <div className='user-old-pics-select'>
-            {
+      </Tab>
+      <Tab
+        eventKey={OLD_IMAGE_TAB}
+        title="Choose old pic"
+        disabled={!allImages || allImages.length === 0}
+      >
+        <div className="user-old-pics-select">
+          {
               updateStatus === PENDING ? (
-                <div className='cover-all loading-overlay'><Loader /></div>
+                <div className="cover-all loading-overlay"><Loader /></div>
               ) : null
             }
-            {
+          {
               allImages && allImages.map((imageName) => (
-                <button 
-                  type="button" 
-                  className='hidden-btn option'
+                <button
+                  type="button"
+                  className="hidden-btn option"
                   onClick={() => changeUserImage(imageName, null)}
                 >
                   <Image fluid src={createImageURL(imageName)} />
                 </button>
               ))
             }
-          </div>
-        </Tab>
-      </Tabs>
+        </div>
+      </Tab>
+    </Tabs>
   );
 };
 

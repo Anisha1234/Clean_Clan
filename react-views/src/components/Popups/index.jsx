@@ -1,5 +1,5 @@
-import React, { 
-  useMemo, useEffect, useCallback, useState, Fragment 
+import React, {
+  useMemo, useEffect, useCallback, useState, Fragment,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Toast from 'react-bootstrap/Toast';
@@ -16,7 +16,7 @@ import './style.css';
 const MAX_DISPLAY_AMOUNT = 3;
 
 const PopupOverflow = ({ onOpenNotiModal }) => (
-  <button className="hidden-btn" onClick={onOpenNotiModal}> 
+  <button className="hidden-btn" onClick={onOpenNotiModal} type="button">
     <Toast>
       <Toast.Header closeButton={false}>
         <FaEllipsisH className="mr-2" />
@@ -27,8 +27,8 @@ const PopupOverflow = ({ onOpenNotiModal }) => (
 );
 
 PopupOverflow.propTypes = {
-  onOpenNotiModal: PropTypes.func.isRequired
-}
+  onOpenNotiModal: PropTypes.func.isRequired,
+};
 
 const Popups = () => {
   const dispatch = useDispatch();
@@ -49,14 +49,14 @@ const Popups = () => {
   const handleCloseNotiModal = useCallback(() => {
     setShowNotiModal(false);
     dispatch(clearAllPopups());
-  } , [dispatch]);
+  }, [dispatch]);
   return (
     <>
       <div className="popups-container">
         {
           popupArray.map(
             ([key, { title, message }], index) => {
-              if(index < MAX_DISPLAY_AMOUNT){
+              if (index < MAX_DISPLAY_AMOUNT) {
                 return (
                   <Toast key={key} onClose={() => handleClosePopup(key)} delay={1440} autohide>
                     <Toast.Header>
@@ -68,11 +68,11 @@ const Popups = () => {
                   </Toast>
                 );
               }
-              if(index === MAX_DISPLAY_AMOUNT){
-                return <PopupOverflow key={key} onOpenNotiModal={handleOpenNotiModal}/>
+              if (index === MAX_DISPLAY_AMOUNT) {
+                return <PopupOverflow key={key} onOpenNotiModal={handleOpenNotiModal} />;
               }
               return null;
-            }
+            },
           )
         }
       </div>
@@ -82,20 +82,20 @@ const Popups = () => {
         </Modal.Header>
         <Modal.Body>
           {
-            popupArray.map(([key, { title, message }])=>(
+            popupArray.map(([key, { title, message }]) => (
               <Fragment key={key}>
-               <Media>
-                  <InfoIcon style={{ fontSize: '40px' }}/>
+                <Media>
+                  <InfoIcon style={{ fontSize: '40px' }} />
                   <Media.Body>
                     <h6>{title}</h6>
                     <p>{message}</p>
                   </Media.Body>
                 </Media>
-                <hr style={{ width: '100%' }}/>
+                <hr style={{ width: '100%' }} />
               </Fragment>
             ))
           }
-          
+
         </Modal.Body>
       </Modal>
     </>

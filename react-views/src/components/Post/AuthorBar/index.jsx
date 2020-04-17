@@ -19,7 +19,7 @@ const AuthorBar = ({ authorID, authorName, authorImage }) => (
       <Link to={`/profile/${authorID}`} style={{ color: 'black' }}>
         <h6 className="post-author-name">{authorName}</h6>
       </Link>
-      
+
     </Media.Body>
   </Media>
 );
@@ -29,7 +29,7 @@ export default AuthorBar;
 AuthorBar.propTypes = {
   authorName: PropTypes.string,
   authorImage: PropTypes.string,
-  authorID: PropTypes.string.isRequired
+  authorID: PropTypes.string.isRequired,
 };
 
 AuthorBar.defaultProps = {

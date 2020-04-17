@@ -33,8 +33,8 @@ const Post = ({ postID }) => {
     <>
       <Card style={{ width: '90%' }} border="light">
         <Card.Header>
-          <AuthorBar 
-            authorName={authorName} 
+          <AuthorBar
+            authorName={authorName}
             authorImage={authorImage}
             authorID={post.author}
           />
